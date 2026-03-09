@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-win-logging-focus-tracking/02-04-PLAN.md
-last_updated: "2026-03-09T14:16:18.600Z"
+stopped_at: Completed 02-win-logging-focus-tracking/02-03-PLAN.md
+last_updated: "2026-03-09T14:16:47.854Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 8
+  completed_plans: 9
   percent: 4
 ---
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 4%
 | Phase 02-win-logging-focus-tracking P02-01 | 3min | 2 tasks | 8 files |
 | Phase 02-win-logging-focus-tracking P02-02 | 2min | 2 tasks | 3 files |
 | Phase 02-win-logging-focus-tracking P02-04 | 3min | 2 tasks | 4 files |
+| Phase 02-win-logging-focus-tracking P02-03 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [Phase 02-04]: WinCard onEdit called with title string only — matches test expectation (not id+title)
 - [Phase 02-04]: vitest.config.js needs its own @/ alias — does not inherit from vite.config.js
 - [Phase 02-04]: @testing-library/jest-dom must be imported in test-setup.js — not auto-registered
+- [Phase 02-03]: Global document keydown listener (useEffect) handles Escape in WinInputOverlay — fires on document.body when nothing is focused
+- [Phase 02-03]: vitest.config.js requires @vitejs/plugin-react and @ path alias separately from vite.config.js
+- [Phase 02-03]: role=dialog on motion.div overlay enables getByRole('dialog') test queries and accessibility
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T14:16:18.598Z
-Stopped at: Completed 02-win-logging-focus-tracking/02-04-PLAN.md
+Last session: 2026-03-09T14:16:47.852Z
+Stopped at: Completed 02-win-logging-focus-tracking/02-03-PLAN.md
 Resume file: None
