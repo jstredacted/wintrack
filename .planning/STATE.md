@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-win-logging-focus-tracking/02-01-PLAN.md
-last_updated: "2026-03-09T14:07:57.603Z"
+stopped_at: Completed 02-win-logging-focus-tracking/02-02-PLAN.md
+last_updated: "2026-03-09T14:11:43.875Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 6
+  completed_plans: 7
   percent: 4
 ---
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 4%
 | Phase 01-foundation P02 | 30 | 3 tasks | 6 files |
 | Phase 01-foundation P05 | 15 | 2 tasks | 3 files |
 | Phase 02-win-logging-focus-tracking P02-01 | 3min | 2 tasks | 8 files |
+| Phase 02-win-logging-focus-tracking P02-02 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,9 @@ Recent decisions affecting current work:
 - [Phase 01-05]: --font-mono added to @theme inline pointing to Geist Mono Variable — font-mono Tailwind class now resolves to Geist Mono, not browser default mono stack
 - [Phase 02-win-logging-focus-tracking]: motion package name (not framer-motion) — rebranded at v12, import from motion/react
 - [Phase 02-win-logging-focus-tracking]: @testing-library/user-event installed as devDependency — required for Wave 2 component interaction tests
+- [Phase 02-02]: useStopwatch accepts { elapsedBase, startedAt } object — matches Wave 0 test stubs (object destructuring, not positional args)
+- [Phase 02-02]: pauseTimer and stopTimer identical in Phase 2 — stopTimer delegates to pauseTimer to avoid duplication
+- [Phase 02-02]: addWin uses optimistic insert with local rollback on Supabase error
 
 ### Pending Todos
 
@@ -99,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T14:07:57.601Z
-Stopped at: Completed 02-win-logging-focus-tracking/02-01-PLAN.md
+Last session: 2026-03-09T14:11:43.873Z
+Stopped at: Completed 02-win-logging-focus-tracking/02-02-PLAN.md
 Resume file: None
