@@ -12,6 +12,7 @@ import TotalFocusTime from '@/components/wins/TotalFocusTime';
 import MorningPrompt from '@/components/checkin/MorningPrompt';
 import EveningPrompt from '@/components/checkin/EveningPrompt';
 import CheckInOverlay from '@/components/checkin/CheckInOverlay';
+import TimerFocusOverlay from '@/components/wins/TimerFocusOverlay';
 
 export default function TodayPage() {
   const today = getLocalDateString();
@@ -44,6 +45,9 @@ export default function TodayPage() {
     closeCheckinOverlay,
     dismissMorningPrompt,
     dismissEveningPrompt,
+    timerOverlayOpen,
+    openTimerOverlay,
+    closeTimerOverlay,
   } = useUIStore();
 
   const { hasCheckedInToday } = useCheckin();
@@ -135,7 +139,10 @@ export default function TodayPage() {
               wins={wins}
               onEdit={(id, newTitle) => editWin(id, newTitle)}
               onDelete={(id) => deleteWin(id)}
-              onStartTimer={(id) => startTimer(id)}
+              onStartTimer={(id) => {
+                  startTimer(id);
+                  openTimerOverlay();
+                }}
               onPauseTimer={(id, secs) => pauseTimer(id, secs)}
               onStopTimer={(id, secs) => stopTimer(id, secs)}
             />
@@ -202,6 +209,13 @@ export default function TodayPage() {
           openCheckinOverlay();
         }}
         onDismiss={dismissEveningPrompt}
+      />
+
+      {/* Timer focus overlay — full-screen bento view when timer is running */}
+      <TimerFocusOverlay
+        open={timerOverlayOpen}
+        wins={wins}
+        onClose={closeTimerOverlay}
       />
     </div>
   );
