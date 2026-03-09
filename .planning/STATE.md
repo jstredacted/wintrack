@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation/01-04-PLAN.md
-last_updated: "2026-03-09T13:13:31.198Z"
+stopped_at: Completed 01-foundation/01-02-PLAN.md
+last_updated: "2026-03-09T13:26:32.982Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 4%
 | Phase 01-foundation P01-02 | 525002min | 2 tasks | 5 files |
 | Phase 01-foundation P03 | 2 | 2 tasks | 9 files |
 | Phase 01-foundation P04 | 3 | 2 tasks | 6 files |
+| Phase 01-foundation P02 | 30 | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,9 @@ Recent decisions affecting current work:
 - [Phase 01-04]: localStorage key 'wintrack-theme' is shared contract between inline script and useTheme hook
 - [Phase 01-04]: useTheme reads initial state from documentElement.classList (set by inline script), not localStorage — avoids re-read flash
 - [Phase 01-04]: matchMedia stub in test-setup.js fixes jsdom missing browser API for vi.spyOn compatibility
+- [Phase 01-02]: win_date stored as text (YYYY-MM-DD) set by client — avoids timezone math in SQL streak queries
+- [Phase 01-02]: Supabase client uses accessToken pattern with static 10-year JWT — auth.* methods intentionally disabled
+- [Phase 01-02]: getLocalDateString() uses Intl.DateTimeFormat en-CA not .toISOString().slice(0,10) — local timezone correctness
 
 ### Pending Todos
 
@@ -88,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T13:13:31.196Z
-Stopped at: Completed 01-foundation/01-04-PLAN.md
+Last session: 2026-03-09T13:26:32.980Z
+Stopped at: Completed 01-foundation/01-02-PLAN.md
 Resume file: None
