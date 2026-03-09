@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-02-PLAN.md (useJournal + useHistory hooks)
-last_updated: "2026-03-09T17:25:07.831Z"
+stopped_at: Completed 04-01-PLAN.md (Wave 0 test stubs for history and journal)
+last_updated: "2026-03-09T17:26:00.138Z"
 last_activity: 2026-03-09 — Phase 3 Plan 02 (data and logic layer) complete
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 20
-  completed_plans: 16
+  completed_plans: 17
   percent: 50
 ---
 
@@ -67,6 +67,7 @@ Progress: [████████░░] ~50%
 | Phase 03-daily-loop-closure P03-03 | 2 | 1 tasks | 2 files |
 | Phase 03-daily-loop-closure P03-05 | 45min | 2 tasks | 5 files |
 | Phase 04-history-and-journal P02 | 3 | 2 tasks | 2 files |
+| Phase 04-history-and-journal P04-01 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -122,6 +123,9 @@ Recent decisions affecting current work:
 - [Phase 04-history-and-journal]: editEntry always sends updated_at in Supabase update payload — no DB trigger on UPDATE for journal_entries
 - [Phase 04-history-and-journal]: completionMap uses wins → check_ins join direction — wins has win_date, check_ins does not
 - [Phase 04-history-and-journal]: addEntry is non-optimistic: waits for .select().single() before adding row to entries state
+- [Phase 04-history-and-journal]: Wave 0 stubs intentionally RED — module-not-found for components, assertion failures for JournalPage placeholder
+- [Phase 04-history-and-journal]: Heatmap test uses data-testid='heatmap-cell' for cell count + className check for bg-foreground/bg-border
+- [Phase 04-history-and-journal]: editEntry test asserts updated_at included in update payload — no DB trigger, client must set it
 
 ### Pending Todos
 
@@ -134,6 +138,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T17:25:07.829Z
-Stopped at: Completed 04-02-PLAN.md (useJournal + useHistory hooks)
+Last session: 2026-03-09T17:26:00.136Z
+Stopped at: Completed 04-01-PLAN.md (Wave 0 test stubs for history and journal)
 Resume file: None
