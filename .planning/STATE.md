@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 04-05-PLAN.md (visual acceptance — Phase 4 complete, v1.0 milestone reached)
-last_updated: "2026-03-09T18:01:33.686Z"
-last_activity: 2026-03-10 — Phase 4 Plan 05 (visual acceptance) complete — all 20 plans done
+status: in_progress
+stopped_at: Completed 05-01-PLAN.md (Wave 0 TDD stubs for Phase 5 UX Polish)
+last_updated: "2026-03-10T03:09:00Z"
+last_activity: 2026-03-10 — Phase 5 Plan 01 (Wave 0 RED test stubs) complete
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 4
-  total_plans: 20
-  completed_plans: 20
-  percent: 100
+  total_plans: 25
+  completed_plans: 21
+  percent: 84
 ---
 
 # Project State
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** The daily discipline loop: declare wins in the morning, complete them through the day, evaluate honestly at night.
-**Current focus:** COMPLETE — v1.0 milestone reached
+**Current focus:** Phase 5 — UX Polish
 
 ## Current Position
 
-Phase: 4 of 4 (History and Journal) — COMPLETE
-Plan: 5 of 5 — All plans complete
-Status: Complete — v1.0 milestone achieved
+Phase: 5 of 5 (UX Polish) — IN PROGRESS
+Plan: 1 of 5 — Plan 01 complete (Wave 0 stubs)
+Status: In Progress — executing Phase 5
 
-Last activity: 2026-03-10 — Phase 4 Plan 05 (visual acceptance) complete — all 20 plans done
+Last activity: 2026-03-10 — Phase 5 Plan 01 (Wave 0 RED test stubs) complete
 
-Progress: [██████████] 100%
+Progress: [████████░░] 84%
 
 ## Performance Metrics
 
@@ -135,6 +135,14 @@ Recent decisions affecting current work:
 - [Phase 04-05]: Stoic journal aesthetic: mono date stamp, large bold title, prose body, subtle icon controls — matches Nothing Phone monochrome design language
 - [Phase 04-05]: JournalEntryForm bare inputs: bottom-border-only title, borderless textarea, underlined Save/Cancel — matches win-logging style
 - [Phase 04-05]: Daily-suppression flags (rollForwardOffered, morningDismissed, eveningDismissed) persisted to localStorage keyed by YYYY-MM-DD — in-memory Zustand state reset on refresh
+- [Phase 05-01]: Wave 0 stubs use module-not-found as RED state for new components — consistent with Phase 3 and 4 Wave 0 approach
+- [Phase 05-01]: useStreak journalStreak tests use mockReturnValueOnce chaining — first call wins streak query, second call journal_entries query
+- [Phase 05-01]: DayStrip uses data-completed attribute for accessibility and test queryability
+- [Phase 05-01]: Header dual-streak uses title attribute as test query anchor (getByTitle) — avoids tight coupling to text content
+
+### Roadmap Evolution
+
+- Phase 5 added: UX Polish
 
 ### Pending Todos
 
@@ -147,6 +155,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T01:47:41Z
-Stopped at: Completed 04-05-PLAN.md (visual acceptance — Phase 4 complete, v1.0 milestone reached)
+Last session: 2026-03-10T03:09:00Z
+Stopped at: Completed 05-01-PLAN.md (Wave 0 TDD stubs — Phase 5 UX Polish started)
 Resume file: None
