@@ -1,15 +1,21 @@
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalDateString } from '@/lib/utils/date';
 import { useWins } from '@/hooks/useWins';
+import { useCheckin } from '@/hooks/useCheckin';
 import { useUIStore } from '@/stores/uiStore';
 import WinList from '@/components/wins/WinList';
 import WinInputOverlay from '@/components/wins/WinInputOverlay';
 import RollForwardPrompt from '@/components/wins/RollForwardPrompt';
 import TotalFocusTime from '@/components/wins/TotalFocusTime';
+import MorningPrompt from '@/components/checkin/MorningPrompt';
+import EveningPrompt from '@/components/checkin/EveningPrompt';
+import CheckInOverlay from '@/components/checkin/CheckInOverlay';
 
 export default function TodayPage() {
   const today = getLocalDateString();
+  const currentHour = new Date().getHours();
 
   const {
     wins,
@@ -31,9 +37,50 @@ export default function TodayPage() {
     openInputOverlay,
     closeInputOverlay,
     markRollForwardOffered,
+    checkinOverlayOpen,
+    morningDismissedDate,
+    eveningDismissedDate,
+    openCheckinOverlay,
+    closeCheckinOverlay,
+    dismissMorningPrompt,
+    dismissEveningPrompt,
   } = useUIStore();
 
+  const { hasCheckedInToday } = useCheckin();
+  const [checkedInToday, setCheckedInToday] = useState(false);
+
+  // After wins load, check if user has already done check-in today
+  useEffect(() => {
+    if (loading || wins.length === 0) return;
+    let cancelled = false;
+    const winIds = wins.map((w) => w.id);
+    hasCheckedInToday(winIds).then((result) => {
+      if (!cancelled) setCheckedInToday(result);
+    });
+    return () => { cancelled = true; };
+  }, [loading, wins]);
+
+  // Re-check checkedInToday when checkinOverlayOpen closes (after a check-in completes)
+  useEffect(() => {
+    if (checkinOverlayOpen || loading || wins.length === 0) return;
+    const winIds = wins.map((w) => w.id);
+    hasCheckedInToday(winIds).then((result) => setCheckedInToday(result));
+  }, [checkinOverlayOpen]);
+
   const showRollForward = yesterdayWins.length > 0 && !rollForwardOffered;
+
+  // Time-gated prompt visibility
+  // Always guard on !loading to prevent false positives during fetch
+  const showMorning = !loading
+    && currentHour >= 9
+    && wins.length === 0
+    && morningDismissedDate !== today;
+
+  const showEvening = !loading
+    && currentHour >= 21
+    && !checkedInToday
+    && wins.length > 0
+    && eveningDismissedDate !== today;
 
   return (
     <div className="flex flex-col min-h-[calc(100svh-7rem)] p-6 gap-4">
@@ -59,7 +106,7 @@ export default function TodayPage() {
         <TotalFocusTime wins={wins} />
       </div>
 
-      {/* Loading / error states */}
+      {/* Loading / error / win list */}
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.p
@@ -96,8 +143,8 @@ export default function TodayPage() {
         )}
       </AnimatePresence>
 
-      {/* Log a win button */}
-      <div className="flex justify-center pt-2">
+      {/* Action buttons */}
+      <div className="flex justify-center gap-3 pt-2">
         <button
           onClick={openInputOverlay}
           className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
@@ -106,6 +153,15 @@ export default function TodayPage() {
           <Plus size={16} />
           Log a win
         </button>
+        {wins.length > 0 && !checkedInToday && (
+          <button
+            onClick={openCheckinOverlay}
+            className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            aria-label="Start check-in"
+          >
+            Check in
+          </button>
+        )}
       </div>
 
       {/* Win input overlay */}
@@ -116,6 +172,36 @@ export default function TodayPage() {
           closeInputOverlay();
         }}
         onClose={closeInputOverlay}
+      />
+
+      {/* Check-in overlay */}
+      <CheckInOverlay
+        open={checkinOverlayOpen}
+        wins={wins}
+        onComplete={() => {
+          // hasCheckedInToday re-check happens via the useEffect watching checkinOverlayOpen
+        }}
+        onClose={closeCheckinOverlay}
+      />
+
+      {/* Morning prompt — 9am+ if no wins and not dismissed today */}
+      <MorningPrompt
+        show={showMorning}
+        onLogWin={() => {
+          dismissMorningPrompt();  // dismiss first — prevent overlap
+          openInputOverlay();
+        }}
+        onDismiss={dismissMorningPrompt}
+      />
+
+      {/* Evening prompt — 9pm+ if no check-in and not dismissed today */}
+      <EveningPrompt
+        show={showEvening}
+        onStartCheckin={() => {
+          dismissEveningPrompt();   // dismiss first — prevent overlap
+          openCheckinOverlay();
+        }}
+        onDismiss={dismissEveningPrompt}
       />
     </div>
   );
