@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useJournal } from '@/hooks/useJournal'
+import { useUIStore } from '@/stores/uiStore'
 import JournalEntryCard from '@/components/journal/JournalEntryCard'
 import JournalEditorOverlay from '@/components/journal/JournalEditorOverlay'
 
 export default function JournalPage() {
   const { entries, loading, addEntry, editEntry, deleteEntry } = useJournal()
+  const refreshStreak = useUIStore((s) => s.refreshStreak)
   const [showNewForm, setShowNewForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
@@ -17,6 +19,7 @@ export default function JournalPage() {
       await editEntry(editingId, { title, body })
     } else {
       await addEntry({ title, body })
+      refreshStreak()
     }
   }
 
@@ -28,7 +31,7 @@ export default function JournalPage() {
   if (loading) return null
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
+    <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Journal</h1>
         {!overlayOpen && (

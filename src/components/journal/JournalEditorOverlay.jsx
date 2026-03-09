@@ -93,8 +93,8 @@ export default function JournalEditorOverlay({
             </button>
           </div>
 
-          {/* Editor form */}
-          <form onSubmit={handleSave} className="flex-1 flex flex-col p-6 max-w-[600px] mx-auto w-full">
+          {/* Editor form — full-screen writing mode */}
+          <form onSubmit={handleSave} className="flex-1 flex flex-col px-12 py-10 sm:px-20 lg:px-32 w-full">
             <input
               ref={titleRef}
               type="text"
@@ -103,17 +103,16 @@ export default function JournalEditorOverlay({
               value={title}
               autoFocus
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-transparent text-2xl font-bold outline-none placeholder:text-muted-foreground mb-4 border-b border-border pb-2"
+              className="w-full bg-transparent text-3xl font-bold outline-none placeholder:text-muted-foreground/40 mb-6 border-b border-border/40 pb-3"
             />
             <textarea
               aria-label="body"
-              rows={12}
               placeholder="Write your entry..."
               value={body}
               onChange={handleBodyChange}
-              className="flex-1 w-full bg-transparent text-base leading-relaxed outline-none resize-none placeholder:text-muted-foreground"
+              className="flex-1 w-full bg-transparent text-lg leading-relaxed outline-none resize-none placeholder:text-muted-foreground/30"
             />
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-6 mt-8 pb-4">
               <button
                 type="submit"
                 disabled={!title.trim()}

@@ -5,20 +5,17 @@ import { getLocalDateString } from '@/lib/utils/date';
 const USER_ID = import.meta.env.VITE_USER_ID;
 
 /**
- * useStreak()
+ * useStreak(refreshKey?)
  *
- * Computes the current streak: consecutive days (back from today) where
- * at least one win has a check_in row with completed=true.
- * Also computes journalStreak: consecutive days with at least one journal entry.
+ * Computes win streak, journal streak, and combined streak (both required per day).
+ * Pass refreshKey from uiStore to force a refetch after relevant user actions.
  *
- * Uses check_ins joined to wins for win_date — check_ins has no win_date column.
- * Uses getLocalDateString() throughout — never toISOString().slice(0,10).
- *
- * @returns {{ streak: number, journalStreak: number, loading: boolean }}
+ * @returns {{ streak, journalStreak, combinedStreak, loading }}
  */
-export function useStreak() {
+export function useStreak(refreshKey = 0) {
   const [streak, setStreak] = useState(0);
   const [journalStreak, setJournalStreak] = useState(0);
+  const [combinedStreak, setCombinedStreak] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,26 +32,23 @@ export function useStreak() {
 
       if (cancelled) return;
 
-      if (error || !data) {
-        setStreak(0);
-      } else {
-        // Build a Set of distinct dates that have at least one completed win
-        const completedDates = new Set(
+      let completedDates = new Set();
+      if (!error && data) {
+        completedDates = new Set(
           data
             .map((row) => row.wins?.win_date)
             .filter(Boolean)
         );
 
-        // Count consecutive days backward from today
         let count = 0;
         let cursor = new Date();
-
         while (completedDates.has(getLocalDateString(cursor))) {
           count++;
           cursor = new Date(cursor.getTime() - 86400000);
         }
-
         setStreak(count);
+      } else {
+        setStreak(0);
       }
 
       const { data: journalData } = await supabase
@@ -82,12 +76,24 @@ export function useStreak() {
       }
       setJournalStreak(jCount);
 
+      // Combined streak: consecutive days where BOTH conditions are met
+      const combinedDates = new Set(
+        [...completedDates].filter(d => journalDates.has(d))
+      );
+      let cCount = 0;
+      let cCursor = new Date();
+      while (combinedDates.has(getLocalDateString(cCursor))) {
+        cCount++;
+        cCursor = new Date(cCursor.getTime() - 86400000);
+      }
+      setCombinedStreak(cCount);
+
       setLoading(false);
     }
 
     fetchStreak();
     return () => { cancelled = true; };
-  }, []);
+  }, [refreshKey]);
 
-  return { streak, journalStreak, loading };
+  return { streak, journalStreak, combinedStreak, loading };
 }
