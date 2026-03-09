@@ -64,7 +64,7 @@ completed: 2026-03-09
 - **Duration:** ~5 min
 - **Started:** 2026-03-09T21:10:00Z
 - **Completed:** 2026-03-09T21:15:00Z
-- **Tasks:** 2 of 3 automated tasks (Task 3 is human checkpoint)
+- **Tasks:** 3 of 3 (2 auto + 1 human-action checkpoint — all complete)
 - **Files modified:** 5
 
 ## Accomplishments
@@ -80,7 +80,7 @@ Each task was committed atomically:
 
 1. **Task 1: Create date utility and pass its tests** - `92087a6` (feat)
 2. **Task 2: Write Supabase migration SQL and client setup files** - `7ac7cc3` (feat)
-3. **Task 3: Apply Supabase migration and create .env.local** - awaiting human action (checkpoint)
+3. **Task 3: Apply Supabase migration and create .env.local** - human-action checkpoint (completed by user — migration applied in Supabase dashboard, .env.local configured with all 4 values)
 
 ## Files Created/Modified
 
@@ -107,21 +107,22 @@ None.
 
 ## User Setup Required
 
-Task 3 is a human-action checkpoint. Before feature development can begin, you must:
+User completed all required setup (confirmed via "done" signal):
 
-1. Get Supabase credentials: Project Settings -> API -> Project URL and anon public key
-2. Run the migration: SQL Editor -> paste `supabase/migrations/001_initial_schema.sql` -> Run
-3. Generate JWT: `SUPABASE_JWT_SECRET=<from-dashboard> node scripts/gen-jwt.mjs`
-4. Create `.env.local`: copy `.env.local.example`, fill in all four values
+1. Got Supabase credentials from Project Settings -> API
+2. Ran migration: SQL Editor -> pasted `supabase/migrations/001_initial_schema.sql` -> verified wins/check_ins/journal_entries tables appeared
+3. Generated JWT: `SUPABASE_JWT_SECRET=<from-dashboard> node scripts/gen-jwt.mjs`
+4. Created `.env.local` with all 4 values (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_USER_ID, VITE_USER_JWT)
 
-See Task 3 checkpoint instructions for full step-by-step details.
+`.env.local` is gitignored — never committed.
 
 ## Next Phase Readiness
 
 - Date utility ready for use across all feature phases (streak logic depends on getLocalDateString())
 - Supabase client ready for import once .env.local is configured
-- Schema ready to apply — no feature development should begin until Task 3 (migration + .env.local) is complete
+- Schema is live — feature development can begin immediately
 - Blockers from STATE.md resolved: RLS posture (Option B: hardcoded UUID + RLS USING auth.uid() = user_id) and timer_started_at column (included in schema for wall-clock recovery)
+- Plan 01-02 fully complete — all 3 tasks done
 
 ---
 *Phase: 01-foundation*
