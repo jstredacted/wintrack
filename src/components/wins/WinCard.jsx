@@ -51,7 +51,7 @@ export default function WinCard({
   }
 
   return (
-    <div className="border border-border rounded p-4 font-mono text-sm">
+    <div className="rounded p-4 font-mono text-sm">
       {/* Title row */}
       <div className="flex items-center justify-between gap-2">
         {isEditing ? (
@@ -71,7 +71,7 @@ export default function WinCard({
           onClick={handleEditStart}
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Pencil size={14} />
+          <Pencil size={18} />
         </button>
       </div>
 
@@ -89,14 +89,14 @@ export default function WinCard({
                 onClick={() => onPauseTimer?.(displaySeconds)}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Pause size={14} />
+                <Pause size={18} />
               </button>
               <button
                 aria-label="stop"
                 onClick={() => onStopTimer?.(displaySeconds)}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Square size={14} />
+                <Square size={18} />
               </button>
             </>
           ) : (
@@ -105,7 +105,7 @@ export default function WinCard({
               onClick={() => onStartTimer?.()}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Play size={14} />
+              <Play size={18} />
             </button>
           )}
 
@@ -114,7 +114,7 @@ export default function WinCard({
             onClick={() => onDelete?.()}
             className="text-muted-foreground hover:text-foreground transition-colors ml-1"
           >
-            <Trash2 size={14} />
+            <Trash2 size={18} />
           </button>
         </div>
       </div>
