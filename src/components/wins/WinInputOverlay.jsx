@@ -20,10 +20,10 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-label="Log a win"
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -32 }}
-          transition={{ duration: 0.22, ease: 'easeOut' }}
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          exit={{ y: '100%' }}
+          transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8"
           onAnimationComplete={() => inputRef.current?.focus()}
         >
