@@ -134,3 +134,47 @@ describe('useStreak', () => {
     expect(result.current.streak).toBe(1);
   });
 });
+
+describe('useStreak — journalStreak', () => {
+  it('returns journalStreak: 0 when there are no journal entries', async () => {
+    const { supabase } = await import('@/lib/supabase');
+    // First call: check_ins query (wins streak), second call: journal_entries query
+    supabase.from
+      .mockReturnValueOnce(buildStreakMock({ data: [], error: null }))
+      .mockReturnValueOnce(buildStreakMock({ data: [], error: null }));
+
+    const { result } = renderHook(() => useStreak());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.journalStreak).toBe(0);
+  });
+
+  it('returns journalStreak: 1 when today has at least one journal entry', async () => {
+    const { supabase } = await import('@/lib/supabase');
+    supabase.from
+      .mockReturnValueOnce(buildStreakMock({ data: [], error: null }))
+      .mockReturnValueOnce(buildStreakMock({
+        data: [{ created_at: new Date().toISOString() }],
+        error: null,
+      }));
+
+    const { result } = renderHook(() => useStreak());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.journalStreak).toBe(1);
+  });
+
+  it('does not double-count multiple entries on the same day', async () => {
+    const todayIso = new Date().toISOString();
+    const { supabase } = await import('@/lib/supabase');
+    supabase.from
+      .mockReturnValueOnce(buildStreakMock({ data: [], error: null }))
+      .mockReturnValueOnce(buildStreakMock({
+        data: [{ created_at: todayIso }, { created_at: todayIso }],
+        error: null,
+      }));
+
+    const { result } = renderHook(() => useStreak());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    // Two entries on same day = streak of 1, not 2
+    expect(result.current.journalStreak).toBe(1);
+  });
+});

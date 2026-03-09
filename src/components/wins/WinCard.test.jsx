@@ -96,4 +96,17 @@ describe('WinCard', () => {
     await user.click(deleteBtn);
     expect(onDelete).toHaveBeenCalled();
   });
+
+  it('renders without a card border class on the root element', () => {
+    const { container } = render(
+      <WinCard
+        win={defaultWin}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />
+    );
+    const root = container.firstChild;
+    // Phase 5 removes 'border border-border' from WinCard root div
+    expect(root.className).not.toContain('border-border');
+  });
 });
