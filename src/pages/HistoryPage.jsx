@@ -29,7 +29,7 @@ export default function HistoryPage() {
   if (loading) return null
 
   return (
-    <div className="flex flex-col min-h-[calc(100svh-7rem)] px-10 py-10">
+    <div className="flex flex-col min-h-svh px-16 py-12">
       {/* Header */}
       <div className="mb-10">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground/50 mb-3">
@@ -39,7 +39,7 @@ export default function HistoryPage() {
       </div>
 
       {/* Timeline strip — bleeds edge-to-edge for drama */}
-      <div className="mb-10 -mx-10 px-10 border-y border-border/30 py-4">
+      <div className="mb-10 -mx-16 px-16 border-y border-border/30 py-4">
         <DayStrip
           completionMap={completionMap}
           selectedDate={selectedDate}
