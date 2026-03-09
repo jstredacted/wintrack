@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation/01-03-PLAN.md
-last_updated: "2026-03-09T13:13:00.681Z"
+stopped_at: Completed 01-foundation/01-04-PLAN.md
+last_updated: "2026-03-09T13:13:31.198Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 4%
 *Updated after each plan completion*
 | Phase 01-foundation P01-02 | 525002min | 2 tasks | 5 files |
 | Phase 01-foundation P03 | 2 | 2 tasks | 9 files |
+| Phase 01-foundation P04 | 3 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,9 @@ Recent decisions affecting current work:
 - [Phase 01-02]: Supabase client uses accessToken pattern with static 10-year JWT — auth.* methods intentionally disabled
 - [Phase 01-03]: Import from 'react-router' not 'react-router-dom' — v7 consolidated packages
 - [Phase 01-03]: AppShell as layout route using Component: key with child routes rendered via Outlet
+- [Phase 01-04]: localStorage key 'wintrack-theme' is shared contract between inline script and useTheme hook
+- [Phase 01-04]: useTheme reads initial state from documentElement.classList (set by inline script), not localStorage — avoids re-read flash
+- [Phase 01-04]: matchMedia stub in test-setup.js fixes jsdom missing browser API for vi.spyOn compatibility
 
 ### Pending Todos
 
@@ -84,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T13:13:00.679Z
-Stopped at: Completed 01-foundation/01-03-PLAN.md
+Last session: 2026-03-09T13:13:31.196Z
+Stopped at: Completed 01-foundation/01-04-PLAN.md
 Resume file: None
