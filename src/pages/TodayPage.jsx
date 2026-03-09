@@ -95,7 +95,7 @@ export default function TodayPage() {
     && eveningDismissedDate !== today;
 
   return (
-    <div className="flex flex-col min-h-[calc(100svh-7rem)] px-10 py-10 gap-10">
+    <div className="flex flex-col min-h-svh px-16 py-12 gap-10">
 
       {/* Commanding greeting header */}
       <div>
@@ -165,7 +165,7 @@ export default function TodayPage() {
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-4 pb-2">
+      <div className="flex items-center gap-4 pb-2 mt-auto">
         <button
           onClick={openInputOverlay}
           className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
