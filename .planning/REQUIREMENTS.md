@@ -14,10 +14,10 @@
 
 ### Check-ins
 
-- [ ] **CHECKIN-01**: User can complete an evening check-in — binary yes/no per win with optional short reflection note
-- [ ] **CHECKIN-02**: App shows an in-app morning prompt at 9am if no wins have been logged yet for today
-- [ ] **CHECKIN-03**: App shows an in-app evening prompt at 9pm if the evening check-in has not been completed
-- [ ] **CHECKIN-04**: App sends browser push notifications at 9am and 9pm as reminders
+- [x] **CHECKIN-01**: User can complete an evening check-in — binary yes/no per win with optional short reflection note
+- [x] **CHECKIN-02**: App shows an in-app morning prompt at 9am if no wins have been logged yet for today
+- [x] **CHECKIN-03**: App shows an in-app evening prompt at 9pm if the evening check-in has not been completed
+- [x] **CHECKIN-04**: App sends browser push notifications at 9am and 9pm as reminders
 
 ### Time Tracking
 
@@ -33,7 +33,7 @@
 
 ### Streaks & History
 
-- [ ] **STREAK-01**: App displays a streak counter for consecutive days where at least one win was marked complete
+- [x] **STREAK-01**: App displays a streak counter for consecutive days where at least one win was marked complete
 - [ ] **HISTORY-01**: User can browse past days' wins and their completion status
 - [ ] **HISTORY-02**: App shows a visual calendar / heatmap of days with completed wins
 
@@ -85,17 +85,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WIN-02 | Phase 2 | Complete |
 | WIN-03 | Phase 2 | Complete |
 | WIN-04 | Phase 2 | Complete |
-| CHECKIN-01 | Phase 3 | Pending |
-| CHECKIN-02 | Phase 3 | Pending |
-| CHECKIN-03 | Phase 3 | Pending |
-| CHECKIN-04 | Phase 3 | Pending |
+| CHECKIN-01 | Phase 3 | Complete |
+| CHECKIN-02 | Phase 3 | Complete |
+| CHECKIN-03 | Phase 3 | Complete |
+| CHECKIN-04 | Phase 3 | Complete |
 | TIMER-01 | Phase 2 | Complete |
 | TIMER-02 | Phase 2 | Complete |
 | TIMER-03 | Phase 2 | Complete |
 | JOURNAL-01 | Phase 4 | Pending |
 | JOURNAL-02 | Phase 4 | Pending |
 | JOURNAL-03 | Phase 4 | Pending |
-| STREAK-01 | Phase 3 | Pending |
+| STREAK-01 | Phase 3 | Complete |
 | HISTORY-01 | Phase 4 | Pending |
 | HISTORY-02 | Phase 4 | Pending |
 | SHELL-01 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-04) |
