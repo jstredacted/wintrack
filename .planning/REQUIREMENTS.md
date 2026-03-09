@@ -98,8 +98,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STREAK-01 | Phase 3 | Pending |
 | HISTORY-01 | Phase 4 | Pending |
 | HISTORY-02 | Phase 4 | Pending |
-| SHELL-01 | Phase 1 | Pending |
-| SHELL-02 | Phase 1 | Pending |
+| SHELL-01 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-04) |
+| SHELL-02 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-02) |
 
 **Coverage:**
 - v1 requirements: 19 total
@@ -108,4 +108,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 — traceability filled during roadmap creation*
+*Last updated: 2026-03-09 — SHELL-01 and SHELL-02 test stubs created in 01-01*

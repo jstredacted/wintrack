@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Vitest setup and test stubs (Wave 0)
+- [x] 01-01-PLAN.md — Vitest setup and test stubs (Wave 0)
 - [ ] 01-02-PLAN.md — Supabase schema, JWT script, client, and date utility
 - [ ] 01-03-PLAN.md — React Router app shell with routing, layout, and pages
 - [ ] 01-04-PLAN.md — Design system: Geist Mono, dot grid, dark mode toggle
@@ -78,7 +78,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/5 | Not started | - |
+| 1. Foundation | 1/5 | In progress | - |
 | 2. Win Logging & Focus Tracking | 0/TBD | Not started | - |
 | 3. Daily Loop Closure | 0/TBD | Not started | - |
 | 4. History & Journal | 0/TBD | Not started | - |
