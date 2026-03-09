@@ -4,22 +4,20 @@ import userEvent from '@testing-library/user-event';
 import DayStrip from './DayStrip';
 import { getLocalDateString } from '@/lib/utils/date';
 
-// Wave 0 stub — fails with module-not-found until plan 05-05 creates DayStrip.jsx
-
 const today = getLocalDateString(new Date());
 const yesterday = getLocalDateString(new Date(Date.now() - 86400000));
 
 describe('DayStrip', () => {
   it('renders N day cells for N days', () => {
     render(<DayStrip completionMap={{}} selectedDate={today} onSelectDate={vi.fn()} days={7} />);
-    const cells = screen.getAllByRole('button');
+    // Use data-testid to count only day cells, not arrow buttons
+    const cells = screen.getAllByTestId('day-cell');
     expect(cells).toHaveLength(7);
   });
 
   it('shows a checkmark indicator for completed days', () => {
     const completionMap = { [yesterday]: true };
     render(<DayStrip completionMap={completionMap} selectedDate={today} onSelectDate={vi.fn()} days={7} />);
-    // The completed day cell should have a check indicator (aria-label or svg title)
     const completedCell = screen.getByRole('button', { name: new RegExp(yesterday) });
     expect(completedCell).toHaveAttribute('data-completed', 'true');
   });
@@ -28,7 +26,7 @@ describe('DayStrip', () => {
     const user = userEvent.setup();
     const onSelectDate = vi.fn();
     render(<DayStrip completionMap={{}} selectedDate={today} onSelectDate={onSelectDate} days={7} />);
-    const firstCell = screen.getAllByRole('button')[0];
+    const firstCell = screen.getAllByTestId('day-cell')[0];
     await user.click(firstCell);
     expect(onSelectDate).toHaveBeenCalledWith(expect.any(String));
   });
