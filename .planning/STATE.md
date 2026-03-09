@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-01-PLAN.md (Wave 0 test stubs)
-last_updated: "2026-03-09T16:16:02.531Z"
+stopped_at: Completed 03-02-PLAN.md (data and logic layer)
+last_updated: "2026-03-09T16:17:48Z"
 last_activity: 2026-03-09 — Phase 2 (Win Logging & Focus Tracking) accepted
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 11
+  completed_plans: 12
   percent: 50
 ---
 
@@ -26,10 +26,10 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 3 of 4 (Daily Loop Closure)
-Plan: 0 of TBD — ready to plan
-Status: Ready to plan
+Plan: 2 of 5 — Wave 1 complete, ready for Wave 2
+Status: In progress
 
-Last activity: 2026-03-09 — Phase 2 (Win Logging & Focus Tracking) accepted
+Last activity: 2026-03-09 — Phase 3 Plan 02 (data and logic layer) complete
 
 Progress: [████████░░] ~50%
 
@@ -62,6 +62,7 @@ Progress: [████████░░] ~50%
 | Phase 02-win-logging-focus-tracking P02-03 | 3min | 2 tasks | 4 files |
 | Phase 02-win-logging-focus-tracking P02-05 | 25 | 3 tasks | 3 files |
 | Phase 03-daily-loop-closure P03-01 | 4 | 2 tasks | 6 files |
+| Phase 03-daily-loop-closure P03-02 | 6min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,9 @@ Recent decisions affecting current work:
 - [Phase 03-01]: Wave 0 stubs intentionally RED — module-not-found is correct failure mode until Wave 1-2 source files are created
 - [Phase 03-01]: useStreak query shape: check_ins joined with wins via win_id FK, returns { wins: { win_date } } — test mocks mirror this shape
 - [Phase 03-01]: en-CA date pattern in tests: Intl.DateTimeFormat('en-CA') used directly in test fixtures, no .toISOString().slice(0,10)
+- [Phase 03-02]: Thenable chainable Supabase mock builder for vitest — mockResolvedValue on .eq() breaks chained .eq().eq() since first call returns a Promise; solution is a mock object with then/catch + all query methods as mockReturnThis()
+- [Phase 03-02]: useStreak timezone test uses en-CA formatted date as fixture — mocking Intl.DateTimeFormat constructor to return same date for all inputs causes infinite while loop in hook
+- [Phase 03-02]: uiStore extended with create()(fn) single-call pattern preserved — Zustand v5 create()(fn) double-parens only needed with middleware; existing file uses create((set) => ...) which is valid
 
 ### Pending Todos
 
@@ -119,6 +123,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T16:16:02.529Z
-Stopped at: Completed 03-01-PLAN.md (Wave 0 test stubs)
-Resume file: None
+Last session: 2026-03-09T16:17:48Z
+Stopped at: Completed 03-02-PLAN.md (data and logic layer)
+Resume file: .planning/phases/03-daily-loop-closure/03-03-PLAN.md
