@@ -130,6 +130,16 @@
     }
 }
 
+/* Wire up tw-animate-css animation utilities (variables exist but @utility is missing from dist) */
+@utility animate-in {
+  animation: var(--animate-in);
+}
+
+@utility animate-out {
+  animation: var(--animate-out);
+  animation-fill-mode: forwards;
+}
+
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
 .dot-grid {
   background-image: radial-gradient(circle, oklch(0.5 0 0 / 0.06) 1px, transparent 1px);
