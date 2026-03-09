@@ -21,9 +21,9 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-label="Log a win"
-          initial={{ y: '100%' }}
+          initial={{ y: '100vh' }}
           animate={{ y: 0 }}
-          exit={{ y: '100%' }}
+          exit={{ y: '100vh' }}
           transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
           style={{ willChange: 'transform' }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8"
