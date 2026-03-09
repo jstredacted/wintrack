@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation/01-02-PLAN.md
-last_updated: "2026-03-09T13:26:32.982Z"
+stopped_at: Completed 01-foundation/01-05-PLAN.md
+last_updated: "2026-03-09T13:37:31.750Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
   percent: 4
 ---
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 4%
 | Phase 01-foundation P03 | 2 | 2 tasks | 9 files |
 | Phase 01-foundation P04 | 3 | 2 tasks | 6 files |
 | Phase 01-foundation P02 | 30 | 3 tasks | 6 files |
+| Phase 01-foundation P05 | 15 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,9 @@ Recent decisions affecting current work:
 - [Phase 01-02]: win_date stored as text (YYYY-MM-DD) set by client — avoids timezone math in SQL streak queries
 - [Phase 01-02]: Supabase client uses accessToken pattern with static 10-year JWT — auth.* methods intentionally disabled
 - [Phase 01-02]: getLocalDateString() uses Intl.DateTimeFormat en-CA not .toISOString().slice(0,10) — local timezone correctness
+- [Phase 01-05]: Dot grid moved from body to .dot-grid utility class on AppShell root — AppShell's bg-background painted over body background-image
+- [Phase 01-05]: Flash prevention script sets document.documentElement.style.backgroundColor directly so dark bg renders before Vite injects CSS modules
+- [Phase 01-05]: --font-mono added to @theme inline pointing to Geist Mono Variable — font-mono Tailwind class now resolves to Geist Mono, not browser default mono stack
 
 ### Pending Todos
 
@@ -92,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T13:26:32.980Z
-Stopped at: Completed 01-foundation/01-02-PLAN.md
+Last session: 2026-03-09T13:37:31.748Z
+Stopped at: Completed 01-foundation/01-05-PLAN.md
 Resume file: None

@@ -12,7 +12,7 @@ wintrack ships the daily discipline loop in four phases. Phase 1 lays the data f
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Supabase schema, RLS, theme system, and date utilities — infrastructure every phase depends on
+- [x] **Phase 1: Foundation** - Supabase schema, RLS, theme system, and date utilities — infrastructure every phase depends on (completed 2026-03-09)
 - [ ] **Phase 2: Win Logging & Focus Tracking** - Full-screen Typeform-style win input, win management, and per-win stopwatch
 - [ ] **Phase 3: Daily Loop Closure** - Evening check-in, in-app prompts, and streak counter
 - [ ] **Phase 4: History & Journal** - Journal entries, past-day browsing, and visual completion history
@@ -78,7 +78,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 4/5 | In Progress|  |
+| 1. Foundation | 5/5 | Complete   | 2026-03-09 |
 | 2. Win Logging & Focus Tracking | 0/TBD | Not started | - |
 | 3. Daily Loop Closure | 0/TBD | Not started | - |
 | 4. History & Journal | 0/TBD | Not started | - |
