@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in-progress
-stopped_at: Completed 01-foundation/01-01-PLAN.md
-last_updated: "2026-03-09T13:08:00Z"
+status: executing
+stopped_at: "Checkpoint: 01-02 Task 3 — awaiting Supabase migration and .env.local setup"
+last_updated: "2026-03-09T13:12:32.372Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 6
-  completed_plans: 1
+  total_plans: 5
+  completed_plans: 2
   percent: 4
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 4%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-foundation P01-02 | 525002min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [Pre-build]: CHECKIN-04 push notifications are a UI stub in v1; actual Web Push / service worker delivery is v2
 - [01-01]: jsdom chosen as vitest environment (not happy-dom) per VALIDATION.md spec
 - [01-01]: Dynamic import() inside it() blocks — Vite resolves statically so module-not-found appears at file evaluation time; accepted as equivalent clean failure behavior
+- [Phase 01-02]: win_date stored as text (YYYY-MM-DD) set by client — avoids timezone math in SQL streak queries
+- [Phase 01-02]: RLS uses separate per-operation policies (not FOR ALL) for correct WITH CHECK semantics
+- [Phase 01-02]: Supabase client uses accessToken pattern with static 10-year JWT — auth.* methods intentionally disabled
 
 ### Pending Todos
 
@@ -77,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T13:08:00Z
-Stopped at: Completed 01-foundation/01-01-PLAN.md
-Resume file: .planning/phases/01-foundation/01-02-PLAN.md
+Last session: 2026-03-09T13:12:32.370Z
+Stopped at: Checkpoint: 01-02 Task 3 — awaiting Supabase migration and .env.local setup
+Resume file: None

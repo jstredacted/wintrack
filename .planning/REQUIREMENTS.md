@@ -39,8 +39,8 @@
 
 ### App Shell
 
-- [ ] **SHELL-01**: User can toggle between dark and light mode
-- [ ] **SHELL-02**: App uses the Nothing Phone Glyph Matrix design language — dot grid patterns, monospaced type, structured negative space, strictly black and white palette
+- [x] **SHELL-01**: User can toggle between dark and light mode
+- [x] **SHELL-02**: App uses the Nothing Phone Glyph Matrix design language — dot grid patterns, monospaced type, structured negative space, strictly black and white palette
 
 ## v2 Requirements
 

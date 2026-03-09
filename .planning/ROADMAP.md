@@ -78,7 +78,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 1/5 | In progress | - |
+| 1. Foundation | 2/5 | In Progress|  |
 | 2. Win Logging & Focus Tracking | 0/TBD | Not started | - |
 | 3. Daily Loop Closure | 0/TBD | Not started | - |
 | 4. History & Journal | 0/TBD | Not started | - |
