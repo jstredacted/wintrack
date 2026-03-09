@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Supabase schema, RLS, theme system, and date utilities — infrastructure every phase depends on (completed 2026-03-09)
 - [x] **Phase 2: Win Logging & Focus Tracking** - Full-screen Typeform-style win input, win management, and per-win stopwatch (completed 2026-03-09)
 - [x] **Phase 3: Daily Loop Closure** - Evening check-in, in-app prompts, and streak counter (completed 2026-03-09)
-- [ ] **Phase 4: History & Journal** - Journal entries, past-day browsing, and visual completion history
+- [x] **Phase 4: History & Journal** - Journal entries, past-day browsing, and visual completion history (completed 2026-03-10)
 
 ## Phase Details
 
@@ -68,11 +68,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Wave 0 test stubs: all 6 test files for CHECKIN-01 through STREAK-01
-- [ ] 03-02-PLAN.md — useStreak, useCheckin, notifications.js, uiStore extension (Wave 1)
-- [ ] 03-03-PLAN.md — CheckInOverlay component (Wave 2, parallel with 03-04)
-- [ ] 03-04-PLAN.md — MorningPrompt + EveningPrompt components (Wave 2, parallel with 03-03)
-- [ ] 03-05-PLAN.md — Wire Header + TodayPage + visual acceptance checkpoint (Wave 3)
+- [x] 03-01-PLAN.md — Wave 0 test stubs: all 6 test files for CHECKIN-01 through STREAK-01
+- [x] 03-02-PLAN.md — useStreak, useCheckin, notifications.js, uiStore extension (Wave 1)
+- [x] 03-03-PLAN.md — CheckInOverlay component (Wave 2, parallel with 03-04)
+- [x] 03-04-PLAN.md — MorningPrompt + EveningPrompt components (Wave 2, parallel with 03-03)
+- [x] 03-05-PLAN.md — Wire Header + TodayPage + visual acceptance checkpoint (Wave 3)
 
 ### Phase 4: History & Journal
 **Goal**: Users can reflect on their discipline over time — browsing past wins, reviewing completion patterns, and writing daily journal entries
@@ -86,11 +86,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Wave 0 test stubs: all 7 test files for JOURNAL-01 through HISTORY-02
-- [ ] 04-02-PLAN.md — useJournal hook + useHistory hook (Wave 1)
-- [ ] 04-03-PLAN.md — Journal components + JournalPage (Wave 2, parallel with 04-04)
-- [ ] 04-04-PLAN.md — History components + HistoryPage (Wave 2, parallel with 04-03)
-- [ ] 04-05-PLAN.md — Full suite gate + visual acceptance checkpoint (Wave 3)
+- [x] 04-01-PLAN.md — Wave 0 test stubs: all 7 test files for JOURNAL-01 through HISTORY-02
+- [x] 04-02-PLAN.md — useJournal hook + useHistory hook (Wave 1)
+- [x] 04-03-PLAN.md — Journal components + JournalPage (Wave 2, parallel with 04-04)
+- [x] 04-04-PLAN.md — History components + HistoryPage (Wave 2, parallel with 04-03)
+- [x] 04-05-PLAN.md — Full suite gate + visual acceptance checkpoint (Wave 3)
 
 ## Progress
 
@@ -102,4 +102,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation | 5/5 | Complete    | 2026-03-09 |
 | 2. Win Logging & Focus Tracking | 5/5 | Complete   | 2026-03-09 |
 | 3. Daily Loop Closure | 5/5 | Complete   | 2026-03-09 |
-| 4. History & Journal | 4/5 | In Progress|  |
+| 4. History & Journal | 5/5 | Complete   | 2026-03-10 |
