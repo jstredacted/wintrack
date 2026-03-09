@@ -50,7 +50,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
         }}
       >
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          What will be your wins today?
+          What's the grind for today?
         </p>
         <input
           ref={inputRef}
