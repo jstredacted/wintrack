@@ -9,8 +9,13 @@
       (function () {
         try {
           var stored = localStorage.getItem('wintrack-theme');
-          if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
             document.documentElement.classList.add('dark');
+            /* Set background-color directly so no white flash before CSS loads */
+            document.documentElement.style.backgroundColor = 'oklch(0.145 0 0)';
+          } else {
+            document.documentElement.style.backgroundColor = 'oklch(1 0 0)';
           }
         } catch (e) {}
       })();
