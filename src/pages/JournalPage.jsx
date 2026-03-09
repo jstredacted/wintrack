@@ -22,13 +22,13 @@ export default function JournalPage() {
   if (loading) return null
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="font-mono text-lg">Journal</h1>
+    <div className="p-6 max-w-xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Journal</h1>
         {!showNewForm && !editingId && (
           <button
             onClick={() => setShowNewForm(true)}
-            className="font-mono text-sm border border-border px-3 py-1 rounded"
+            className="font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors border-b border-muted-foreground pb-px"
           >
             New Entry
           </button>
@@ -36,16 +36,21 @@ export default function JournalPage() {
       </div>
 
       {showNewForm && (
-        <div className="mb-4 border border-border rounded p-3">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15 }}
+          className="border-b border-border mb-2"
+        >
           <JournalEntryForm
             onSubmit={handleCreate}
             onCancel={() => setShowNewForm(false)}
           />
-        </div>
+        </motion.div>
       )}
 
       {entries.length === 0 && !showNewForm ? (
-        <p className="font-mono text-sm text-muted-foreground">No entries yet</p>
+        <p className="font-mono text-xs text-muted-foreground">No entries yet</p>
       ) : (
         <AnimatePresence>
           {entries.map(entry => (
@@ -57,14 +62,12 @@ export default function JournalPage() {
               transition={{ duration: 0.15 }}
             >
               {editingId === entry.id ? (
-                <div className="border border-border rounded p-3 mb-2">
-                  <JournalEntryForm
-                    initialTitle={entry.title}
-                    initialBody={entry.body}
-                    onSubmit={(fields) => handleEdit(entry.id, fields)}
-                    onCancel={() => setEditingId(null)}
-                  />
-                </div>
+                <JournalEntryForm
+                  initialTitle={entry.title}
+                  initialBody={entry.body}
+                  onSubmit={(fields) => handleEdit(entry.id, fields)}
+                  onCancel={() => setEditingId(null)}
+                />
               ) : (
                 <JournalEntryCard
                   entry={entry}

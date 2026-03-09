@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function JournalEntryForm({
   initialTitle = '',
@@ -8,6 +8,11 @@ export default function JournalEntryForm({
 }) {
   const [title, setTitle] = useState(initialTitle)
   const [body, setBody] = useState(initialBody)
+  const titleRef = useRef(null)
+
+  useEffect(() => {
+    titleRef.current?.focus()
+  }, [])
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -15,33 +20,34 @@ export default function JournalEntryForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="py-4">
       <input
+        ref={titleRef}
         type="text"
         placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="font-mono bg-transparent border-b border-border outline-none w-full mb-3"
+        className="w-full bg-transparent text-2xl font-bold outline-none placeholder:text-muted-foreground mb-4 border-b border-border pb-2"
       />
       <textarea
-        rows={5}
+        rows={8}
         placeholder="Write your entry..."
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        className="font-mono bg-transparent border border-border rounded p-2 text-sm resize-none outline-none w-full"
+        className="w-full bg-transparent text-base leading-relaxed outline-none resize-none placeholder:text-muted-foreground"
       />
-      <div className="flex gap-2 mt-2">
+      <div className="flex gap-4 mt-6">
         <button
           type="submit"
           disabled={!title.trim()}
-          className="font-mono text-sm border border-border px-3 py-1 rounded disabled:opacity-40"
+          className="font-mono text-xs uppercase tracking-widest text-foreground disabled:opacity-30 border-b border-foreground pb-px disabled:border-muted-foreground"
         >
           Save
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="font-mono text-sm px-3 py-1"
+          className="font-mono text-xs uppercase tracking-widest text-muted-foreground"
         >
           Cancel
         </button>
