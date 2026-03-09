@@ -50,7 +50,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
         }}
       >
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          What's your intention today?
+          What will be your wins today?
         </p>
         <input
           ref={inputRef}

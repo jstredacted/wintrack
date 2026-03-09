@@ -47,7 +47,7 @@ export default function TodayPage() {
   } = useUIStore();
 
   const { hasCheckedInToday } = useCheckin();
-  const [checkedInToday, setCheckedInToday] = useState(false);
+  const [checkedInToday, setCheckedInToday] = useState(null);
 
   // After wins load, check if user has already done check-in today
   useEffect(() => {
@@ -77,8 +77,8 @@ export default function TodayPage() {
     && morningDismissedDate !== today;
 
   const showEvening = !loading
+    && checkedInToday === false
     && currentHour >= 21
-    && !checkedInToday
     && wins.length > 0
     && eveningDismissedDate !== today;
 
