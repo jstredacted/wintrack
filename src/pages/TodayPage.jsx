@@ -14,6 +14,13 @@ import EveningPrompt from '@/components/checkin/EveningPrompt';
 import CheckInOverlay from '@/components/checkin/CheckInOverlay';
 import TimerFocusOverlay from '@/components/wins/TimerFocusOverlay';
 
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
 export default function TodayPage() {
   const today = getLocalDateString();
   const currentHour = new Date().getHours();
@@ -88,11 +95,20 @@ export default function TodayPage() {
     && eveningDismissedDate !== today;
 
   return (
-    <div className="flex flex-col min-h-[calc(100svh-7rem)] p-6 gap-4">
-      {/* Date header */}
-      <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground text-center">
-        {today}
-      </p>
+    <div className="flex flex-col min-h-[calc(100svh-7rem)] px-10 py-10 gap-10">
+
+      {/* Commanding greeting header */}
+      <div>
+        <h1 className="text-5xl font-bold leading-none tracking-tight">
+          {getGreeting()}
+        </h1>
+        <p className="font-mono text-lg text-muted-foreground mt-3 tracking-[0.1em] uppercase">
+          {today}
+        </p>
+        <div className="mt-2">
+          <TotalFocusTime wins={wins} />
+        </div>
+      </div>
 
       {/* Roll-forward prompt */}
       {showRollForward && (
@@ -106,56 +122,53 @@ export default function TodayPage() {
         />
       )}
 
-      {/* Total focus time */}
-      <div className="flex justify-center">
-        <TotalFocusTime wins={wins} />
-      </div>
-
       {/* Loading / error / win list */}
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <motion.p
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="text-xs font-mono text-muted-foreground text-center"
-          >
-            Loading…
-          </motion.p>
-        ) : (
-          <motion.div
-            key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
-          >
-            {error && (
-              <p className="text-xs font-mono text-destructive text-center mb-4">
-                {error}
-              </p>
-            )}
-            <WinList
-              wins={wins}
-              onEdit={(id, newTitle) => editWin(id, newTitle)}
-              onDelete={(id) => deleteWin(id)}
-              onStartTimer={(id) => {
+      <div className="flex-1">
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.p
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="text-sm font-mono text-muted-foreground"
+            >
+              Loading…
+            </motion.p>
+          ) : (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              {error && (
+                <p className="text-sm font-mono text-destructive mb-6">
+                  {error}
+                </p>
+              )}
+              <WinList
+                wins={wins}
+                onEdit={(id, newTitle) => editWin(id, newTitle)}
+                onDelete={(id) => deleteWin(id)}
+                onStartTimer={(id) => {
                   startTimer(id);
                   openTimerOverlay();
                 }}
-              onPauseTimer={(id, secs) => pauseTimer(id, secs)}
-              onStopTimer={(id, secs) => stopTimer(id, secs)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+                onPauseTimer={(id, secs) => pauseTimer(id, secs)}
+                onStopTimer={(id, secs) => stopTimer(id, secs)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Action buttons */}
-      <div className="flex justify-center gap-3 pt-2">
+      <div className="flex items-center gap-4 pb-2">
         <button
           onClick={openInputOverlay}
-          className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+          className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
           aria-label="Log a win"
         >
           <Plus size={16} />
@@ -164,7 +177,7 @@ export default function TodayPage() {
         {wins.length > 0 && !checkedInToday && (
           <button
             onClick={openCheckinOverlay}
-            className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
             aria-label="Start check-in"
           >
             Check in
