@@ -47,7 +47,14 @@ Plans:
   3. User can roll incomplete wins from yesterday into today — a confirmation step is shown before rolls occur
   4. User can start, stop, and pause a stopwatch on any win; the elapsed time shown on the win card is correct after a page refresh and after the tab has been in the background
   5. Today's view shows total focused time summed across all wins for the day
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Install motion + zustand, create all test stubs (Wave 1)
+- [ ] 02-02-PLAN.md — useStopwatch hook, useWins data hook, Zustand uiStore (Wave 2)
+- [ ] 02-03-PLAN.md — WinInputOverlay + WinList (Wave 3, parallel with 02-04)
+- [ ] 02-04-PLAN.md — WinCard + RollForwardPrompt (Wave 3, parallel with 02-03)
+- [ ] 02-05-PLAN.md — TotalFocusTime + wire TodayPage + visual checkpoint (Wave 4)
 
 ### Phase 3: Daily Loop Closure
 **Goal**: The accountability loop closes each night — check-in captures completion, in-app prompts appear at the right times, and the streak counter reflects consecutive days of follow-through
@@ -79,6 +86,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 5/5 | Complete    | 2026-03-09 |
-| 2. Win Logging & Focus Tracking | 0/TBD | Not started | - |
+| 2. Win Logging & Focus Tracking | 0/5 | Not started | - |
 | 3. Daily Loop Closure | 0/TBD | Not started | - |
 | 4. History & Journal | 0/TBD | Not started | - |
