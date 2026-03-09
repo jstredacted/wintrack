@@ -1,0 +1,13 @@
+export default function RollForwardPrompt({ count, onConfirm, onDismiss }) {
+  return (
+    <div className="border border-border rounded p-4 flex items-center justify-between gap-4 text-sm font-mono">
+      <span className="text-muted-foreground">
+        {count} unfinished win{count !== 1 ? 's' : ''} from yesterday — carry forward?
+      </span>
+      <div className="flex gap-2">
+        <button onClick={onConfirm} className="text-foreground underline">Yes</button>
+        <button onClick={onDismiss} className="text-muted-foreground">Dismiss</button>
+      </div>
+    </div>
+  );
+}
