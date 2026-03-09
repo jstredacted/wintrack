@@ -33,4 +33,9 @@ export const useUIStore = create((set) => ({
   closeCheckinOverlay: () => set({ checkinOverlayOpen: false }),
   dismissMorningPrompt: () => set({ morningDismissedDate: writeDate('morningDismissedDate') }),
   dismissEveningPrompt: () => set({ eveningDismissedDate: writeDate('eveningDismissedDate') }),
+
+  // --- Phase 5 state ---
+  timerOverlayOpen: false,
+  openTimerOverlay: () => set({ timerOverlayOpen: true }),
+  closeTimerOverlay: () => set({ timerOverlayOpen: false }),
 }));
