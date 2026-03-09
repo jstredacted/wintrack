@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Checkpoint: 01-02 Task 3 — awaiting Supabase migration and .env.local setup"
-last_updated: "2026-03-09T13:12:32.372Z"
+stopped_at: Completed 01-foundation/01-03-PLAN.md
+last_updated: "2026-03-09T13:13:00.681Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 2
+  completed_plans: 4
   percent: 4
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 4%
 
 *Updated after each plan completion*
 | Phase 01-foundation P01-02 | 525002min | 2 tasks | 5 files |
+| Phase 01-foundation P03 | 2 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ Recent decisions affecting current work:
 - [Phase 01-02]: win_date stored as text (YYYY-MM-DD) set by client — avoids timezone math in SQL streak queries
 - [Phase 01-02]: RLS uses separate per-operation policies (not FOR ALL) for correct WITH CHECK semantics
 - [Phase 01-02]: Supabase client uses accessToken pattern with static 10-year JWT — auth.* methods intentionally disabled
+- [Phase 01-03]: Import from 'react-router' not 'react-router-dom' — v7 consolidated packages
+- [Phase 01-03]: AppShell as layout route using Component: key with child routes rendered via Outlet
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T13:12:32.370Z
-Stopped at: Checkpoint: 01-02 Task 3 — awaiting Supabase migration and .env.local setup
+Last session: 2026-03-09T13:13:00.679Z
+Stopped at: Completed 01-foundation/01-03-PLAN.md
 Resume file: None
