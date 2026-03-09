@@ -35,13 +35,9 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label="Log a win"
-      className={[
-        'fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8',
-        'duration-300 fill-mode-forwards',
-        exiting
-          ? 'animate-out slide-out-to-bottom'
-          : 'animate-in slide-in-from-bottom',
-      ].join(' ')}
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8 ${
+        exiting ? 'overlay-exit' : 'overlay-enter'
+      }`}
       onAnimationEnd={() => {
         if (exiting) setVisible(false);
       }}
