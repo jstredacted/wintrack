@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md (Wave 0 test stubs for history and journal)
-last_updated: "2026-03-09T17:26:00.138Z"
+stopped_at: Completed 04-04-PLAN.md (history UI — Heatmap, DayDetail, HistoryPage)
+last_updated: "2026-03-09T17:29:00.366Z"
 last_activity: 2026-03-09 — Phase 3 Plan 02 (data and logic layer) complete
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 20
-  completed_plans: 17
+  completed_plans: 19
   percent: 50
 ---
 
@@ -68,6 +68,8 @@ Progress: [████████░░] ~50%
 | Phase 03-daily-loop-closure P03-05 | 45min | 2 tasks | 5 files |
 | Phase 04-history-and-journal P02 | 3 | 2 tasks | 2 files |
 | Phase 04-history-and-journal P04-01 | 4 | 2 tasks | 7 files |
+| Phase 04-history-and-journal P03 | 5 | 2 tasks | 3 files |
+| Phase 04-history-and-journal P04-04 | 5min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -126,6 +128,9 @@ Recent decisions affecting current work:
 - [Phase 04-history-and-journal]: Wave 0 stubs intentionally RED — module-not-found for components, assertion failures for JournalPage placeholder
 - [Phase 04-history-and-journal]: Heatmap test uses data-testid='heatmap-cell' for cell count + className check for bg-foreground/bg-border
 - [Phase 04-history-and-journal]: editEntry test asserts updated_at included in update payload — no DB trigger, client must set it
+- [Phase 04-history-and-journal]: JournalEntryCard accepts editingId prop (not isEditing bool) — matches Wave 0 test stubs
+- [Phase 04-history-and-journal]: Heatmap accepts days prop (default 84) — Wave 0 tests require configurable count for N-cell assertions
+- [Phase 04-history-and-journal]: DayDetail renders date prop and loading state — Wave 0 tests assert both behaviors
 
 ### Pending Todos
 
@@ -138,6 +143,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T17:26:00.136Z
-Stopped at: Completed 04-01-PLAN.md (Wave 0 test stubs for history and journal)
+Last session: 2026-03-09T17:29:00.364Z
+Stopped at: Completed 04-04-PLAN.md (history UI — Heatmap, DayDetail, HistoryPage)
 Resume file: None
