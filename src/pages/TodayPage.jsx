@@ -244,10 +244,10 @@ export default function TodayPage() {
           closeTimerOverlay();
           openInputOverlay();
         }}
+        onStartWin={(id) => startTimer(id)}
         onPauseWin={(id, displaySeconds) => pauseTimer(id, displaySeconds)}
         onStopWin={(id, displaySeconds) => {
           stopTimer(id, displaySeconds);
-          // Close overlay if no other timers are still running after this stop
           const remaining = wins.filter(w => w.id !== id && w.timer_started_at);
           if (remaining.length === 0) closeTimerOverlay();
         }}

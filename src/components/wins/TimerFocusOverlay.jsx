@@ -6,7 +6,8 @@ import { formatElapsed, useStopwatch } from '@/hooks/useStopwatch';
 function timerFontSize(count) {
   if (count === 1) return 'clamp(5rem, 12vw, 10rem)';
   if (count === 2) return 'clamp(4rem, 8vw, 7rem)';
-  return 'clamp(2.75rem, 5.5vw, 5rem)';
+  if (count === 3) return 'clamp(2.75rem, 5.5vw, 5rem)';
+  return 'clamp(2rem, 4vw, 3.5rem)';
 }
 
 function TimerStation({ win, fontSize }) {
@@ -16,6 +17,9 @@ function TimerStation({ win, fontSize }) {
   });
 
   const isRunning = !!win.timer_started_at;
+  const hasElapsed = (win.timer_elapsed_seconds ?? 0) > 0;
+
+  const playLabel = isRunning ? 'Pause timer' : hasElapsed ? 'Resume timer' : 'Start timer';
 
   return (
     <div className="flex flex-col items-center gap-6 select-none" data-win-id={win.id} data-display-seconds={displaySeconds}>
@@ -35,8 +39,14 @@ function TimerStation({ win, fontSize }) {
 
       <div className="flex items-center gap-6">
         <button
-          aria-label={isRunning ? 'Pause timer' : 'Resume timer'}
-          onClick={() => win._onPause?.(win.id, displaySeconds)}
+          aria-label={playLabel}
+          onClick={() => {
+            if (isRunning) {
+              win._onPause?.(win.id, displaySeconds);
+            } else {
+              win._onStart?.(win.id);
+            }
+          }}
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
           {isRunning ? <Pause size={18} /> : <Play size={18} />}
@@ -77,6 +87,7 @@ export default function TimerFocusOverlay({
   onStopAll,
   onAddWin,
   onPauseWin,
+  onStartWin,
   onStopWin,
 }) {
   const [visible, setVisible] = useState(false);
@@ -96,16 +107,17 @@ export default function TimerFocusOverlay({
 
   if (!visible) return null;
 
-  const displayWins = wins.slice(0, 3).map(w => ({
+  const displayWins = wins.map(w => ({
     ...w,
     _onPause: onPauseWin,
+    _onStart: onStartWin,
     _onStop: onStopWin,
   }));
-  const showAddSlot = displayWins.length < 3;
+  const showAddSlot = displayWins.length < 4;
+  const totalItems = displayWins.length + (showAddSlot ? 1 : 0);
   const fontSize = timerFontSize(displayWins.length);
-  const gapStyle = (displayWins.length + (showAddSlot ? 1 : 0)) <= 2
-    ? 'clamp(4rem, 10vw, 8rem)'
-    : 'clamp(3rem, 6vw, 5rem)';
+  const useGrid = totalItems >= 3;
+  const gapStyle = totalItems <= 2 ? 'clamp(4rem, 10vw, 8rem)' : 'clamp(3rem, 6vw, 5rem)';
 
   return createPortal(
     <div
@@ -151,6 +163,13 @@ export default function TimerFocusOverlay({
               <Plus size={18} />
               Log a win
             </button>
+          </div>
+        ) : useGrid ? (
+          <div className="grid grid-cols-2 gap-x-20 gap-y-16 items-center justify-items-center">
+            {displayWins.map((win) => (
+              <TimerStation key={win.id} win={win} fontSize={fontSize} />
+            ))}
+            {showAddSlot && <AddSlot onClick={onAddWin} />}
           </div>
         ) : (
           <div className="flex items-center justify-center" style={{ gap: gapStyle }}>
