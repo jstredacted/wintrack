@@ -3,7 +3,18 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CheckInOverlay from './CheckInOverlay';
 
-vi.mock('@/lib/supabase');
+vi.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      select: vi.fn().mockReturnThis(),
+      insert: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      in: vi.fn().mockReturnThis(),
+      then: vi.fn((resolve) => Promise.resolve({ error: null }).then(resolve)),
+      catch: vi.fn(),
+    })),
+  },
+}));
 
 // CHECKIN-01: Step-through evening check-in overlay (one win at a time, yes/no + optional note)
 // Wave 0 stub — all tests fail with module-not-found until Wave 2 creates CheckInOverlay.jsx
