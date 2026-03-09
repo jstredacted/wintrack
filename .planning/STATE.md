@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-win-logging-focus-tracking/02-02-PLAN.md
-last_updated: "2026-03-09T14:11:43.875Z"
+stopped_at: Completed 02-win-logging-focus-tracking/02-04-PLAN.md
+last_updated: "2026-03-09T14:16:18.600Z"
 last_activity: 2026-03-09 — Completed Plan 01-01 (Vitest test scaffold)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 7
+  completed_plans: 8
   percent: 4
 ---
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 4%
 | Phase 01-foundation P05 | 15 | 2 tasks | 3 files |
 | Phase 02-win-logging-focus-tracking P02-01 | 3min | 2 tasks | 8 files |
 | Phase 02-win-logging-focus-tracking P02-02 | 2min | 2 tasks | 3 files |
+| Phase 02-win-logging-focus-tracking P02-04 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ Recent decisions affecting current work:
 - [Phase 02-02]: useStopwatch accepts { elapsedBase, startedAt } object — matches Wave 0 test stubs (object destructuring, not positional args)
 - [Phase 02-02]: pauseTimer and stopTimer identical in Phase 2 — stopTimer delegates to pauseTimer to avoid duplication
 - [Phase 02-02]: addWin uses optimistic insert with local rollback on Supabase error
+- [Phase 02-04]: WinCard onEdit called with title string only — matches test expectation (not id+title)
+- [Phase 02-04]: vitest.config.js needs its own @/ alias — does not inherit from vite.config.js
+- [Phase 02-04]: @testing-library/jest-dom must be imported in test-setup.js — not auto-registered
 
 ### Pending Todos
 
@@ -103,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T14:11:43.873Z
-Stopped at: Completed 02-win-logging-focus-tracking/02-02-PLAN.md
+Last session: 2026-03-09T14:16:18.598Z
+Stopped at: Completed 02-win-logging-focus-tracking/02-04-PLAN.md
 Resume file: None
