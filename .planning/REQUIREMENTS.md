@@ -29,7 +29,7 @@
 
 - [x] **JOURNAL-01**: User can write a daily journal entry with a title and body
 - [x] **JOURNAL-02**: User can edit or delete past journal entries
-- [ ] **JOURNAL-03**: User can browse past journal entries in a list view
+- [x] **JOURNAL-03**: User can browse past journal entries in a list view
 
 ### Streaks & History
 
@@ -94,7 +94,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TIMER-03 | Phase 2 | Complete |
 | JOURNAL-01 | Phase 4 | Complete |
 | JOURNAL-02 | Phase 4 | Complete |
-| JOURNAL-03 | Phase 4 | Pending |
+| JOURNAL-03 | Phase 4 | Complete |
 | STREAK-01 | Phase 3 | Complete |
 | HISTORY-01 | Phase 4 | Complete |
 | HISTORY-02 | Phase 4 | Complete |
