@@ -103,6 +103,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Win Logging & Focus Tracking | 5/5 | Complete   | 2026-03-09 |
 | 3. Daily Loop Closure | 5/5 | Complete   | 2026-03-09 |
 | 4. History & Journal | 5/5 | Complete   | 2026-03-10 |
+| 5. UX Polish | 1/5 | In Progress | — |
 
 ### Phase 5: UX Polish
 
@@ -112,7 +113,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 **Plans:** 5 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Wave 0 RED test stubs for all new Phase 5 components
+- [x] 05-01-PLAN.md — Wave 0 RED test stubs for all new Phase 5 components
 - [ ] 05-02-PLAN.md — Global layout container, clamp() typography, useStreak journalStreak, borderless WinCard
 - [ ] 05-03-PLAN.md — TimerFocusOverlay full-screen bento + TotalFocusTime count-up animation
 - [ ] 05-04-PLAN.md — JournalEditorOverlay full-screen slide-up editor with word count + summary
