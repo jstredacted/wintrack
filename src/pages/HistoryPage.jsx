@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useHistory } from '@/hooks/useHistory'
 import { getLocalDateString } from '@/lib/utils/date'
-import Heatmap from '@/components/history/Heatmap'
+import DayStrip from '@/components/history/DayStrip'
 import DayDetail from '@/components/history/DayDetail'
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
 
 export default function HistoryPage() {
   const { completionMap, loading, fetchWinsForDate } = useHistory()
@@ -34,10 +41,14 @@ export default function HistoryPage() {
       <h1 className="font-mono text-lg mb-4">History</h1>
 
       <div className="mb-6">
-        <Heatmap
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+          {getGreeting()}
+        </p>
+        <DayStrip
           completionMap={completionMap}
           selectedDate={selectedDate}
           onSelectDate={handleSelectDate}
+          days={28}
         />
       </div>
 

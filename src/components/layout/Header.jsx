@@ -2,7 +2,7 @@ import ThemeToggle from "../theme/ThemeToggle";
 import { useStreak } from "@/hooks/useStreak";
 
 export default function Header() {
-  const { streak } = useStreak();
+  const { streak, journalStreak } = useStreak();
 
   return (
     <header className="sticky top-0 z-10 flex h-12 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-sm">
@@ -10,13 +10,20 @@ export default function Header() {
         wintrack
       </span>
       <div className="flex items-center gap-3">
-        <span
-          className="text-sm font-mono text-muted-foreground tabular-nums"
-          aria-label={`Streak: ${streak} days`}
-          title="Consecutive days with a completed win"
-        >
-          {streak}
-        </span>
+        <div className="flex items-center gap-3 font-mono text-sm text-muted-foreground tabular-nums">
+          <span
+            title="Wins streak"
+            aria-label={`Wins streak: ${streak} days`}
+          >
+            {streak}W
+          </span>
+          <span
+            title="Journal streak"
+            aria-label={`Journal streak: ${journalStreak} days`}
+          >
+            {journalStreak}J
+          </span>
+        </div>
         <ThemeToggle />
       </div>
     </header>
