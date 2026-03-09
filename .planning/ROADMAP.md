@@ -52,8 +52,8 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Install motion + zustand, create all test stubs (Wave 1)
 - [x] 02-02-PLAN.md — useStopwatch hook, useWins data hook, Zustand uiStore (Wave 2)
-- [x] 02-03-PLAN.md — WinInputOverlay + WinList (Wave 3, parallel with 02-04)
-- [x] 02-04-PLAN.md — WinCard + RollForwardPrompt (Wave 3, parallel with 02-03)
+- [x] 02-03-PLAN.md — WinInputOverlay + WinList (Wave 3, parallel with 02-03)
+- [x] 02-04-PLAN.md — WinCard + RollForwardPrompt (Wave 3, parallel with 02-04)
 - [x] 02-05-PLAN.md — TotalFocusTime + wire TodayPage + visual checkpoint (Wave 4)
 
 ### Phase 3: Daily Loop Closure
@@ -65,7 +65,14 @@ Plans:
   2. App displays a morning prompt at 9am if no wins have been logged for today, and an evening prompt at 9pm if check-in has not been completed
   3. App shows browser push notification stubs for the 9am and 9pm times with documented path to v2 implementation (no actual push delivery in v1)
   4. Streak counter increments on days where at least one win is marked complete, displays correctly on the today view, and does not corrupt across timezone boundaries
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Wave 0 test stubs: all 6 test files for CHECKIN-01 through STREAK-01
+- [ ] 03-02-PLAN.md — useStreak, useCheckin, notifications.js, uiStore extension (Wave 1)
+- [ ] 03-03-PLAN.md — CheckInOverlay component (Wave 2, parallel with 03-04)
+- [ ] 03-04-PLAN.md — MorningPrompt + EveningPrompt components (Wave 2, parallel with 03-03)
+- [ ] 03-05-PLAN.md — Wire Header + TodayPage + visual acceptance checkpoint (Wave 3)
 
 ### Phase 4: History & Journal
 **Goal**: Users can reflect on their discipline over time — browsing past wins, reviewing completion patterns, and writing daily journal entries
@@ -87,5 +94,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 5/5 | Complete    | 2026-03-09 |
 | 2. Win Logging & Focus Tracking | 5/5 | Complete   | 2026-03-09 |
-| 3. Daily Loop Closure | 0/TBD | Not started | - |
+| 3. Daily Loop Closure | 0/5 | Not started | - |
 | 4. History & Journal | 0/TBD | Not started | - |
