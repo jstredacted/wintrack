@@ -154,7 +154,6 @@ export function useWins() {
       user_id: USER_ID,
       title,
       win_date: today,
-      status: 'pending',
       timer_elapsed_seconds: 0,
       timer_started_at: null,
     }));
