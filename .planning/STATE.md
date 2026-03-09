@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 05-03-PLAN.md (Wave 2: TimerFocusOverlay, useCountUp animation, TodayPage wiring)"
-last_updated: "2026-03-09T19:14:28.654Z"
-last_activity: 2026-03-10 — Phase 5 Plan 02 (Wave 1 layout tokens + useStreak journalStreak + WinCard) complete
+stopped_at: "Completed 05-04-PLAN.md (Wave 2: JournalEditorOverlay full-screen overlay, journal CSS keyframes, JournalPage wiring)"
+last_updated: "2026-03-09T19:34:43.753Z"
+last_activity: "2026-03-10 — Phase 5 Plan 03 (Wave 2: TimerFocusOverlay + useCountUp + TodayPage wire) complete"
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 25
-  completed_plans: 23
-  percent: 88
+  completed_plans: 24
+  percent: 92
 ---
 
 # Project State
@@ -73,6 +73,7 @@ Progress: [█████████░] 92%
 | Phase 04-history-and-journal P04-05 | 30min | 2 tasks | 5 files |
 | Phase 05-ux-polish P05-02 | 8 | 2 tasks | 4 files |
 | Phase 05-ux-polish P03 | 2 | 2 tasks | 4 files |
+| Phase 05-ux-polish P04 | 18 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -146,6 +147,8 @@ Recent decisions affecting current work:
 - [Phase 05-02]: AppShell max-w-[600px] container wraps only Outlet, not Header/BottomTabBar — full-width chrome, constrained content
 - [Phase 05-03]: useCountUp uses prev ref pattern — animates from previous rendered value to new target, never from 0
 - [Phase 05-03]: totalSeconds used for null check (not animatedSeconds) — component hides correctly when total is truly 0
+- [Phase 05-04]: liveWordCountRef: track word count as both state+ref in same onChange handler for display + async-safe capture in createPortal components
+- [Phase 05-04]: autoFocus prop on title input replaces setTimeout focus to avoid racing with userEvent.type in tests — setTimeout stolen focus mid-typing causing flaky word count assertions
 
 ### Roadmap Evolution
 
@@ -162,6 +165,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T19:14:28.653Z
-Stopped at: Completed 05-03-PLAN.md (Wave 2: TimerFocusOverlay, useCountUp animation, TodayPage wiring)
+Last session: 2026-03-09T19:34:43.751Z
+Stopped at: Completed 05-04-PLAN.md (Wave 2: JournalEditorOverlay full-screen overlay, journal CSS keyframes, JournalPage wiring)
 Resume file: None
