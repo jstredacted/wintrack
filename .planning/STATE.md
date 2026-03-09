@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 05-02-PLAN.md (Wave 1 foundation: useStreak journalStreak, layout tokens, WinCard)"
-last_updated: "2026-03-09T19:10:15.817Z"
-last_activity: 2026-03-10 — Phase 5 Plan 01 (Wave 0 RED test stubs) complete
+stopped_at: "Completed 05-03-PLAN.md (Wave 2: TimerFocusOverlay, useCountUp animation, TodayPage wiring)"
+last_updated: "2026-03-09T19:14:28.654Z"
+last_activity: 2026-03-10 — Phase 5 Plan 02 (Wave 1 layout tokens + useStreak journalStreak + WinCard) complete
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 25
-  completed_plans: 22
+  completed_plans: 23
   percent: 88
 ---
 
@@ -26,12 +26,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 5 of 5 (UX Polish) — IN PROGRESS
-Plan: 2 of 5 — Plan 02 complete (Wave 1 foundation tokens)
+Plan: 3 of 5 — Plan 03 complete (Wave 2: TimerFocusOverlay, count-up animation, TodayPage wiring)
 Status: In Progress — executing Phase 5
 
-Last activity: 2026-03-10 — Phase 5 Plan 02 (Wave 1 layout tokens + useStreak journalStreak + WinCard) complete
+Last activity: 2026-03-10 — Phase 5 Plan 03 (Wave 2: TimerFocusOverlay + useCountUp + TodayPage wire) complete
 
-Progress: [█████████░] 88%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -72,6 +72,7 @@ Progress: [█████████░] 88%
 | Phase 04-history-and-journal P04-04 | 5min | 2 tasks | 3 files |
 | Phase 04-history-and-journal P04-05 | 30min | 2 tasks | 5 files |
 | Phase 05-ux-polish P05-02 | 8 | 2 tasks | 4 files |
+| Phase 05-ux-polish P03 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -143,6 +144,8 @@ Recent decisions affecting current work:
 - [Phase 05-02]: journalStreak guards against missing/invalid created_at fields using filter+NaN check before getLocalDateString
 - [Phase 05-02]: Fluid type tokens defined as @theme inline CSS vars applied via @layer base .font-mono — Tailwind v4 compatible global baseline
 - [Phase 05-02]: AppShell max-w-[600px] container wraps only Outlet, not Header/BottomTabBar — full-width chrome, constrained content
+- [Phase 05-03]: useCountUp uses prev ref pattern — animates from previous rendered value to new target, never from 0
+- [Phase 05-03]: totalSeconds used for null check (not animatedSeconds) — component hides correctly when total is truly 0
 
 ### Roadmap Evolution
 
@@ -159,6 +162,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T19:10:15.814Z
-Stopped at: Completed 05-02-PLAN.md (Wave 1 foundation: useStreak journalStreak, layout tokens, WinCard)
+Last session: 2026-03-09T19:14:28.653Z
+Stopped at: Completed 05-03-PLAN.md (Wave 2: TimerFocusOverlay, useCountUp animation, TodayPage wiring)
 Resume file: None
