@@ -1,12 +1,7 @@
 import { Check } from 'lucide-react';
 import { getLocalDateString } from '@/lib/utils/date';
 
-export default function DayStrip({
-  completionMap = {},
-  selectedDate,
-  onSelectDate,
-  days = 28,
-}) {
+export default function DayStrip({ completionMap = {}, selectedDate, onSelectDate, days = 28 }) {
   const cells = [];
   const today = new Date();
   for (let i = days - 1; i >= 0; i--) {
@@ -20,7 +15,7 @@ export default function DayStrip({
 
   return (
     <div
-      className="flex overflow-x-auto gap-1 py-2 snap-x snap-mandatory scroll-smooth"
+      className="flex overflow-x-auto gap-0 snap-x snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {cells.map(({ date, dayAbbr, dateNum, completed }) => {
@@ -33,22 +28,22 @@ export default function DayStrip({
             data-completed={completed ? 'true' : 'false'}
             onClick={() => onSelectDate?.(date)}
             className={[
-              'snap-start shrink-0 flex flex-col items-center gap-1 px-3 py-2 min-w-[3.25rem] font-mono transition-colors',
+              'snap-start shrink-0 flex flex-col items-center gap-2 px-4 py-5 min-w-[4.5rem] font-mono transition-all',
               isSelected
-                ? 'text-foreground'
-                : 'text-muted-foreground hover:text-foreground/70',
+                ? 'text-foreground border-b-2 border-foreground'
+                : 'text-muted-foreground/40 hover:text-muted-foreground/70 border-b-2 border-transparent',
             ].join(' ')}
           >
-            <span className="text-[0.6rem] uppercase tracking-wide">{dayAbbr}</span>
-            <span className="text-sm tabular-nums">{dateNum}</span>
-            {/* Status indicator row — always present to preserve alignment */}
+            <span className="text-xs uppercase tracking-widest">{dayAbbr}</span>
+            <span className="text-3xl tabular-nums font-light">{dateNum}</span>
             <span className="h-4 flex items-center justify-center">
-              {completed
-                ? <Check size={12} aria-hidden="true" className={isSelected ? 'text-foreground' : 'text-muted-foreground'} />
-                : isSelected
-                ? <span className="w-1 h-1 rounded-full bg-foreground" />
-                : null
-              }
+              {completed && (
+                <Check
+                  size={13}
+                  aria-hidden="true"
+                  className={isSelected ? 'text-foreground' : 'text-muted-foreground/40'}
+                />
+              )}
             </span>
           </button>
         );

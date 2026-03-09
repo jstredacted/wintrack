@@ -31,21 +31,21 @@ export default function JournalPage() {
   if (loading) return null
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Journal</h1>
-        {!overlayOpen && (
-          <button
-            onClick={() => setShowNewForm(true)}
-            className="font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors border-b border-muted-foreground pb-px"
-          >
-            New Entry
-          </button>
-        )}
+    <div className="flex flex-col min-h-[calc(100svh-7rem)] px-10 py-10">
+      {/* Header */}
+      <div className="flex items-baseline justify-between mb-10">
+        <h1 className="text-5xl font-bold leading-none tracking-tight">Journal</h1>
+        <button
+          onClick={() => setShowNewForm(true)}
+          className="font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors border-b border-muted-foreground/40 hover:border-foreground pb-px"
+        >
+          New Entry
+        </button>
       </div>
 
+      {/* Entry list */}
       {entries.length === 0 ? (
-        <p className="font-mono text-xs text-muted-foreground">No entries yet</p>
+        <p className="font-mono text-sm text-muted-foreground/50">No entries yet</p>
       ) : (
         <AnimatePresence>
           {entries.map(entry => (
@@ -60,7 +60,6 @@ export default function JournalPage() {
                 entry={entry}
                 onEdit={(id) => setEditingId(id)}
                 onDelete={(id) => deleteEntry(id)}
-                editingId={editingId}
               />
             </motion.div>
           ))}

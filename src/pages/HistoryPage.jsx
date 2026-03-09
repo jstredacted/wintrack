@@ -5,9 +5,9 @@ import DayStrip from '@/components/history/DayStrip'
 import DayDetail from '@/components/history/DayDetail'
 
 function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
   return 'Good evening';
 }
 
@@ -21,10 +21,7 @@ export default function HistoryPage() {
     let cancelled = false
     setDetailLoading(true)
     fetchWinsForDate(selectedDate).then(wins => {
-      if (!cancelled) {
-        setSelectedWins(wins)
-        setDetailLoading(false)
-      }
+      if (!cancelled) { setSelectedWins(wins); setDetailLoading(false) }
     })
     return () => { cancelled = true }
   }, [selectedDate, fetchWinsForDate])
@@ -32,12 +29,17 @@ export default function HistoryPage() {
   if (loading) return null
 
   return (
-    <div className="p-6">
-      <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-        {getGreeting()}
-      </p>
+    <div className="flex flex-col min-h-[calc(100svh-7rem)] px-10 py-10">
+      {/* Header */}
+      <div className="mb-10">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground/50 mb-3">
+          {getGreeting()}
+        </p>
+        <h1 className="text-5xl font-bold leading-none tracking-tight">History</h1>
+      </div>
 
-      <div className="mb-8">
+      {/* Timeline strip — bleeds edge-to-edge for drama */}
+      <div className="mb-10 -mx-10 px-10 border-y border-border/30 py-4">
         <DayStrip
           completionMap={completionMap}
           selectedDate={selectedDate}
@@ -46,6 +48,7 @@ export default function HistoryPage() {
         />
       </div>
 
+      {/* Day detail */}
       <DayDetail date={selectedDate} wins={selectedWins} loading={detailLoading} />
     </div>
   )

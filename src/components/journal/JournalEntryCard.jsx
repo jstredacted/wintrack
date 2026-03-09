@@ -3,46 +3,52 @@ import { Pencil, Trash2 } from 'lucide-react'
 function formatEntryDate(isoString) {
   const d = new Date(isoString)
   return d.toLocaleString('en-US', {
-    month: 'short',
+    weekday: 'long',
+    month: 'long',
     day: 'numeric',
     year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  }).toUpperCase()
+  })
 }
 
-export default function JournalEntryCard({ entry, onEdit, onDelete, editingId, isEditing }) {
-  const isCurrentlyEditing = isEditing != null ? isEditing : editingId === entry.id
-
+export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }) {
+  const isCurrentlyEditing = editingId === entry.id
   return (
-    <article className="py-6 border-b border-border last:border-0">
-      <p className="font-mono text-xs tracking-widest text-muted-foreground mb-2">
+    <article className="py-10 border-b border-border/30 last:border-0 group">
+      {/* Date — editorial metadata */}
+      <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground/40 mb-4">
         {formatEntryDate(entry.created_at)}
       </p>
-      <h2 className="text-2xl font-bold mb-3 leading-tight">{entry.title}</h2>
+
+      {/* Title — the hero */}
+      <h2 className="text-3xl font-bold leading-tight mb-4">{entry.title}</h2>
+
+      {/* Body preview */}
       {entry.body && (
-        <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap break-words">
+        <p className="text-base leading-loose text-muted-foreground line-clamp-4 whitespace-pre-wrap">
           {entry.body}
         </p>
       )}
-      <div className="flex gap-3 mt-4">
+
+      {/* Actions — visible on hover only */}
+      <div className="flex gap-4 mt-5 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           type="button"
           aria-label="Edit entry"
           onClick={() => onEdit(entry.id)}
-          className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Pencil size={14} />
+          <Pencil size={13} />
+          Edit
         </button>
         {!isCurrentlyEditing && (
           <button
             type="button"
             aria-label="Delete entry"
             onClick={() => onDelete(entry.id)}
-            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Trash2 size={14} />
+            <Trash2 size={13} />
+            Delete
           </button>
         )}
       </div>
