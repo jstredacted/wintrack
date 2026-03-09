@@ -81,31 +81,31 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WIN-01 | — | Pending |
-| WIN-02 | — | Pending |
-| WIN-03 | — | Pending |
-| WIN-04 | — | Pending |
-| CHECKIN-01 | — | Pending |
-| CHECKIN-02 | — | Pending |
-| CHECKIN-03 | — | Pending |
-| CHECKIN-04 | — | Pending |
-| TIMER-01 | — | Pending |
-| TIMER-02 | — | Pending |
-| TIMER-03 | — | Pending |
-| JOURNAL-01 | — | Pending |
-| JOURNAL-02 | — | Pending |
-| JOURNAL-03 | — | Pending |
-| STREAK-01 | — | Pending |
-| HISTORY-01 | — | Pending |
-| HISTORY-02 | — | Pending |
-| SHELL-01 | — | Pending |
-| SHELL-02 | — | Pending |
+| WIN-01 | Phase 2 | Pending |
+| WIN-02 | Phase 2 | Pending |
+| WIN-03 | Phase 2 | Pending |
+| WIN-04 | Phase 2 | Pending |
+| CHECKIN-01 | Phase 3 | Pending |
+| CHECKIN-02 | Phase 3 | Pending |
+| CHECKIN-03 | Phase 3 | Pending |
+| CHECKIN-04 | Phase 3 | Pending |
+| TIMER-01 | Phase 2 | Pending |
+| TIMER-02 | Phase 2 | Pending |
+| TIMER-03 | Phase 2 | Pending |
+| JOURNAL-01 | Phase 4 | Pending |
+| JOURNAL-02 | Phase 4 | Pending |
+| JOURNAL-03 | Phase 4 | Pending |
+| STREAK-01 | Phase 3 | Pending |
+| HISTORY-01 | Phase 4 | Pending |
+| HISTORY-02 | Phase 4 | Pending |
+| SHELL-01 | Phase 1 | Pending |
+| SHELL-02 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 19 total
-- Mapped to phases: 0
-- Unmapped: 19 ⚠️ (will be resolved during roadmap creation)
+- Mapped to phases: 19
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 after initial definition*
+*Last updated: 2026-03-09 — traceability filled during roadmap creation*
