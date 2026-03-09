@@ -212,7 +212,7 @@ export default function TodayPage() {
         onDismiss={dismissEveningPrompt}
       />
 
-      {/* Timer focus overlay — full-screen bento view when timer is running */}
+      {/* Timer focus overlay — full-screen floating stopwatch view */}
       <TimerFocusOverlay
         open={timerOverlayOpen}
         wins={wins}
@@ -230,6 +230,13 @@ export default function TodayPage() {
         onAddWin={() => {
           closeTimerOverlay();
           openInputOverlay();
+        }}
+        onPauseWin={(id, displaySeconds) => pauseTimer(id, displaySeconds)}
+        onStopWin={(id, displaySeconds) => {
+          stopTimer(id, displaySeconds);
+          // Close overlay if no other timers are still running after this stop
+          const remaining = wins.filter(w => w.id !== id && w.timer_started_at);
+          if (remaining.length === 0) closeTimerOverlay();
         }}
       />
     </div>

@@ -129,10 +129,8 @@
     }
   html {
     @apply font-sans;
+    font-size: 18px;
     }
-  .font-mono {
-    font-size: var(--font-size-fluid-base);
-  }
 }
 
 /* Win input overlay slide animation */
