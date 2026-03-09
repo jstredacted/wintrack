@@ -27,15 +27,15 @@
 
 ### Journal
 
-- [ ] **JOURNAL-01**: User can write a daily journal entry with a title and body
-- [ ] **JOURNAL-02**: User can edit or delete past journal entries
+- [x] **JOURNAL-01**: User can write a daily journal entry with a title and body
+- [x] **JOURNAL-02**: User can edit or delete past journal entries
 - [ ] **JOURNAL-03**: User can browse past journal entries in a list view
 
 ### Streaks & History
 
 - [x] **STREAK-01**: App displays a streak counter for consecutive days where at least one win was marked complete
-- [ ] **HISTORY-01**: User can browse past days' wins and their completion status
-- [ ] **HISTORY-02**: App shows a visual calendar / heatmap of days with completed wins
+- [x] **HISTORY-01**: User can browse past days' wins and their completion status
+- [x] **HISTORY-02**: App shows a visual calendar / heatmap of days with completed wins
 
 ### App Shell
 
@@ -92,12 +92,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TIMER-01 | Phase 2 | Complete |
 | TIMER-02 | Phase 2 | Complete |
 | TIMER-03 | Phase 2 | Complete |
-| JOURNAL-01 | Phase 4 | Pending |
-| JOURNAL-02 | Phase 4 | Pending |
+| JOURNAL-01 | Phase 4 | Complete |
+| JOURNAL-02 | Phase 4 | Complete |
 | JOURNAL-03 | Phase 4 | Pending |
 | STREAK-01 | Phase 3 | Complete |
-| HISTORY-01 | Phase 4 | Pending |
-| HISTORY-02 | Phase 4 | Pending |
+| HISTORY-01 | Phase 4 | Complete |
+| HISTORY-02 | Phase 4 | Complete |
 | SHELL-01 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-04) |
 | SHELL-02 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-02) |
 
