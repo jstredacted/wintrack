@@ -50,14 +50,14 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
         }}
       >
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          What's your win today?
+          What's your intention today?
         </p>
         <input
           ref={inputRef}
           name="title"
           autoComplete="off"
           className="w-full bg-transparent text-2xl font-mono outline-none border-b border-border pb-2 text-foreground"
-          placeholder="I shipped..."
+          placeholder="I will..."
         />
         <button type="submit" className="sr-only">
           Submit

@@ -164,7 +164,7 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
                     }
                   }}
                   rows={3}
-                  placeholder="Optional \u2014 press Enter to skip"
+                  placeholder="Optional — press Enter to skip"
                   className="w-full bg-transparent border border-border rounded-md p-3 text-sm font-mono text-foreground resize-none outline-none focus:border-foreground"
                 />
                 <button
