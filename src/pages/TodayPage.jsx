@@ -33,7 +33,7 @@ export default function TodayPage() {
 
   const {
     inputOverlayOpen,
-    rollForwardOffered,
+    rollForwardOfferedDate,
     openInputOverlay,
     closeInputOverlay,
     markRollForwardOffered,
@@ -67,7 +67,7 @@ export default function TodayPage() {
     hasCheckedInToday(winIds).then((result) => setCheckedInToday(result));
   }, [checkinOverlayOpen]);
 
-  const showRollForward = yesterdayWins.length > 0 && !rollForwardOffered;
+  const showRollForward = yesterdayWins.length > 0 && rollForwardOfferedDate !== today;
 
   // Time-gated prompt visibility
   // Always guard on !loading to prevent false positives during fetch
