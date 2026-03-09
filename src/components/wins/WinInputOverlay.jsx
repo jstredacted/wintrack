@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { useRef, useEffect } from 'react';
 
@@ -12,7 +13,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
-  return (
+  return createPortal(
     <AnimatePresence mode="wait">
       {open && (
         <motion.div
@@ -24,6 +25,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+          style={{ willChange: 'transform' }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8"
           onAnimationComplete={() => inputRef.current?.focus()}
         >
@@ -50,6 +52,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
           </form>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
