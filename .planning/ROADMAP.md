@@ -32,10 +32,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Vitest setup and test stubs (Wave 0)
-- [ ] 01-02-PLAN.md — Supabase schema, JWT script, client, and date utility
-- [ ] 01-03-PLAN.md — React Router app shell with routing, layout, and pages
-- [ ] 01-04-PLAN.md — Design system: Geist Mono, dot grid, dark mode toggle
-- [ ] 01-05-PLAN.md — Visual acceptance checkpoint
+- [x] 01-02-PLAN.md — Supabase schema, JWT script, client, and date utility
+- [x] 01-03-PLAN.md — React Router app shell with routing, layout, and pages
+- [x] 01-04-PLAN.md — Design system: Geist Mono, dot grid, dark mode toggle
+- [x] 01-05-PLAN.md — Visual acceptance checkpoint
 
 ### Phase 2: Win Logging & Focus Tracking
 **Goal**: Users can declare their daily wins through a focused, frictionless input flow and track focused time per win
@@ -50,11 +50,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Install motion + zustand, create all test stubs (Wave 1)
-- [ ] 02-02-PLAN.md — useStopwatch hook, useWins data hook, Zustand uiStore (Wave 2)
-- [ ] 02-03-PLAN.md — WinInputOverlay + WinList (Wave 3, parallel with 02-04)
-- [ ] 02-04-PLAN.md — WinCard + RollForwardPrompt (Wave 3, parallel with 02-03)
-- [ ] 02-05-PLAN.md — TotalFocusTime + wire TodayPage + visual checkpoint (Wave 4)
+- [x] 02-01-PLAN.md — Install motion + zustand, create all test stubs (Wave 1)
+- [x] 02-02-PLAN.md — useStopwatch hook, useWins data hook, Zustand uiStore (Wave 2)
+- [x] 02-03-PLAN.md — WinInputOverlay + WinList (Wave 3, parallel with 02-04)
+- [x] 02-04-PLAN.md — WinCard + RollForwardPrompt (Wave 3, parallel with 02-03)
+- [x] 02-05-PLAN.md — TotalFocusTime + wire TodayPage + visual checkpoint (Wave 4)
 
 ### Phase 3: Daily Loop Closure
 **Goal**: The accountability loop closes each night — check-in captures completion, in-app prompts appear at the right times, and the streak counter reflects consecutive days of follow-through
