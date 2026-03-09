@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { getLocalDateString } from '@/lib/utils/date';
 import { useWins } from '@/hooks/useWins';
 import { useUIStore } from '@/stores/uiStore';
@@ -59,28 +60,41 @@ export default function TodayPage() {
       </div>
 
       {/* Loading / error states */}
-      {loading && (
-        <p className="text-xs font-mono text-muted-foreground text-center">
-          Loading…
-        </p>
-      )}
-      {error && (
-        <p className="text-xs font-mono text-destructive text-center">
-          {error}
-        </p>
-      )}
-
-      {/* Win list */}
-      {!loading && (
-        <WinList
-          wins={wins}
-          onEdit={(id, newTitle) => editWin(id, newTitle)}
-          onDelete={(id) => deleteWin(id)}
-          onStartTimer={(id) => startTimer(id)}
-          onPauseTimer={(id, secs) => pauseTimer(id, secs)}
-          onStopTimer={(id, secs) => stopTimer(id, secs)}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.p
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="text-xs font-mono text-muted-foreground text-center"
+          >
+            Loading…
+          </motion.p>
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {error && (
+              <p className="text-xs font-mono text-destructive text-center mb-4">
+                {error}
+              </p>
+            )}
+            <WinList
+              wins={wins}
+              onEdit={(id, newTitle) => editWin(id, newTitle)}
+              onDelete={(id) => deleteWin(id)}
+              onStartTimer={(id) => startTimer(id)}
+              onPauseTimer={(id, secs) => pauseTimer(id, secs)}
+              onStopTimer={(id, secs) => stopTimer(id, secs)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Log a win button */}
       <div className="flex justify-center pt-2">

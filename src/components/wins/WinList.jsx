@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'motion/react';
 import WinCard from './WinCard';
 
 /**
@@ -31,17 +32,26 @@ export default function WinList({
 
   return (
     <div className="flex flex-col gap-3">
-      {wins.map((win) => (
-        <WinCard
-          key={win.id}
-          win={win}
-          onEdit={(newTitle) => onEdit?.(win.id, newTitle)}
-          onDelete={() => onDelete?.(win.id)}
-          onStartTimer={() => onStartTimer?.(win.id)}
-          onPauseTimer={(secs) => onPauseTimer?.(win.id, secs)}
-          onStopTimer={(secs) => onStopTimer?.(win.id, secs)}
-        />
-      ))}
+      <AnimatePresence initial={false}>
+        {wins.map((win) => (
+          <motion.div
+            key={win.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            <WinCard
+              win={win}
+              onEdit={(newTitle) => onEdit?.(win.id, newTitle)}
+              onDelete={() => onDelete?.(win.id)}
+              onStartTimer={() => onStartTimer?.(win.id)}
+              onPauseTimer={(secs) => onPauseTimer?.(win.id, secs)}
+              onStopTimer={(secs) => onStopTimer?.(win.id, secs)}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
