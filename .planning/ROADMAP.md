@@ -103,14 +103,14 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Win Logging & Focus Tracking | 5/5 | Complete   | 2026-03-09 |
 | 3. Daily Loop Closure | 5/5 | Complete   | 2026-03-09 |
 | 4. History & Journal | 5/5 | Complete   | 2026-03-10 |
-| 5. UX Polish | 2/5 | In Progress|  |
+| 5. UX Polish | 3/5 | In Progress|  |
 
 ### Phase 5: UX Polish
 
 **Goal:** All major surfaces are polished to a cohesive, high-quality finish — fluid typography, focused timer overlay, immersive journal editor, intuitive day-strip history, and dual streak tracking in the header
 **Requirements**: (polish pass — no new v1 requirement IDs)
 **Depends on:** Phase 4
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 - [x] 05-01-PLAN.md — Wave 0 RED test stubs for all new Phase 5 components
