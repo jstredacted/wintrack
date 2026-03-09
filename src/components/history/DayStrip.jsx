@@ -20,26 +20,39 @@ export default function DayStrip({
 
   return (
     <div
-      className="flex overflow-x-auto gap-2 pb-2 snap-x snap-mandatory scroll-smooth day-strip"
+      className="flex overflow-x-auto gap-1 py-2 snap-x snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
-      {cells.map(({ date, dayAbbr, dateNum, completed }) => (
-        <button
-          key={date}
-          aria-label={date}
-          data-completed={completed ? 'true' : 'false'}
-          onClick={() => onSelectDate?.(date)}
-          className={[
-            'snap-start shrink-0 flex flex-col items-center gap-1 p-2 min-w-[3rem] rounded font-mono',
-            'text-muted-foreground hover:text-foreground transition-colors',
-            selectedDate === date ? 'ring-1 ring-foreground text-foreground' : '',
-          ].join(' ')}
-        >
-          <span className="text-[0.6rem] uppercase tracking-wide">{dayAbbr}</span>
-          <span className="text-sm tabular-nums">{dateNum}</span>
-          {completed && <Check size={18} aria-hidden="true" />}
-        </button>
-      ))}
+      {cells.map(({ date, dayAbbr, dateNum, completed }) => {
+        const isSelected = selectedDate === date;
+        return (
+          <button
+            key={date}
+            aria-label={date}
+            aria-pressed={isSelected}
+            data-completed={completed ? 'true' : 'false'}
+            onClick={() => onSelectDate?.(date)}
+            className={[
+              'snap-start shrink-0 flex flex-col items-center gap-1 px-3 py-2 min-w-[3.25rem] font-mono transition-colors',
+              isSelected
+                ? 'text-foreground'
+                : 'text-muted-foreground hover:text-foreground/70',
+            ].join(' ')}
+          >
+            <span className="text-[0.6rem] uppercase tracking-wide">{dayAbbr}</span>
+            <span className="text-sm tabular-nums">{dateNum}</span>
+            {/* Status indicator row — always present to preserve alignment */}
+            <span className="h-4 flex items-center justify-center">
+              {completed
+                ? <Check size={12} aria-hidden="true" className={isSelected ? 'text-foreground' : 'text-muted-foreground'} />
+                : isSelected
+                ? <span className="w-1 h-1 rounded-full bg-foreground" />
+                : null
+              }
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }

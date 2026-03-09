@@ -17,7 +17,6 @@ export default function HistoryPage() {
   const [selectedWins, setSelectedWins] = useState([])
   const [detailLoading, setDetailLoading] = useState(false)
 
-  // Fetch wins for selected date whenever it changes
   useEffect(() => {
     let cancelled = false
     setDetailLoading(true)
@@ -30,31 +29,24 @@ export default function HistoryPage() {
     return () => { cancelled = true }
   }, [selectedDate, fetchWinsForDate])
 
-  function handleSelectDate(date) {
-    setSelectedDate(date)
-  }
-
   if (loading) return null
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h1 className="font-mono text-lg mb-4">History</h1>
+    <div className="p-6">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+        {getGreeting()}
+      </p>
 
-      <div className="mb-6">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          {getGreeting()}
-        </p>
+      <div className="mb-8">
         <DayStrip
           completionMap={completionMap}
           selectedDate={selectedDate}
-          onSelectDate={handleSelectDate}
+          onSelectDate={setSelectedDate}
           days={28}
         />
       </div>
 
-      <div>
-        <DayDetail date={selectedDate} wins={selectedWins} loading={detailLoading} />
-      </div>
+      <DayDetail date={selectedDate} wins={selectedWins} loading={detailLoading} />
     </div>
   )
 }

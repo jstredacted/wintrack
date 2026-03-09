@@ -7,9 +7,7 @@ export default function AppShell() {
     <div className="flex flex-col min-h-svh bg-background text-foreground dot-grid">
       <Header />
       <main className="flex-1 overflow-y-auto pb-16">
-        <div className="max-w-[600px] mx-auto">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
       <BottomTabBar />
     </div>

@@ -48,6 +48,7 @@ export default function TodayPage() {
     timerOverlayOpen,
     openTimerOverlay,
     closeTimerOverlay,
+    refreshStreak,
   } = useUIStore();
 
   const { hasCheckedInToday } = useCheckin();
@@ -186,7 +187,7 @@ export default function TodayPage() {
         open={checkinOverlayOpen}
         wins={wins}
         onComplete={() => {
-          // hasCheckedInToday re-check happens via the useEffect watching checkinOverlayOpen
+          refreshStreak();
         }}
         onClose={closeCheckinOverlay}
       />
@@ -216,6 +217,20 @@ export default function TodayPage() {
         open={timerOverlayOpen}
         wins={wins}
         onClose={closeTimerOverlay}
+        onStopAll={() => {
+          wins.forEach((win) => {
+            if (win.timer_started_at) {
+              const elapsed = (win.timer_elapsed_seconds ?? 0) +
+                Math.floor((Date.now() - new Date(win.timer_started_at).getTime()) / 1000);
+              stopTimer(win.id, elapsed);
+            }
+          });
+          closeTimerOverlay();
+        }}
+        onAddWin={() => {
+          closeTimerOverlay();
+          openInputOverlay();
+        }}
       />
     </div>
   );

@@ -38,4 +38,8 @@ export const useUIStore = create((set) => ({
   timerOverlayOpen: false,
   openTimerOverlay: () => set({ timerOverlayOpen: true }),
   closeTimerOverlay: () => set({ timerOverlayOpen: false }),
+
+  // Increment to trigger useStreak refetch (after journal save or checkin complete)
+  streakRefreshKey: 0,
+  refreshStreak: () => set((s) => ({ streakRefreshKey: s.streakRefreshKey + 1 })),
 }));
