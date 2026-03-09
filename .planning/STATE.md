@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 05-01-PLAN.md (Wave 0 TDD stubs for Phase 5 UX Polish)
-last_updated: "2026-03-10T03:09:00Z"
+status: executing
+stopped_at: "Completed 05-02-PLAN.md (Wave 1 foundation: useStreak journalStreak, layout tokens, WinCard)"
+last_updated: "2026-03-09T19:10:15.817Z"
 last_activity: 2026-03-10 — Phase 5 Plan 01 (Wave 0 RED test stubs) complete
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 25
-  completed_plans: 21
-  percent: 84
+  completed_plans: 22
+  percent: 88
 ---
 
 # Project State
@@ -26,12 +26,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 5 of 5 (UX Polish) — IN PROGRESS
-Plan: 1 of 5 — Plan 01 complete (Wave 0 stubs)
+Plan: 2 of 5 — Plan 02 complete (Wave 1 foundation tokens)
 Status: In Progress — executing Phase 5
 
-Last activity: 2026-03-10 — Phase 5 Plan 01 (Wave 0 RED test stubs) complete
+Last activity: 2026-03-10 — Phase 5 Plan 02 (Wave 1 layout tokens + useStreak journalStreak + WinCard) complete
 
-Progress: [████████░░] 84%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -71,6 +71,7 @@ Progress: [████████░░] 84%
 | Phase 04-history-and-journal P03 | 5 | 2 tasks | 3 files |
 | Phase 04-history-and-journal P04-04 | 5min | 2 tasks | 3 files |
 | Phase 04-history-and-journal P04-05 | 30min | 2 tasks | 5 files |
+| Phase 05-ux-polish P05-02 | 8 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -139,6 +140,9 @@ Recent decisions affecting current work:
 - [Phase 05-01]: useStreak journalStreak tests use mockReturnValueOnce chaining — first call wins streak query, second call journal_entries query
 - [Phase 05-01]: DayStrip uses data-completed attribute for accessibility and test queryability
 - [Phase 05-01]: Header dual-streak uses title attribute as test query anchor (getByTitle) — avoids tight coupling to text content
+- [Phase 05-02]: journalStreak guards against missing/invalid created_at fields using filter+NaN check before getLocalDateString
+- [Phase 05-02]: Fluid type tokens defined as @theme inline CSS vars applied via @layer base .font-mono — Tailwind v4 compatible global baseline
+- [Phase 05-02]: AppShell max-w-[600px] container wraps only Outlet, not Header/BottomTabBar — full-width chrome, constrained content
 
 ### Roadmap Evolution
 
@@ -155,6 +159,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T03:09:00Z
-Stopped at: Completed 05-01-PLAN.md (Wave 0 TDD stubs — Phase 5 UX Polish started)
+Last session: 2026-03-09T19:10:15.814Z
+Stopped at: Completed 05-02-PLAN.md (Wave 1 foundation: useStreak journalStreak, layout tokens, WinCard)
 Resume file: None
