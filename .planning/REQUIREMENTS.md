@@ -7,10 +7,10 @@
 
 ### Win Logging
 
-- [ ] **WIN-01**: User can create a win using a full-screen Typeform-style input flow (one prompt at a time, animated transitions between steps)
-- [ ] **WIN-02**: User can edit the text of an existing win
-- [ ] **WIN-03**: User can delete a win from today's list
-- [ ] **WIN-04**: User can roll incomplete wins from yesterday into today's list
+- [x] **WIN-01**: User can create a win using a full-screen Typeform-style input flow (one prompt at a time, animated transitions between steps)
+- [x] **WIN-02**: User can edit the text of an existing win
+- [x] **WIN-03**: User can delete a win from today's list
+- [x] **WIN-04**: User can roll incomplete wins from yesterday into today's list
 
 ### Check-ins
 
@@ -21,9 +21,9 @@
 
 ### Time Tracking
 
-- [ ] **TIMER-01**: User can start, stop, and pause a stopwatch for any win
-- [ ] **TIMER-02**: Cumulative time logged for a win is displayed on its win card
-- [ ] **TIMER-03**: Today view shows total focused time across all wins for the day
+- [x] **TIMER-01**: User can start, stop, and pause a stopwatch for any win
+- [x] **TIMER-02**: Cumulative time logged for a win is displayed on its win card
+- [x] **TIMER-03**: Today view shows total focused time across all wins for the day
 
 ### Journal
 
@@ -81,17 +81,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WIN-01 | Phase 2 | Pending |
-| WIN-02 | Phase 2 | Pending |
-| WIN-03 | Phase 2 | Pending |
-| WIN-04 | Phase 2 | Pending |
+| WIN-01 | Phase 2 | Complete |
+| WIN-02 | Phase 2 | Complete |
+| WIN-03 | Phase 2 | Complete |
+| WIN-04 | Phase 2 | Complete |
 | CHECKIN-01 | Phase 3 | Pending |
 | CHECKIN-02 | Phase 3 | Pending |
 | CHECKIN-03 | Phase 3 | Pending |
 | CHECKIN-04 | Phase 3 | Pending |
-| TIMER-01 | Phase 2 | Pending |
-| TIMER-02 | Phase 2 | Pending |
-| TIMER-03 | Phase 2 | Pending |
+| TIMER-01 | Phase 2 | Complete |
+| TIMER-02 | Phase 2 | Complete |
+| TIMER-03 | Phase 2 | Complete |
 | JOURNAL-01 | Phase 4 | Pending |
 | JOURNAL-02 | Phase 4 | Pending |
 | JOURNAL-03 | Phase 4 | Pending |
