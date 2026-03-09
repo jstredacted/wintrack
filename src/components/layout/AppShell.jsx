@@ -1,17 +1,13 @@
-import { Outlet } from "react-router";
-import Header from "./Header";
-import BottomTabBar from "./BottomTabBar";
+import { Outlet } from 'react-router';
+import SideNav from './SideNav';
 
 export default function AppShell() {
   return (
-    <div className="flex flex-col min-h-svh bg-background text-foreground dot-grid">
-      <Header />
-      <main className="flex-1 overflow-y-auto pb-16">
-        <div className="max-w-[1100px] mx-auto w-full">
-          <Outlet />
-        </div>
+    <div className="flex h-svh bg-background text-foreground dot-grid">
+      <SideNav />
+      <main className="ml-14 flex-1 overflow-y-auto">
+        <Outlet />
       </main>
-      <BottomTabBar />
     </div>
   );
 }
