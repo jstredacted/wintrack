@@ -151,6 +151,22 @@
   animation: overlay-slide-out 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
+/* Journal editor — slide up from bottom (separate from generic overlay for future easing control) */
+@keyframes journal-slide-in {
+  from { transform: translateY(100vh); }
+  to   { transform: translateY(0); }
+}
+@keyframes journal-slide-out {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100vh); }
+}
+.journal-overlay-enter {
+  animation: journal-slide-in 0.35s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+.journal-overlay-exit {
+  animation: journal-slide-out 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
 .dot-grid {
   background-image: radial-gradient(circle, oklch(0.5 0 0 / 0.06) 1px, transparent 1px);
