@@ -83,7 +83,14 @@ Plans:
   2. User can browse past journal entries in a list view sorted by date
   3. User can browse any past day's wins and see whether each win was marked complete or incomplete
   4. App shows a visual calendar or heatmap where days with at least one completed win are visually distinguished from days without
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Wave 0 test stubs: all 7 test files for JOURNAL-01 through HISTORY-02
+- [ ] 04-02-PLAN.md — useJournal hook + useHistory hook (Wave 1)
+- [ ] 04-03-PLAN.md — Journal components + JournalPage (Wave 2, parallel with 04-04)
+- [ ] 04-04-PLAN.md — History components + HistoryPage (Wave 2, parallel with 04-03)
+- [ ] 04-05-PLAN.md — Full suite gate + visual acceptance checkpoint (Wave 3)
 
 ## Progress
 
@@ -95,4 +102,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation | 5/5 | Complete    | 2026-03-09 |
 | 2. Win Logging & Focus Tracking | 5/5 | Complete   | 2026-03-09 |
 | 3. Daily Loop Closure | 5/5 | Complete   | 2026-03-09 |
-| 4. History & Journal | 0/TBD | Not started | - |
+| 4. History & Journal | 0/5 | Not started | - |
