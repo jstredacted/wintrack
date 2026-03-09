@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-04-PLAN.md (MorningPrompt and EveningPrompt)
-last_updated: "2026-03-09T16:22:55.345Z"
+stopped_at: Completed 03-03-PLAN.md (CheckInOverlay component)
+last_updated: "2026-03-09T16:23:41.652Z"
 last_activity: 2026-03-09 — Phase 3 Plan 02 (data and logic layer) complete
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
   percent: 50
 ---
 
@@ -64,6 +64,7 @@ Progress: [████████░░] ~50%
 | Phase 03-daily-loop-closure P03-01 | 4 | 2 tasks | 6 files |
 | Phase 03-daily-loop-closure P03-02 | 6min | 2 tasks | 10 files |
 | Phase 03-daily-loop-closure P04 | 1min | 1 tasks | 2 files |
+| Phase 03-daily-loop-closure P03-03 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,8 @@ Recent decisions affecting current work:
 - [Phase 03-02]: Thenable chainable Supabase mock builder for vitest — mockResolvedValue on .eq() breaks chained .eq().eq() since first call returns a Promise; solution is a mock object with then/catch + all query methods as mockReturnThis()
 - [Phase 03-02]: useStreak timezone test uses en-CA formatted date as fixture — mocking Intl.DateTimeFormat constructor to return same date for all inputs causes infinite while loop in hook
 - [Phase 03-02]: uiStore extended with create()(fn) single-call pattern preserved — Zustand v5 create()(fn) double-parens only needed with middleware; existing file uses create((set) => ...) which is valid
+- [Phase 03-03]: AnimatePresence without mode='wait' — jsdom blocks forever on exit animations; omitting mode allows step transitions in tests without behavior change in browser
+- [Phase 03-03]: vi.mock factory form required for supabase tests — bare vi.mock() cannot prevent supabase accessToken init error; explicit factory replaces module before evaluation
 
 ### Pending Todos
 
@@ -124,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T16:22:55.343Z
-Stopped at: Completed 03-04-PLAN.md (MorningPrompt and EveningPrompt)
+Last session: 2026-03-09T16:23:41.651Z
+Stopped at: Completed 03-03-PLAN.md (CheckInOverlay component)
 Resume file: None
