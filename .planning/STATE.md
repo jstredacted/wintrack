@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: 05-05 Task 1 complete — awaiting visual acceptance checkpoint (Task 2)
-last_updated: "2026-03-09T19:36:45.418Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-10T14:14:26.596Z"
 last_activity: "2026-03-10 — Phase 5 Plan 03 (Wave 2: TimerFocusOverlay + useCountUp + TodayPage wire) complete"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 4
-  total_plans: 25
-  completed_plans: 24
+  total_plans: 33
+  completed_plans: 25
   percent: 92
 ---
 
@@ -74,6 +74,7 @@ Progress: [█████████░] 92%
 | Phase 05-ux-polish P05-02 | 8 | 2 tasks | 4 files |
 | Phase 05-ux-polish P03 | 2 | 2 tasks | 4 files |
 | Phase 05-ux-polish P04 | 18 | 2 tasks | 3 files |
+| Phase 06-animations-micro-interactions-and-overlay-fixes P06-01 | 2 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -149,10 +150,13 @@ Recent decisions affecting current work:
 - [Phase 05-03]: totalSeconds used for null check (not animatedSeconds) — component hides correctly when total is truly 0
 - [Phase 05-04]: liveWordCountRef: track word count as both state+ref in same onChange handler for display + async-safe capture in createPortal components
 - [Phase 05-04]: autoFocus prop on title input replaces setTimeout focus to avoid racing with userEvent.type in tests — setTimeout stolen focus mid-typing causing flaky word count assertions
+- [Phase 06-01]: showAddSlot = true (no length cap) — always show Add slot in TimerFocusOverlay
+- [Phase 06-01]: TodayPage mock uses plain vi.fn() return — useUIStore destructures directly without selector argument
 
 ### Roadmap Evolution
 
 - Phase 5 added: UX Polish
+- Phase 6 added: Animations, micro-interactions, and overlay fixes
 
 ### Pending Todos
 
@@ -165,6 +169,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T19:36:45.417Z
-Stopped at: 05-05 Task 1 complete — awaiting visual acceptance checkpoint (Task 2)
+Last session: 2026-03-10T14:14:26.594Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
