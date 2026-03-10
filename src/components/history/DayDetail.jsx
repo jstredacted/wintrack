@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
 function WinRow({ win }) {
@@ -23,18 +24,28 @@ function WinRow({ win }) {
             <button
               onClick={() => setExpanded(v => !v)}
               aria-label={expanded ? 'Hide reason' : 'Show reason'}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
             >
               {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
           )}
         </div>
       </div>
-      {!completed && note && expanded && (
-        <p className="font-mono text-xs text-muted-foreground mt-2 pl-0 leading-relaxed">
-          {note}
-        </p>
-      )}
+      <AnimatePresence>
+        {!completed && note && expanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <p className="font-mono text-xs text-muted-foreground mt-2 leading-relaxed">
+              {note}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -52,7 +52,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
           <button
             aria-label="Previous days"
             onClick={() => scroll(-1)}
-            className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-muted-foreground/50 hover:text-foreground transition-colors p-1"
+            className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-muted-foreground/50 hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75 p-1"
           >
             <ChevronLeft size={16} />
           </button>
@@ -77,7 +77,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
               data-completed={completed ? 'true' : 'false'}
               onClick={() => onSelectDate?.(date)}
               className={[
-                'snap-start shrink-0 flex flex-col items-center gap-2 px-4 py-5 min-w-[4.5rem] font-mono transition-all',
+                'snap-start shrink-0 flex flex-col items-center gap-2 px-4 py-5 min-w-[4.5rem] font-mono transition-all active:scale-[0.94]',
                 isSelected
                   ? 'text-foreground border-b-2 border-foreground'
                   : 'text-muted-foreground/40 hover:text-muted-foreground/70 border-b-2 border-transparent',
@@ -109,7 +109,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
           <button
             aria-label="Next days"
             onClick={() => scroll(1)}
-            className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-muted-foreground/50 hover:text-foreground transition-colors p-1"
+            className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-muted-foreground/50 hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75 p-1"
           >
             <ChevronRight size={16} />
           </button>
