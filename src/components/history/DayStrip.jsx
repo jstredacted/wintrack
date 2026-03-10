@@ -30,7 +30,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
     const el = scrollRef.current;
     if (!el) return;
     el.scrollLeft = el.scrollWidth;
-    updateScrollState();
+    requestAnimationFrame(updateScrollState);
   }, []);
 
   const scroll = (dir) => {
