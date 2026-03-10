@@ -45,4 +45,16 @@ describe('JournalEditorOverlay', () => {
     await user.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('shows "Saving\u2026" on Save button while async onSave is pending', async () => {
+    const user = userEvent.setup();
+    let resolveSave;
+    const onSave = vi.fn(() => new Promise((resolve) => { resolveSave = resolve; }));
+    render(<JournalEditorOverlay open={true} onSave={onSave} onClose={vi.fn()} />);
+    await user.type(screen.getByRole('textbox', { name: /title/i }), 'My entry');
+    await user.click(screen.getByRole('button', { name: /save/i }));
+    // While save is pending, button text should be 'Saving...'
+    expect(screen.getByRole('button', { name: /saving/i })).toBeInTheDocument();
+    resolveSave();
+  });
 });
