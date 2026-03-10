@@ -113,7 +113,7 @@ export default function TimerFocusOverlay({
     _onStart: onStartWin,
     _onStop: onStopWin,
   }));
-  const showAddSlot = displayWins.length < 4;
+  const showAddSlot = true; // always show Add slot — no cap on win count
   const totalItems = displayWins.length + (showAddSlot ? 1 : 0);
   const fontSize = timerFontSize(displayWins.length);
   const useGrid = totalItems >= 3;
