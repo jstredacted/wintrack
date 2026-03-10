@@ -123,7 +123,7 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
             <button
               onClick={onClose}
               disabled={submitting}
-              className="mt-4 px-6 py-2 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+              className="mt-4 px-6 py-2 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
             >
               {submitting ? 'Saving\u2026' : 'Close'}
             </button>
@@ -169,7 +169,7 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
                 />
                 <button
                   type="submit"
-                  className="px-6 py-2 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                  className="px-6 py-2 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
                 >
                   Next
                 </button>
@@ -178,13 +178,13 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
               <div className="flex gap-4">
                 <button
                   onClick={handleYes}
-                  className="px-8 py-3 bg-foreground text-background rounded-md text-sm font-mono font-medium hover:opacity-90 transition-opacity"
+                  className="px-8 py-3 bg-foreground text-background rounded-md text-sm font-mono font-medium hover:opacity-90 transition-opacity active:scale-[0.96] transition-transform duration-75"
                 >
                   Yes
                 </button>
                 <button
                   onClick={handleNo}
-                  className="px-8 py-3 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                  className="px-8 py-3 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
                 >
                   No
                 </button>

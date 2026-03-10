@@ -38,14 +38,14 @@ export default function MorningPrompt({ show, onLogWin, onDismiss }) {
         <div className="flex flex-col gap-3 w-full">
           <button
             onClick={onLogWin}
-            className="w-full px-6 py-3 bg-foreground text-background rounded-md text-sm font-mono font-medium hover:opacity-90 transition-opacity"
+            className="w-full px-6 py-3 bg-foreground text-background rounded-md text-sm font-mono font-medium hover:opacity-90 transition-opacity active:scale-[0.96] transition-transform duration-75"
             aria-label="Log a win"
           >
             Log a win
           </button>
           <button
             onClick={onDismiss}
-            className="w-full px-6 py-3 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            className="w-full px-6 py-3 border border-border rounded-md text-sm font-mono text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
             aria-label="Later"
           >
             Later
