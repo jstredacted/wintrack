@@ -54,4 +54,12 @@ describe('TimerFocusOverlay', () => {
     await user.click(screen.getByRole('button', { name: /resume timer/i }));
     expect(onStartWin).toHaveBeenCalledWith('w1');
   });
+
+  it('renders Add slot when exactly 4 wins are shown', () => {
+    const fourWins = Array.from({ length: 4 }, (_, i) => ({
+      id: `w${i}`, title: `Win ${i}`, timer_elapsed_seconds: 0, timer_started_at: null,
+    }));
+    render(<TimerFocusOverlay open={true} wins={fourWins} onClose={vi.fn()} />);
+    expect(screen.getByRole('button', { name: /add a win/i })).toBeInTheDocument();
+  });
 });
