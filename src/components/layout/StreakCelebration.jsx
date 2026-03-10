@@ -3,12 +3,14 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function StreakCelebration({ open, streak, onClose }) {
   const [visible, setVisible] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const [displayCount, setDisplayCount] = useState(0);
   const rafRef = useRef(null);
 
-  // Mount/unmount
+  // Mount/unmount state machine
   useEffect(() => {
-    if (open) setVisible(true);
+    if (open) { setVisible(true); setExiting(false); }
+    else if (visible) { setExiting(true); }
   }, [open]);
 
   // Animate number from 0 → streak over 1.5s ease-out cubic
@@ -45,9 +47,13 @@ export default function StreakCelebration({ open, streak, onClose }) {
       aria-modal="true"
       aria-label="Streak celebration"
       onClick={onClose}
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background cursor-pointer"
-      style={{ animation: open ? 'overlay-enter 0.3s ease forwards' : undefined }}
-      onAnimationEnd={() => { if (!open) setVisible(false); }}
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background cursor-pointer ${
+        exiting ? 'overlay-exit' : 'overlay-enter'
+      }`}
+      onAnimationEnd={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (exiting) setVisible(false);
+      }}
     >
       {/* Fire */}
       <span className="text-[6rem] leading-none mb-6" aria-hidden="true">🔥</span>
