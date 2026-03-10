@@ -121,12 +121,17 @@ Plans:
 
 ### Phase 6: Animations, micro-interactions, and overlay fixes
 
-**Goal:** All five UX friction points are resolved — timer overlay cap removed, journal save crossfades smoothly, journal dismiss is snappy, TodayPage flash eliminated, and primary buttons have tactile press feedback
+**Goal:** All original UX friction bugs are resolved, every interactive element across the app has tactile press feedback, and list/content transitions replace snapping with smooth animation — a cohesive, polished feel throughout
 **Requirements**: FIX-01, FIX-02, FIX-03, FIX-04, FIX-05
 **Depends on:** Phase 5
-**Plans:** 3 plans
+**Plans:** 8 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Wave 0 stubs + FIX-01: remove 4-win cap, create TodayPage.test.jsx, add saving-state test
-- [ ] 06-02-PLAN.md — FIX-02 + FIX-04: remove AnimatePresence mode="wait" flash fix, tune journal exit easing
-- [ ] 06-03-PLAN.md — FIX-03 + FIX-05: journal save AnimatePresence crossfade + saving state + active:scale button
+- [ ] 06-01-PLAN.md — Wave 0 stubs + FIX-01: remove 4-win cap, TodayPage.test.jsx, saving-state stub (Wave 1)
+- [ ] 06-02-PLAN.md — FIX-02 + FIX-04: TodayPage AnimatePresence flash fix + journal exit easing (Wave 2, parallel)
+- [ ] 06-03-PLAN.md — FIX-03 + FIX-05: journal save crossfade + saving state + active:scale (Wave 2, parallel)
+- [ ] 06-04-PLAN.md — NEW-BUG-01: StreakCelebration state-machine refactor — fix broken animation + add exit (Wave 2, parallel)
+- [ ] 06-05-PLAN.md — Press feedback: WinCard, TimerFocusOverlay, RollForwardPrompt, TodayPage buttons (Wave 2, parallel)
+- [ ] 06-06-PLAN.md — Press feedback: CheckInOverlay, MorningPrompt, EveningPrompt, SideNav, Journal surfaces (Wave 2, parallel)
+- [ ] 06-07-PLAN.md — Animations: DayStrip press feedback, DayDetail note height animation, HistoryPage date crossfade (Wave 2, parallel)
+- [ ] 06-08-PLAN.md — Visual acceptance checkpoint (Wave 3)
