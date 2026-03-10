@@ -118,3 +118,15 @@ Plans:
 - [ ] 05-03-PLAN.md — TimerFocusOverlay full-screen bento + TotalFocusTime count-up animation
 - [ ] 05-04-PLAN.md — JournalEditorOverlay full-screen slide-up editor with word count + summary
 - [ ] 05-05-PLAN.md — DayStrip replaces Heatmap, greeting header, dual-streak Header + visual acceptance
+
+### Phase 6: Animations, micro-interactions, and overlay fixes
+
+**Goal:** All five UX friction points are resolved — timer overlay cap removed, journal save crossfades smoothly, journal dismiss is snappy, TodayPage flash eliminated, and primary buttons have tactile press feedback
+**Requirements**: FIX-01, FIX-02, FIX-03, FIX-04, FIX-05
+**Depends on:** Phase 5
+**Plans:** 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Wave 0 stubs + FIX-01: remove 4-win cap, create TodayPage.test.jsx, add saving-state test
+- [ ] 06-02-PLAN.md — FIX-02 + FIX-04: remove AnimatePresence mode="wait" flash fix, tune journal exit easing
+- [ ] 06-03-PLAN.md — FIX-03 + FIX-05: journal save AnimatePresence crossfade + saving state + active:scale button
