@@ -53,7 +53,7 @@ export default function WinCard({
         <button
           aria-label="edit"
           onClick={handleEditStart}
-          className="text-muted-foreground/30 hover:text-muted-foreground transition-colors mt-0.5 opacity-0 group-hover:opacity-100"
+          className="text-muted-foreground/30 hover:text-muted-foreground transition-colors mt-0.5 opacity-0 group-hover:opacity-100 active:opacity-70 transition-opacity duration-75"
         >
           <Pencil size={16} />
         </button>
@@ -71,14 +71,14 @@ export default function WinCard({
               <button
                 aria-label="pause"
                 onClick={() => onPauseTimer?.(displaySeconds)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
               >
                 <Pause size={18} />
               </button>
               <button
                 aria-label="stop"
                 onClick={() => onStopTimer?.(displaySeconds)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
               >
                 <Square size={18} />
               </button>
@@ -87,7 +87,7 @@ export default function WinCard({
             <button
               aria-label="start"
               onClick={() => onStartTimer?.()}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
             >
               <Play size={18} />
             </button>
@@ -95,7 +95,7 @@ export default function WinCard({
           <button
             aria-label="delete"
             onClick={() => onDelete?.()}
-            className="text-muted-foreground/30 hover:text-muted-foreground transition-colors opacity-0 group-hover:opacity-100 ml-1"
+            className="text-muted-foreground/30 hover:text-muted-foreground transition-colors opacity-0 group-hover:opacity-100 ml-1 active:opacity-70 transition-opacity duration-75"
           >
             <Trash2 size={16} />
           </button>
