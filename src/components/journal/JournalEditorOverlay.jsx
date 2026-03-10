@@ -24,6 +24,7 @@ export default function JournalEditorOverlay({
   const startedAtRef = useRef(null);
   const titleRef = useRef(null);
   const liveWordCountRef = useRef(0);
+  const savingRef = useRef(false);
 
   useEffect(() => {
     if (open) {
@@ -35,6 +36,7 @@ export default function JournalEditorOverlay({
       liveWordCountRef.current = wordCount(initialBody);
       setLiveWordCount(liveWordCountRef.current);
       startedAtRef.current = Date.now();
+      savingRef.current = false;
     } else if (visible) {
       setExiting(true);
     }
@@ -58,7 +60,8 @@ export default function JournalEditorOverlay({
   async function handleSave(e) {
     e.preventDefault();
     const currentTitle = title.trim();
-    if (!currentTitle) return;
+    if (!currentTitle || savingRef.current) return;
+    savingRef.current = true;
     const wc = liveWordCountRef.current;
     const minutes = Math.round((Date.now() - startedAtRef.current) / 60000);
     await onSave({ title: currentTitle, body: body.trim() });

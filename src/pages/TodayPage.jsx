@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalDateString } from '@/lib/utils/date';
@@ -58,6 +58,7 @@ export default function TodayPage() {
     refreshStreak,
   } = useUIStore();
 
+  const openedFromTimerRef = useRef(false);
   const { hasCheckedInToday } = useCheckin();
   const [checkedInToday, setCheckedInToday] = useState(null);
 
@@ -189,10 +190,18 @@ export default function TodayPage() {
       <WinInputOverlay
         open={inputOverlayOpen}
         onSubmit={async (title) => {
-          await addWin(title);
+          const newWin = await addWin(title);
+          closeInputOverlay();
+          if (openedFromTimerRef.current && newWin) {
+            openedFromTimerRef.current = false;
+            startTimer(newWin.id);
+            openTimerOverlay();
+          }
+        }}
+        onClose={() => {
+          openedFromTimerRef.current = false;
           closeInputOverlay();
         }}
-        onClose={closeInputOverlay}
       />
 
       {/* Check-in overlay */}
@@ -241,6 +250,7 @@ export default function TodayPage() {
           closeTimerOverlay();
         }}
         onAddWin={() => {
+          openedFromTimerRef.current = true;
           closeTimerOverlay();
           openInputOverlay();
         }}
