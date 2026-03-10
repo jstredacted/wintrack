@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useHistory } from '@/hooks/useHistory'
 import { getLocalDateString } from '@/lib/utils/date'
 import DayStrip from '@/components/history/DayStrip'
@@ -48,8 +49,18 @@ export default function HistoryPage() {
         />
       </div>
 
-      {/* Day detail */}
-      <DayDetail date={selectedDate} wins={selectedWins} loading={detailLoading} />
+      {/* Day detail — crossfade on selected date change */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={selectedDate}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.12 }}
+        >
+          <DayDetail date={selectedDate} wins={selectedWins} loading={detailLoading} />
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }
