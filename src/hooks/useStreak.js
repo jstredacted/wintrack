@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getLocalDateString } from '@/lib/utils/date';
-
-const USER_ID = import.meta.env.VITE_USER_ID;
+import { USER_ID } from '@/lib/env';
 
 /**
  * useStreak(refreshKey?)
