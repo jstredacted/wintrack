@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getLocalDateString } from '@/lib/utils/date';
-
-const USER_ID = import.meta.env.VITE_USER_ID;
+import { USER_ID } from '@/lib/env';
 
 /**
  * useWins()
@@ -107,6 +106,7 @@ export function useWins() {
     }
 
     setWins((prev) => prev.map((w) => (w.id === optimistic.id ? data : w)));
+    return data;
   }, []);
 
   /**
