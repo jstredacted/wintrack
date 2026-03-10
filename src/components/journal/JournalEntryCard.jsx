@@ -35,7 +35,7 @@ export default function JournalEntryCard({ entry, onEdit, onDelete, editingId })
           type="button"
           aria-label="Edit entry"
           onClick={() => onEdit(entry.id)}
-          className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
         >
           <Pencil size={13} />
           Edit
@@ -45,7 +45,7 @@ export default function JournalEntryCard({ entry, onEdit, onDelete, editingId })
             type="button"
             aria-label="Delete entry"
             onClick={() => onDelete(entry.id)}
-            className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
           >
             <Trash2 size={13} />
             Delete

@@ -57,7 +57,7 @@ export default function SideNav() {
               aria-label={label}
               className={({ isActive }) =>
                 cn(
-                  'relative flex items-center justify-center w-10 h-10 rounded-lg transition-colors',
+                  'relative flex items-center justify-center w-10 h-10 rounded-lg transition-colors active:bg-foreground/10',
                   isActive
                     ? 'text-foreground bg-foreground/8'
                     : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'

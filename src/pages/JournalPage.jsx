@@ -37,7 +37,7 @@ export default function JournalPage() {
         <h1 className="text-5xl font-bold leading-none tracking-tight">Journal</h1>
         <button
           onClick={() => setShowNewForm(true)}
-          className="font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors border-b border-muted-foreground/40 hover:border-foreground pb-px"
+          className="font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors border-b border-muted-foreground/40 hover:border-foreground pb-px active:opacity-70 transition-opacity duration-75"
         >
           New Entry
         </button>
