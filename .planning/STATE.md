@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-02-PLAN.md
-last_updated: "2026-03-10T14:17:32.410Z"
+stopped_at: Completed 06-03-PLAN.md
+last_updated: "2026-03-10T14:21:05.532Z"
 last_activity: "2026-03-10 — Phase 5 Plan 03 (Wave 2: TimerFocusOverlay + useCountUp + TodayPage wire) complete"
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 33
-  completed_plans: 26
+  completed_plans: 27
   percent: 92
 ---
 
@@ -76,6 +76,7 @@ Progress: [█████████░] 92%
 | Phase 05-ux-polish P04 | 18 | 2 tasks | 3 files |
 | Phase 06-animations-micro-interactions-and-overlay-fixes P06-01 | 2 | 3 tasks | 4 files |
 | Phase 06-animations-micro-interactions-and-overlay-fixes P06-02 | 2 | 2 tasks | 2 files |
+| Phase 06-animations-micro-interactions-and-overlay-fixes P06-03 | 2 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -155,6 +156,8 @@ Recent decisions affecting current work:
 - [Phase 06-01]: TodayPage mock uses plain vi.fn() return — useUIStore destructures directly without selector argument
 - [Phase 06-02]: AnimatePresence cross-fade (no mode prop) vs mode='wait' — removes blank gap when timer open triggers brief loading re-flip
 - [Phase 06-02]: Journal exit easing: 0.22s cubic-bezier(0.4,0,1,1) ease-in vs 0.3s spring — snappier dismiss without changing entry
+- [Phase 06-animations-micro-interactions-and-overlay-fixes]: onAnimationEnd bubble guard (e.target !== e.currentTarget) required when inner AnimatePresence fires animationend events that bubble to portal div
+- [Phase 06-animations-micro-interactions-and-overlay-fixes]: saving state pattern: setSaving(true) before await onSave, setSaving(false) after — drives button text + disabled to prevent double-submit
 
 ### Roadmap Evolution
 
@@ -172,6 +175,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T14:17:32.408Z
-Stopped at: Completed 06-02-PLAN.md
+Last session: 2026-03-10T14:21:05.530Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None
