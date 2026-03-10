@@ -169,7 +169,7 @@ export default function TodayPage() {
       <div className="flex items-center gap-4 pb-2 mt-auto">
         <button
           onClick={openInputOverlay}
-          className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+          className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
           aria-label="Log a win"
         >
           <Plus size={16} />
@@ -178,7 +178,7 @@ export default function TodayPage() {
         {wins.length > 0 && !checkedInToday && (
           <button
             onClick={openCheckinOverlay}
-            className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
             aria-label="Start check-in"
           >
             Check in
