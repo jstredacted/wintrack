@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-05-PLAN.md
-last_updated: "2026-03-10T14:26:48.870Z"
+stopped_at: Completed 06-06-PLAN.md
+last_updated: "2026-03-10T14:30:11.625Z"
 last_activity: "2026-03-10 — Phase 5 Plan 03 (Wave 2: TimerFocusOverlay + useCountUp + TodayPage wire) complete"
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 33
-  completed_plans: 29
+  completed_plans: 30
   percent: 92
 ---
 
@@ -79,6 +79,7 @@ Progress: [█████████░] 92%
 | Phase 06-animations-micro-interactions-and-overlay-fixes P06-03 | 2 | 2 tasks | 1 files |
 | Phase 06-animations-micro-interactions-and-overlay-fixes P06-04 | 3 | 1 tasks | 1 files |
 | Phase 06-animations-micro-interactions-and-overlay-fixes P06-05 | 2 | 2 tasks | 4 files |
+| Phase 06-animations-micro-interactions-and-overlay-fixes P06-06 | 4 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -161,6 +162,7 @@ Recent decisions affecting current work:
 - [Phase 06-animations-micro-interactions-and-overlay-fixes]: onAnimationEnd bubble guard (e.target !== e.currentTarget) required when inner AnimatePresence fires animationend events that bubble to portal div
 - [Phase 06-animations-micro-interactions-and-overlay-fixes]: saving state pattern: setSaving(true) before await onSave, setSaving(false) after — drives button text + disabled to prevent double-submit
 - [Phase 06-04]: StreakCelebration: remove style.animation referencing CSS class name as @keyframes name — use overlay-enter/overlay-exit CSS classes instead
+- [Phase 06-06]: SideNav NavLink uses active:bg-foreground/10 not scale — absolute-positioned indicator pip would visually shift if container scales
 
 ### Roadmap Evolution
 
@@ -178,6 +180,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T14:26:48.868Z
-Stopped at: Completed 06-05-PLAN.md
+Last session: 2026-03-10T14:30:11.622Z
+Stopped at: Completed 06-06-PLAN.md
 Resume file: None
