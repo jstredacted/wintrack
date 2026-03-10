@@ -125,7 +125,7 @@ export default function TodayPage() {
 
       {/* Loading / error / win list */}
       <div className="flex-1">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {loading ? (
             <motion.p
               key="loading"
