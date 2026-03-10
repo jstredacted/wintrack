@@ -162,7 +162,7 @@
   animation: journal-slide-in 0.35s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 .journal-overlay-exit {
-  animation: journal-slide-out 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: journal-slide-out 0.22s cubic-bezier(0.4, 0, 1, 1) both;
 }
 
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
