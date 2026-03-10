@@ -21,6 +21,7 @@ export default function JournalEditorOverlay({
   const [liveWordCount, setLiveWordCount] = useState(0);
   const [summaryWordCount, setSummaryWordCount] = useState(0);
   const [summaryMinutes, setSummaryMinutes] = useState(0);
+  const [saving, setSaving] = useState(false);
   const startedAtRef = useRef(null);
   const titleRef = useRef(null);
   const liveWordCountRef = useRef(0);
@@ -62,11 +63,13 @@ export default function JournalEditorOverlay({
     const currentTitle = title.trim();
     if (!currentTitle || savingRef.current) return;
     savingRef.current = true;
+    setSaving(true);
     const wc = liveWordCountRef.current;
     const minutes = Math.round((Date.now() - startedAtRef.current) / 60000);
     await onSave({ title: currentTitle, body: body.trim() });
     setSummaryWordCount(wc);
     setSummaryMinutes(minutes);
+    setSaving(false);
     setScreen('summary');
   }
 
@@ -118,10 +121,13 @@ export default function JournalEditorOverlay({
             <div className="flex gap-6 mt-8 pb-4">
               <button
                 type="submit"
-                disabled={!title.trim()}
-                className="font-mono text-xs uppercase tracking-widest text-foreground disabled:opacity-30 border-b border-foreground pb-px disabled:border-muted-foreground"
+                disabled={!title.trim() || saving}
+                className="font-mono text-xs uppercase tracking-widest text-foreground
+                           disabled:opacity-30 border-b border-foreground pb-px
+                           disabled:border-muted-foreground
+                           active:scale-[0.96] transition-transform duration-75"
               >
-                Save
+                {saving ? 'Saving\u2026' : 'Save'}
               </button>
               <button
                 type="button"
