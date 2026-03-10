@@ -47,14 +47,14 @@ function TimerStation({ win, fontSize }) {
               win._onStart?.(win.id);
             }
           }}
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
         >
           {isRunning ? <Pause size={18} /> : <Play size={18} />}
         </button>
         <button
           aria-label="Stop timer"
           onClick={() => win._onStop?.(win.id, displaySeconds)}
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
         >
           <Square size={16} />
         </button>
@@ -68,7 +68,7 @@ function AddSlot({ onClick }) {
     <button
       onClick={onClick}
       aria-label="Add a win"
-      className="flex flex-col items-center justify-center gap-6 opacity-30 hover:opacity-70 transition-opacity cursor-pointer px-10 py-8"
+      className="flex flex-col items-center justify-center gap-6 opacity-30 hover:opacity-70 active:opacity-50 transition-opacity cursor-pointer px-10 py-8"
     >
       <span className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
         New win
@@ -136,7 +136,7 @@ export default function TimerFocusOverlay({
           <button
             aria-label="Stop all timers"
             onClick={onStopAll}
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
           >
             <Square size={14} />
             Stop all
@@ -144,7 +144,7 @@ export default function TimerFocusOverlay({
           <button
             aria-label="Close focus view"
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors active:opacity-70 transition-opacity duration-75"
           >
             <X size={18} />
           </button>
@@ -158,7 +158,7 @@ export default function TimerFocusOverlay({
             <span className="font-mono text-sm uppercase tracking-[0.2em]">No active wins</span>
             <button
               onClick={onAddWin}
-              className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-muted-foreground transition-colors"
+              className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-muted-foreground transition-colors active:opacity-70 transition-opacity duration-75"
             >
               <Plus size={18} />
               Log a win
