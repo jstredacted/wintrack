@@ -58,6 +58,7 @@ export default function JournalPage() {
             >
               <JournalEntryCard
                 entry={entry}
+                editingId={editingId}
                 onEdit={(id) => setEditingId(id)}
                 onDelete={(id) => deleteEntry(id)}
               />
