@@ -107,6 +107,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 4. History & Journal | 5/5 | Complete   | 2026-03-10 |
 | 5. UX Polish | 5/5 | Complete   | 2026-03-10 |
 | 6. Animations, Micro-interactions & Overlay Fixes | 8/8 | Complete | 2026-03-11 |
+| 7. Cleanup & Contract Fixes | 0/1 | Pending | — |
 
 ### Phase 5: UX Polish
 
@@ -138,3 +139,14 @@ Plans:
 - [x] 06-06-PLAN.md — Press feedback: CheckInOverlay, MorningPrompt, EveningPrompt, SideNav, Journal surfaces (Wave 2, parallel)
 - [x] 06-07-PLAN.md — Animations: DayStrip press feedback, DayDetail note height animation, HistoryPage date crossfade (Wave 2, parallel)
 - [x] 06-08-PLAN.md — Visual acceptance checkpoint (Wave 3)
+
+### Phase 7: Cleanup & Contract Fixes
+
+**Goal:** Remove dead code left over from Phase 5's component replacements, fix the useHistory env consistency gap, forward the missing editingId prop in JournalPage, and backfill Phase 5 documentation artifacts
+**Requirements**: (gap closure — no new v1 requirement IDs)
+**Gap Closure:** Closes audit tech debt from v1.0-MILESTONE-AUDIT.md
+**Depends on:** Phase 6
+**Plans:** 0 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Dead code removal, env fix, editingId prop forward, Phase 5 docs
