@@ -107,7 +107,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 4. History & Journal | 5/5 | Complete   | 2026-03-10 |
 | 5. UX Polish | 5/5 | Complete   | 2026-03-10 |
 | 6. Animations, Micro-interactions & Overlay Fixes | 8/8 | Complete | 2026-03-11 |
-| 7. Cleanup & Contract Fixes | 0/1 | Pending | — |
+| 7. Cleanup & Contract Fixes | 1/1 | Complete | 2026-03-11 |
 
 ### Phase 5: UX Polish
 
@@ -146,7 +146,7 @@ Plans:
 **Requirements**: (gap closure — no new v1 requirement IDs)
 **Gap Closure:** Closes audit tech debt from v1.0-MILESTONE-AUDIT.md
 **Depends on:** Phase 6
-**Plans:** 0 plans
+**Plans:** 1/1 plans executed
 
 Plans:
-- [ ] 07-01-PLAN.md — Dead code removal, env fix, editingId prop forward, Phase 5 docs
+- [x] 07-01-PLAN.md — Dead code removal, env fix, editingId prop forward, Phase 5 docs
