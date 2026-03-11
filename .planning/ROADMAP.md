@@ -16,6 +16,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Win Logging & Focus Tracking** - Full-screen Typeform-style win input, win management, and per-win stopwatch (completed 2026-03-09)
 - [x] **Phase 3: Daily Loop Closure** - Evening check-in, in-app prompts, and streak counter (completed 2026-03-09)
 - [x] **Phase 4: History & Journal** - Journal entries, past-day browsing, and visual completion history (completed 2026-03-10)
+- [x] **Phase 5: UX Polish** - Fluid typography, TimerFocusOverlay, JournalEditorOverlay, DayStrip, and dual-streak header (completed 2026-03-10)
+- [x] **Phase 6: Animations, Micro-interactions & Overlay Fixes** - Full-app press feedback, overlay animation fixes, StreakCelebration, HistoryPage crossfade (completed 2026-03-11)
 
 ## Phase Details
 
@@ -103,35 +105,36 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Win Logging & Focus Tracking | 5/5 | Complete   | 2026-03-09 |
 | 3. Daily Loop Closure | 5/5 | Complete   | 2026-03-09 |
 | 4. History & Journal | 5/5 | Complete   | 2026-03-10 |
-| 5. UX Polish | 4/5 | In Progress|  |
+| 5. UX Polish | 5/5 | Complete   | 2026-03-10 |
+| 6. Animations, Micro-interactions & Overlay Fixes | 8/8 | Complete | 2026-03-11 |
 
 ### Phase 5: UX Polish
 
 **Goal:** All major surfaces are polished to a cohesive, high-quality finish — fluid typography, focused timer overlay, immersive journal editor, intuitive day-strip history, and dual streak tracking in the header
 **Requirements**: (polish pass — no new v1 requirement IDs)
 **Depends on:** Phase 4
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans executed
 
 Plans:
 - [x] 05-01-PLAN.md — Wave 0 RED test stubs for all new Phase 5 components
-- [ ] 05-02-PLAN.md — Global layout container, clamp() typography, useStreak journalStreak, borderless WinCard
-- [ ] 05-03-PLAN.md — TimerFocusOverlay full-screen bento + TotalFocusTime count-up animation
-- [ ] 05-04-PLAN.md — JournalEditorOverlay full-screen slide-up editor with word count + summary
-- [ ] 05-05-PLAN.md — DayStrip replaces Heatmap, greeting header, dual-streak Header + visual acceptance
+- [x] 05-02-PLAN.md — Global layout container, clamp() typography, useStreak journalStreak, borderless WinCard
+- [x] 05-03-PLAN.md — TimerFocusOverlay full-screen bento + TotalFocusTime count-up animation
+- [x] 05-04-PLAN.md — JournalEditorOverlay full-screen slide-up editor with word count + summary
+- [x] 05-05-PLAN.md — DayStrip replaces Heatmap, greeting header, dual-streak Header + visual acceptance
 
 ### Phase 6: Animations, micro-interactions, and overlay fixes
 
 **Goal:** All original UX friction bugs are resolved, every interactive element across the app has tactile press feedback, and list/content transitions replace snapping with smooth animation — a cohesive, polished feel throughout
 **Requirements**: FIX-01, FIX-02, FIX-03, FIX-04, FIX-05
 **Depends on:** Phase 5
-**Plans:** 7/8 plans executed
+**Plans:** 8/8 plans complete
 
 Plans:
-- [ ] 06-01-PLAN.md — Wave 0 stubs + FIX-01: remove 4-win cap, TodayPage.test.jsx, saving-state stub (Wave 1)
-- [ ] 06-02-PLAN.md — FIX-02 + FIX-04: TodayPage AnimatePresence flash fix + journal exit easing (Wave 2, parallel)
-- [ ] 06-03-PLAN.md — FIX-03 + FIX-05: journal save crossfade + saving state + active:scale (Wave 2, parallel)
-- [ ] 06-04-PLAN.md — NEW-BUG-01: StreakCelebration state-machine refactor — fix broken animation + add exit (Wave 2, parallel)
-- [ ] 06-05-PLAN.md — Press feedback: WinCard, TimerFocusOverlay, RollForwardPrompt, TodayPage buttons (Wave 2, parallel)
-- [ ] 06-06-PLAN.md — Press feedback: CheckInOverlay, MorningPrompt, EveningPrompt, SideNav, Journal surfaces (Wave 2, parallel)
-- [ ] 06-07-PLAN.md — Animations: DayStrip press feedback, DayDetail note height animation, HistoryPage date crossfade (Wave 2, parallel)
-- [ ] 06-08-PLAN.md — Visual acceptance checkpoint (Wave 3)
+- [x] 06-01-PLAN.md — Wave 0 stubs + FIX-01: remove 4-win cap, TodayPage.test.jsx, saving-state stub (Wave 1)
+- [x] 06-02-PLAN.md — FIX-02 + FIX-04: TodayPage AnimatePresence flash fix + journal exit easing (Wave 2, parallel)
+- [x] 06-03-PLAN.md — FIX-03 + FIX-05: journal save crossfade + saving state + active:scale (Wave 2, parallel)
+- [x] 06-04-PLAN.md — NEW-BUG-01: StreakCelebration state-machine refactor — fix broken animation + add exit (Wave 2, parallel)
+- [x] 06-05-PLAN.md — Press feedback: WinCard, TimerFocusOverlay, RollForwardPrompt, TodayPage buttons (Wave 2, parallel)
+- [x] 06-06-PLAN.md — Press feedback: CheckInOverlay, MorningPrompt, EveningPrompt, SideNav, Journal surfaces (Wave 2, parallel)
+- [x] 06-07-PLAN.md — Animations: DayStrip press feedback, DayDetail note height animation, HistoryPage date crossfade (Wave 2, parallel)
+- [x] 06-08-PLAN.md — Visual acceptance checkpoint (Wave 3)
