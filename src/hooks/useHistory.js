@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-
-const USER_ID = import.meta.env.VITE_USER_ID
+import { USER_ID } from '@/lib/env'
 
 export function useHistory() {
   const [completionMap, setCompletionMap] = useState({})
