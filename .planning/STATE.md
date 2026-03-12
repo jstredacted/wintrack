@@ -29,7 +29,7 @@ Phase: 6 of 6 (Animations, micro-interactions, and overlay fixes) — COMPLETE
 Plan: 8 of 8 — Plan 08 complete (Visual acceptance checkpoint — user approved)
 Status: Complete — all 6 phases done, v1.0 feature-complete
 
-Last activity: 2026-03-11 — Phase 6 Plan 08 (Visual acceptance checkpoint) approved and phase closed
+Last activity: 2026-03-12 - Completed quick task 1: Add logo to website replacing basic w text and tab favicon with dark light mode support
 
 Progress: [██████████] 100%
 
@@ -177,6 +177,12 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 None yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Add logo to website replacing basic w text and tab favicon with dark light mode support | 2026-03-12 | 39a9608 | [1-add-logo-to-website-replacing-basic-w-te](./quick/1-add-logo-to-website-replacing-basic-w-te/) |
 
 ### Blockers/Concerns
 
