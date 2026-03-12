@@ -38,12 +38,13 @@ export default function SideNav() {
       <nav
         className="fixed left-0 top-0 bottom-0 w-14 flex flex-col items-center border-r border-border bg-background z-10"
       >
-        {/* Monogram */}
-        <div
-          aria-label="wintrack"
-          className="h-14 flex items-center justify-center text-xs font-mono uppercase tracking-widest text-muted-foreground/50 select-none"
-        >
-          W
+        {/* Logo */}
+        <div aria-label="wintrack" className="h-14 flex items-center justify-center select-none">
+          <img
+            src="/logo.png"
+            alt="Wintrack"
+            className="w-8 h-8 dark:invert dark:mix-blend-screen mix-blend-multiply"
+          />
         </div>
 
         {/* Nav icons */}
