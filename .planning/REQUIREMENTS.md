@@ -74,6 +74,17 @@
 - **CAT-04**: Category badge is visible on TimelineItem in DayDetail history view
 - **CAT-05**: TodayPage shows per-category completion counts when multiple categories are in use
 
+### User Settings (Phase 4)
+
+- **SETTINGS-01**: User settings persist to Supabase user_settings table with defaults (single row per user)
+- **SETTINGS-02**: Settings load from localStorage cache on mount for instant availability (no flash)
+- **NIGHTOWL-01**: getLocalDateString respects a configurable dayStartHour offset (e.g., 4am = wins at 2am count as previous day)
+- **NIGHTOWL-02**: Streak calculation (useStreak) correctly handles night-owl day offset
+- **NIGHTOWL-03**: useWins fetches correct "today" and "yesterday" wins with day offset applied
+- **SCHEDULE-01**: Morning and evening prompt hours are configurable via settings (not hardcoded 9am/9pm)
+- **HEATMAP-01**: App shows a GitHub-style 84-day consistency heatmap with colored cells for completed days
+- **SETTINGSUI-01**: User can access a Settings page from SideNav to configure day boundary, prompt hours, and view consistency graph
+
 ## v2 Requirements
 
 ### Notifications
@@ -148,12 +159,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAT-03 | v1.1 Phase 3 | Planned |
 | CAT-04 | v1.1 Phase 3 | Planned |
 | CAT-05 | v1.1 Phase 3 | Planned |
+| SETTINGS-01 | v1.1 Phase 4 | Planned |
+| SETTINGS-02 | v1.1 Phase 4 | Planned |
+| NIGHTOWL-01 | v1.1 Phase 4 | Planned |
+| NIGHTOWL-02 | v1.1 Phase 4 | Planned |
+| NIGHTOWL-03 | v1.1 Phase 4 | Planned |
+| SCHEDULE-01 | v1.1 Phase 4 | Planned |
+| HEATMAP-01 | v1.1 Phase 4 | Planned |
+| SETTINGSUI-01 | v1.1 Phase 4 | Planned |
 
 **Coverage:**
 - v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 18 total — 0 complete, 18 planned
+- v1.1 requirements: 26 total — 8 complete, 18 planned
 - v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-14 — v1.1 Phase 3 requirements added (CAT-01..05)*
+*Last updated: 2026-03-14 — v1.1 Phase 4 requirements added (SETTINGS-01..02, NIGHTOWL-01..03, SCHEDULE-01, HEATMAP-01, SETTINGSUI-01)*

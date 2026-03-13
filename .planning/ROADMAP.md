@@ -71,13 +71,15 @@ Plans:
 
 ### Phase 4: User profiles and settings — user system, night owl day cycle, check-in schedule, consistency graph and streak
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Build a user settings system with Supabase persistence and localStorage caching, implement night-owl day boundary offset (configurable dayStartHour shifts "today" for late-night users), make morning/evening prompt hours configurable, add a GitHub-style 84-day consistency heatmap, and create a Settings page accessible from SideNav.
+**Requirements**: [SETTINGS-01, SETTINGS-02, NIGHTOWL-01, NIGHTOWL-02, NIGHTOWL-03, SCHEDULE-01, HEATMAP-01, SETTINGSUI-01]
 **Depends on:** Phase 3
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 4 to break down)
+- [ ] 04-01-PLAN.md — Settings infrastructure (DB migration, settingsStore, useSettings hook, night-owl getLocalDateString)
+- [ ] 04-02-PLAN.md — Night owl threading (dayStartHour through useStreak, useWins, TodayPage, DayStrip, uiStore)
+- [ ] 04-03-PLAN.md — Settings UI + consistency heatmap (SettingsPage, ConsistencyGraph, SideNav, routing)
 
 ### Phase 5: Push notifications — web push with service workers and cloud compute setup
 
