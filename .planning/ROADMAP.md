@@ -28,7 +28,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 | 1. Foundation | 5/5 | Complete   | 2026-03-13 | 2026-03-09 |
 | 2. Win Logging & Focus Tracking | v1.0 | 5/5 | Complete | 2026-03-09 |
 | 3. Daily Loop Closure | v1.0 | 5/5 | Complete | 2026-03-09 |
-| 4. History & Journal | v1.0 | 5/5 | Complete | 2026-03-10 |
+| 4. History & Journal | 1/3 | In Progress|  | 2026-03-10 |
 | 5. UX Polish | v1.0 | 5/5 | Complete | 2026-03-10 |
 | 6. Animations & Overlay Fixes | v1.0 | 8/8 | Complete | 2026-03-11 |
 | 7. Cleanup & Contract Fixes | v1.0 | 1/1 | Complete | 2026-03-11 |
@@ -74,7 +74,7 @@ Plans:
 **Goal:** Build a user settings system with Supabase persistence and localStorage caching, implement night-owl day boundary offset (configurable dayStartHour shifts "today" for late-night users), make morning/evening prompt hours configurable, add a GitHub-style 84-day consistency heatmap, and create a Settings page accessible from SideNav.
 **Requirements**: [SETTINGS-01, SETTINGS-02, NIGHTOWL-01, NIGHTOWL-02, NIGHTOWL-03, SCHEDULE-01, HEATMAP-01, SETTINGSUI-01]
 **Depends on:** Phase 3
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 04-01-PLAN.md — Settings infrastructure (DB migration, settingsStore, useSettings hook, night-owl getLocalDateString)
