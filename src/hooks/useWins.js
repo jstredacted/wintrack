@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getLocalDateString } from '@/lib/utils/date';
 import { USER_ID } from '@/lib/env';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 /**
  * useWins()
@@ -24,6 +25,7 @@ import { USER_ID } from '@/lib/env';
  * STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer commented out
  */
 export function useWins() {
+  const dayStartHour = useSettingsStore(s => s.settings.dayStartHour);
   const [wins, setWins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,8 +39,10 @@ export function useWins() {
       setLoading(true);
       setError(null);
 
-      const today = getLocalDateString();
-      const yesterday = getLocalDateString(new Date(Date.now() - 86400000));
+      const today = getLocalDateString(new Date(), dayStartHour);
+      const yd = new Date();
+      yd.setDate(yd.getDate() - 1);
+      const yesterday = getLocalDateString(yd, dayStartHour);
 
       const [todayResult, yesterdayResult] = await Promise.all([
         supabase
@@ -71,13 +75,13 @@ export function useWins() {
 
     fetchWins();
     return () => { cancelled = true; };
-  }, []);
+  }, [dayStartHour]);
 
   /**
    * addWin(title, category) — insert a new win for today, append optimistically
    */
   const addWin = useCallback(async (title, category = 'work') => {
-    const today = getLocalDateString();
+    const today = getLocalDateString(new Date(), dayStartHour);
     const optimistic = {
       id: `optimistic-${Date.now()}`,
       user_id: USER_ID,
@@ -108,7 +112,7 @@ export function useWins() {
 
     setWins((prev) => prev.map((w) => (w.id === optimistic.id ? data : w)));
     return data;
-  }, []);
+  }, [dayStartHour]);
 
   /**
    * editWin(id, newTitle) — update the title
@@ -175,7 +179,7 @@ export function useWins() {
   const rollForward = useCallback(async () => {
     if (yesterdayWins.length === 0) return;
 
-    const today = getLocalDateString();
+    const today = getLocalDateString(new Date(), dayStartHour);
     const toInsert = yesterdayWins.map(({ title, category }) => ({
       user_id: USER_ID,
       title,
@@ -196,7 +200,7 @@ export function useWins() {
     }
 
     setWins((prev) => [...prev, ...(data ?? [])]);
-  }, [yesterdayWins]);
+  }, [yesterdayWins, dayStartHour]);
 
   /* STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer kept for potential re-enable
   const startTimer = useCallback(async (winId) => {

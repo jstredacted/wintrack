@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getLocalDateString } from '@/lib/utils/date';
 import { USER_ID } from '@/lib/env';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 /**
  * useStreak(refreshKey?)
@@ -12,6 +13,7 @@ import { USER_ID } from '@/lib/env';
  * @returns {{ streak, journalStreak, combinedStreak, loading }}
  */
 export function useStreak(refreshKey = 0) {
+  const dayStartHour = useSettingsStore(s => s.settings.dayStartHour);
   const [streak, setStreak] = useState(0);
   const [journalStreak, setJournalStreak] = useState(0);
   const [combinedStreak, setCombinedStreak] = useState(0);
@@ -41,9 +43,10 @@ export function useStreak(refreshKey = 0) {
 
         let count = 0;
         let cursor = new Date();
-        while (completedDates.has(getLocalDateString(cursor))) {
+        while (completedDates.has(getLocalDateString(cursor, dayStartHour))) {
           count++;
-          cursor = new Date(cursor.getTime() - 86400000);
+          cursor = new Date(cursor);
+          cursor.setDate(cursor.getDate() - 1);
         }
         setStreak(count);
       } else {
@@ -62,16 +65,17 @@ export function useStreak(refreshKey = 0) {
           .filter(row => row.created_at)
           .map(row => {
             const d = new Date(row.created_at);
-            return isNaN(d.getTime()) ? null : getLocalDateString(d);
+            return isNaN(d.getTime()) ? null : getLocalDateString(d, dayStartHour);
           })
           .filter(Boolean)
       );
 
       let jCount = 0;
       let jCursor = new Date();
-      while (journalDates.has(getLocalDateString(jCursor))) {
+      while (journalDates.has(getLocalDateString(jCursor, dayStartHour))) {
         jCount++;
-        jCursor = new Date(jCursor.getTime() - 86400000);
+        jCursor = new Date(jCursor);
+        jCursor.setDate(jCursor.getDate() - 1);
       }
       setJournalStreak(jCount);
 
@@ -81,9 +85,10 @@ export function useStreak(refreshKey = 0) {
       );
       let cCount = 0;
       let cCursor = new Date();
-      while (combinedDates.has(getLocalDateString(cCursor))) {
+      while (combinedDates.has(getLocalDateString(cCursor, dayStartHour))) {
         cCount++;
-        cCursor = new Date(cCursor.getTime() - 86400000);
+        cCursor = new Date(cCursor);
+        cCursor.setDate(cCursor.getDate() - 1);
       }
       setCombinedStreak(cCount);
 
@@ -92,7 +97,7 @@ export function useStreak(refreshKey = 0) {
 
     fetchStreak();
     return () => { cancelled = true; };
-  }, [refreshKey]);
+  }, [refreshKey, dayStartHour]);
 
   return { streak, journalStreak, combinedStreak, loading };
 }

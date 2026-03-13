@@ -4,8 +4,8 @@ import { getLocalDateString } from '@/lib/utils/date';
 function readDate(key) {
   try { return localStorage.getItem(key) || null; } catch { return null; }
 }
-function writeDate(key) {
-  const d = getLocalDateString();
+function writeDate(key, dayStartHour = 0) {
+  const d = getLocalDateString(new Date(), dayStartHour);
   try { localStorage.setItem(key, d); } catch {}
   return d;
 }
@@ -20,7 +20,7 @@ export const useUIStore = create((set) => ({
   closeInputOverlay: () => set({ inputOverlayOpen: false }),
   setEditingWin: (id) => set({ editingWinId: id }),
   clearEditingWin: () => set({ editingWinId: null }),
-  markRollForwardOffered: () => set({ rollForwardOfferedDate: writeDate('rollForwardOfferedDate') }),
+  markRollForwardOffered: (dayStartHour) => set({ rollForwardOfferedDate: writeDate('rollForwardOfferedDate', dayStartHour) }),
 
   // --- Phase 3 state ---
   checkinOverlayOpen: false,
@@ -31,8 +31,8 @@ export const useUIStore = create((set) => ({
 
   openCheckinOverlay: () => set({ checkinOverlayOpen: true }),
   closeCheckinOverlay: () => set({ checkinOverlayOpen: false }),
-  dismissMorningPrompt: () => set({ morningDismissedDate: writeDate('morningDismissedDate') }),
-  dismissEveningPrompt: () => set({ eveningDismissedDate: writeDate('eveningDismissedDate') }),
+  dismissMorningPrompt: (dayStartHour) => set({ morningDismissedDate: writeDate('morningDismissedDate', dayStartHour) }),
+  dismissEveningPrompt: (dayStartHour) => set({ eveningDismissedDate: writeDate('eveningDismissedDate', dayStartHour) }),
 
   // --- Phase 5 state ---
   timerOverlayOpen: false,

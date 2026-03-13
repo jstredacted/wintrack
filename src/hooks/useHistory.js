@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { USER_ID } from '@/lib/env'
+import { useSettingsStore } from '@/stores/settingsStore'
 
 export function useHistory() {
+  const dayStartHour = useSettingsStore(s => s.settings.dayStartHour)
   const [completionMap, setCompletionMap] = useState({})
   const [loading, setLoading] = useState(true)
 
@@ -27,7 +29,7 @@ export function useHistory() {
       setLoading(false)
     }
     fetchMap()
-  }, [])
+  }, [dayStartHour])
 
   const fetchWinsForDate = useCallback(async (date) => {
     const { data } = await supabase
