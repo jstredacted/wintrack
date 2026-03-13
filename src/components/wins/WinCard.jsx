@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, Circle, CheckCircle } from 'lucide-react';
 // STOPWATCH REMOVED — Play, Pause, Square imports kept for potential re-enable
 // import { Play, Pause, Square } from 'lucide-react';
 // STOPWATCH REMOVED — useStopwatch import kept for potential re-enable
@@ -9,6 +9,7 @@ export default function WinCard({
   win,
   onEdit,
   onDelete,
+  onToggle,
   // STOPWATCH REMOVED — onStartTimer, onPauseTimer, onStopTimer props
   // onStartTimer,
   // onPauseTimer,
@@ -43,6 +44,13 @@ export default function WinCard({
     <div className="py-6 border-b font-mono group">
       {/* Title row */}
       <div className="flex items-start justify-between gap-4">
+        <button
+          aria-label={win.completed ? 'Mark incomplete' : 'Mark complete'}
+          onClick={() => onToggle?.()}
+          className="shrink-0 mt-1 text-muted-foreground/40 hover:text-foreground transition-colors"
+        >
+          {win.completed ? <CheckCircle size={16} /> : <Circle size={16} />}
+        </button>
         {isEditing ? (
           <input
             className="flex-1 bg-transparent border-b border-border outline-none text-lg text-foreground pb-1"
@@ -53,7 +61,9 @@ export default function WinCard({
             autoFocus
           />
         ) : (
-          <span className="flex-1 text-lg leading-snug text-foreground">{win.title}</span>
+          <span className={`flex-1 text-lg leading-snug ${win.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+            {win.title}
+          </span>
         )}
         <div className="flex items-center gap-2 mt-0.5">
           <button

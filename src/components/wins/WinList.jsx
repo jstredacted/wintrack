@@ -8,6 +8,7 @@ import WinCard from './WinCard';
  *   wins: array of win objects
  *   onEdit(winId, newTitle)     — called when a win title is edited
  *   onDelete(winId)             — called when a win is deleted
+ *   onToggle(winId)             — called when a win toggle button is clicked
  *
  * STOPWATCH REMOVED — onStartTimer, onPauseTimer, onStopTimer props removed
  */
@@ -15,6 +16,7 @@ export default function WinList({
   wins = [],
   onEdit,
   onDelete,
+  onToggle,
   // STOPWATCH REMOVED — onStartTimer, onPauseTimer, onStopTimer,
 }) {
   if (wins.length === 0) {
@@ -43,6 +45,7 @@ export default function WinList({
               win={win}
               onEdit={(newTitle) => onEdit?.(win.id, newTitle)}
               onDelete={() => onDelete?.(win.id)}
+              onToggle={() => onToggle?.(win.id)}
             />
           </motion.div>
         ))}

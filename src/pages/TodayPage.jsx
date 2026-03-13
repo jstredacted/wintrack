@@ -37,6 +37,7 @@ export default function TodayPage() {
     editWin,
     deleteWin,
     rollForward,
+    toggleWinCompleted,
     // STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer,
   } = useWins();
 
@@ -156,6 +157,7 @@ export default function TodayPage() {
                 wins={wins}
                 onEdit={(id, newTitle) => editWin(id, newTitle)}
                 onDelete={(id) => deleteWin(id)}
+                onToggle={(id) => toggleWinCompleted(id)}
               />
             </motion.div>
           )}
