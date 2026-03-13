@@ -42,4 +42,9 @@ export const useUIStore = create((set) => ({
   // Increment to trigger useStreak refetch (after journal save or checkin complete)
   streakRefreshKey: 0,
   refreshStreak: () => set((s) => ({ streakRefreshKey: s.streakRefreshKey + 1 })),
+
+  // --- Dev tools state (toggled via Ctrl+Shift+D in dev mode) ---
+  devToolsOpen: false,
+  toggleDevTools: () => set((s) => ({ devToolsOpen: !s.devToolsOpen })),
+  closeDevTools: () => set({ devToolsOpen: false }),
 }));
