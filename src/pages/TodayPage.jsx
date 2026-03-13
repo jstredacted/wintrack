@@ -188,8 +188,8 @@ export default function TodayPage() {
       {/* Win input overlay */}
       <WinInputOverlay
         open={inputOverlayOpen}
-        onSubmit={async (title) => {
-          await addWin(title);
+        onSubmit={async (title, category) => {
+          await addWin(title, category);
           // STOPWATCH REMOVED — timer start after win add
           // if (openedFromTimerRef.current && newWin) {
           //   openedFromTimerRef.current = false;

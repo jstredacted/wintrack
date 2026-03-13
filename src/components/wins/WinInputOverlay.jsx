@@ -1,11 +1,18 @@
 import { createPortal } from 'react-dom';
 import { useRef, useEffect, useState } from 'react';
 
+const WIN_CATEGORIES = [
+  { value: 'work', label: 'Work' },
+  { value: 'personal', label: 'Personal' },
+  { value: 'health', label: 'Health' },
+];
+
 export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
   const inputRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [submittedTitles, setSubmittedTitles] = useState([]);
+  const [category, setCategory] = useState('work');
 
   const handleDone = onDone ?? onClose;
 
@@ -14,6 +21,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
       setVisible(true);
       setExiting(false);
       setSubmittedTitles([]);
+      setCategory('work');
     } else if (visible) {
       setExiting(true);
     }
@@ -51,8 +59,8 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
           e.preventDefault();
           const title = new FormData(e.target).get('title');
           if (title?.trim()) {
-            onSubmit(title.trim());
-            setSubmittedTitles((prev) => [...prev, title.trim()]);
+            onSubmit(title.trim(), category);
+            setSubmittedTitles((prev) => [...prev, { title: title.trim(), category }]);
             e.target.reset();
             inputRef.current?.focus();
           }
@@ -61,6 +69,25 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
           What's the grind for today?
         </p>
+
+        {/* Category selector */}
+        <div className="flex gap-2 mb-4">
+          {WIN_CATEGORIES.map((cat) => (
+            <button
+              key={cat.value}
+              type="button"
+              onClick={() => setCategory(cat.value)}
+              className={`font-mono text-xs uppercase tracking-[0.2em] px-2 py-1 border ${
+                category === cat.value
+                  ? 'border-foreground text-foreground'
+                  : 'border-border text-muted-foreground'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
         <input
           ref={inputRef}
           name="title"
@@ -74,8 +101,15 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
 
         {submittedTitles.length > 0 && (
           <ul className="mt-6 flex flex-col gap-1">
-            {submittedTitles.map((t, i) => (
-              <li key={i} className="font-mono text-sm text-muted-foreground/60">+ {t}</li>
+            {submittedTitles.map((entry, i) => (
+              <li key={i} className="font-mono text-sm text-muted-foreground/60">
+                + {entry.title}
+                {entry.category !== 'work' && (
+                  <span className="ml-2 text-xs uppercase tracking-[0.15em]">
+                    [{entry.category}]
+                  </span>
+                )}
+              </li>
             ))}
           </ul>
         )}
