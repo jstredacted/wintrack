@@ -42,6 +42,19 @@
 - [x] **SHELL-01**: User can toggle between dark and light mode
 - [x] **SHELL-02**: App uses the Nothing Phone Glyph Matrix design language — dot grid patterns, monospaced type, structured negative space, strictly black and white palette
 
+## v1.1 Requirements
+
+### UX Revisions (Phase 1)
+
+- [ ] **UX-01**: Stopwatch feature is removed from the UI (code commented out, not deleted)
+- [ ] **UX-02**: DB migration drops timer columns from wins table
+- [ ] **UX-03**: Win entry wording changed from "Log a win" to intention-oriented language ("Set intentions")
+- [ ] **UX-04**: Win input overlay supports multi-win entry (stays open after submit, shows submitted list, Done to close)
+- [ ] **UX-05**: Journal entries have categories (Daily, Milestone, Financial) with selector in editor and badge on cards
+- [ ] **UX-06**: Streak display uses monochrome Lucide Flame icon instead of fire emoji
+- [ ] **UX-07**: Streak celebration requires explicit click to dismiss (no auto-close), shows "You're on a roll" messaging
+- [ ] **UX-08**: Dev tools panel accessible via Ctrl+Shift+D for test data seeding and clearing (dev mode only)
+
 ## v2 Requirements
 
 ### Notifications
@@ -67,8 +80,6 @@
 | Feature | Reason |
 |---------|--------|
 | Multi-user / auth | Personal tool — single user, no accounts |
-| Win categories / tags | Deliberately minimal — freeform text only |
-| Journal tags / categories | No distractions, no taxonomy |
 | AI coaching or suggestions | Out of scope for this product's character |
 | Social / sharing | Personal accountability tool, not social |
 | Pomodoro timer | Different feature set; timer is per-win, not timed sessions |
@@ -81,31 +92,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WIN-01 | Phase 2 | Complete |
-| WIN-02 | Phase 2 | Complete |
-| WIN-03 | Phase 2 | Complete |
-| WIN-04 | Phase 2 | Complete |
-| CHECKIN-01 | Phase 3 | Complete |
-| CHECKIN-02 | Phase 3 | Complete |
-| CHECKIN-03 | Phase 3 | Complete |
-| CHECKIN-04 | Phase 3 | Complete |
-| TIMER-01 | Phase 2 | Complete |
-| TIMER-02 | Phase 2 | Complete |
-| TIMER-03 | Phase 2 | Complete |
-| JOURNAL-01 | Phase 4 | Complete |
-| JOURNAL-02 | Phase 4 | Complete |
-| JOURNAL-03 | Phase 4 | Complete |
-| STREAK-01 | Phase 3 | Complete |
-| HISTORY-01 | Phase 4 | Complete |
-| HISTORY-02 | Phase 4 | Complete |
-| SHELL-01 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-04) |
-| SHELL-02 | Phase 1 | In progress (test stubs created in 01-01; implementation in 01-02) |
+| WIN-01 | v1.0 Phase 2 | Complete |
+| WIN-02 | v1.0 Phase 2 | Complete |
+| WIN-03 | v1.0 Phase 2 | Complete |
+| WIN-04 | v1.0 Phase 2 | Complete |
+| CHECKIN-01 | v1.0 Phase 3 | Complete |
+| CHECKIN-02 | v1.0 Phase 3 | Complete |
+| CHECKIN-03 | v1.0 Phase 3 | Complete |
+| CHECKIN-04 | v1.0 Phase 3 | Complete |
+| TIMER-01 | v1.0 Phase 2 | Complete |
+| TIMER-02 | v1.0 Phase 2 | Complete |
+| TIMER-03 | v1.0 Phase 2 | Complete |
+| JOURNAL-01 | v1.0 Phase 4 | Complete |
+| JOURNAL-02 | v1.0 Phase 4 | Complete |
+| JOURNAL-03 | v1.0 Phase 4 | Complete |
+| STREAK-01 | v1.0 Phase 3 | Complete |
+| HISTORY-01 | v1.0 Phase 4 | Complete |
+| HISTORY-02 | v1.0 Phase 4 | Complete |
+| SHELL-01 | v1.0 Phase 1 | Complete |
+| SHELL-02 | v1.0 Phase 1 | Complete |
+| UX-01 | v1.1 Phase 1 | Planned |
+| UX-02 | v1.1 Phase 1 | Planned |
+| UX-03 | v1.1 Phase 1 | Planned |
+| UX-04 | v1.1 Phase 1 | Planned |
+| UX-05 | v1.1 Phase 1 | Planned |
+| UX-06 | v1.1 Phase 1 | Planned |
+| UX-07 | v1.1 Phase 1 | Planned |
+| UX-08 | v1.1 Phase 1 | Planned |
 
 **Coverage:**
-- v1 requirements: 19 total
-- Mapped to phases: 19
-- Unmapped: 0 ✓
+- v1 requirements: 19 total — 19 complete
+- v1.1 requirements: 8 total — 0 complete, 8 planned
+- v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 — SHELL-01 and SHELL-02 test stubs created in 01-01*
+*Last updated: 2026-03-13 — v1.1 UX requirements added for Phase 1*
