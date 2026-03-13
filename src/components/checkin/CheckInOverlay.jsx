@@ -103,10 +103,10 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
         {isComplete ? (
           <motion.div
             key="complete"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="flex flex-col items-center gap-6 text-center"
           >
             <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
@@ -129,25 +129,30 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
             </button>
           </motion.div>
         ) : (
-          <motion.div
-            key={`step-${step}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+          <div
+            key="checkin-frame"
             className="flex flex-col items-center gap-8 text-center w-full max-w-md"
           >
-            {/* Progress indicator */}
+            {/* Progress indicator — fixed */}
             <p className="text-xs font-mono text-muted-foreground">
               {step + 1} / {wins.length}
             </p>
 
-            {/* Win title */}
-            <p className="text-2xl font-mono text-foreground leading-snug">
-              {wins[step].title}
-            </p>
+            {/* Win title — slides from right on step change */}
+            <AnimatePresence mode="popLayout">
+              <motion.p
+                key={`title-${step}`}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="text-2xl font-mono text-foreground leading-snug"
+              >
+                {wins[step].title}
+              </motion.p>
+            </AnimatePresence>
 
-            {/* Yes / No buttons or note field */}
+            {/* Yes / No buttons or note field — fixed */}
             {showNote ? (
               <form onSubmit={handleNoteSubmit} className="w-full flex flex-col gap-4">
                 <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
@@ -190,7 +195,7 @@ export default function CheckInOverlay({ open, wins, onComplete, onClose }) {
                 </button>
               </div>
             )}
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>,

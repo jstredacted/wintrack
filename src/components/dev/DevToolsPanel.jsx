@@ -12,7 +12,6 @@ export default function DevToolsPanel({ open, onClose }) {
       user_id: USER_ID,
       title: `Dev win ${i + 1}`,
       win_date: today,
-      completed: false,
     }));
     await supabase.from('wins').insert(wins);
     onClose();
@@ -25,7 +24,6 @@ export default function DevToolsPanel({ open, onClose }) {
       user_id: USER_ID,
       title: `Dev win ${i + 1}`,
       win_date: yesterday,
-      completed: true,
     }));
     const { data: insertedWins } = await supabase
       .from('wins')
