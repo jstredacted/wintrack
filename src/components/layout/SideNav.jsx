@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router';
-import { LayoutDashboard, Clock, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Clock, BookOpen, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '../theme/ThemeToggle';
 import { useStreak } from '@/hooks/useStreak';
@@ -85,7 +85,10 @@ export default function SideNav() {
               title={`Streak: ${combinedStreak} days`}
               aria-label={`Streak: ${combinedStreak} days`}
             >
-              {combinedStreak}🔥
+              <span className="flex items-center gap-1">
+                <Flame size={12} strokeWidth={1.5} />
+                {combinedStreak}
+              </span>
             </span>
           )}
           <ThemeToggle />
