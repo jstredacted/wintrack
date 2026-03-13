@@ -1,3 +1,4 @@
+// STOPWATCH REMOVED — entire component kept for potential re-enable
 import { useState, useEffect, useRef } from 'react';
 import { formatElapsed } from '@/hooks/useStopwatch';
 
