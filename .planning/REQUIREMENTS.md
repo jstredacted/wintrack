@@ -53,7 +53,7 @@
 - [ ] **UX-05**: Journal entries have categories (Daily, Milestone, Financial) with selector in editor and badge on cards
 - [ ] **UX-06**: Streak display uses monochrome Lucide Flame icon instead of fire emoji
 - [ ] **UX-07**: Streak celebration requires explicit click to dismiss (no auto-close), shows "You're on a roll" messaging
-- [ ] **UX-08**: Dev tools panel accessible via Ctrl+Shift+D for test data seeding and clearing (dev mode only)
+- [x] **UX-08**: Dev tools panel accessible via Ctrl+Shift+D for test data seeding and clearing (dev mode only)
 
 ## v2 Requirements
 
