@@ -167,10 +167,10 @@ export default function TodayPage() {
         <button
           onClick={openInputOverlay}
           className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
-          aria-label="Log a win"
+          aria-label="Set intentions"
         >
           <Plus size={16} />
-          Log a win
+          Set intentions
         </button>
         {wins.length > 0 && !checkedInToday && (
           <button
@@ -188,7 +188,6 @@ export default function TodayPage() {
         open={inputOverlayOpen}
         onSubmit={async (title) => {
           await addWin(title);
-          closeInputOverlay();
           // STOPWATCH REMOVED — timer start after win add
           // if (openedFromTimerRef.current && newWin) {
           //   openedFromTimerRef.current = false;
@@ -196,10 +195,8 @@ export default function TodayPage() {
           //   openTimerOverlay();
           // }
         }}
-        onClose={() => {
-          // STOPWATCH REMOVED — openedFromTimerRef.current = false;
-          closeInputOverlay();
-        }}
+        onDone={closeInputOverlay}
+        onClose={closeInputOverlay}
       />
 
       {/* Check-in overlay */}
