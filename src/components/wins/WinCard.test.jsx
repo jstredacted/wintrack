@@ -97,6 +97,41 @@ describe('WinCard', () => {
     expect(onDelete).toHaveBeenCalled();
   });
 
+  it('renders category badge for non-default category (personal)', () => {
+    render(
+      <WinCard
+        win={{ ...defaultWin, category: 'personal' }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />
+    );
+    expect(screen.getByText('personal')).toBeInTheDocument();
+  });
+
+  it('does not render category badge for default category (work)', () => {
+    render(
+      <WinCard
+        win={{ ...defaultWin, category: 'work' }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />
+    );
+    expect(screen.queryByText('work')).not.toBeInTheDocument();
+  });
+
+  it('does not render category badge when category is undefined', () => {
+    render(
+      <WinCard
+        win={{ ...defaultWin }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />
+    );
+    // No badge text that would be a category label
+    expect(screen.queryByText('health')).not.toBeInTheDocument();
+    expect(screen.queryByText('personal')).not.toBeInTheDocument();
+  });
+
   it('renders without a card border class on the root element', () => {
     const { container } = render(
       <WinCard

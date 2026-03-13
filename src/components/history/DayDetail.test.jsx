@@ -51,6 +51,24 @@ describe('DayDetail', () => {
     });
   });
 
+  describe('category badges', () => {
+    it('renders category badge for non-default category on timeline item', () => {
+      const winsWithCategory = [
+        { id: 'win-1', title: 'Exercise', category: 'health', check_ins: [{ completed: true, note: null }] },
+      ];
+      render(<DayDetail wins={winsWithCategory} date="2026-03-09" />);
+      expect(screen.getByText('health')).toBeInTheDocument();
+    });
+
+    it('does not render category badge for default work category', () => {
+      const winsWithWork = [
+        { id: 'win-1', title: 'Write tests', category: 'work', check_ins: [{ completed: false, note: null }] },
+      ];
+      render(<DayDetail wins={winsWithWork} date="2026-03-09" />);
+      expect(screen.queryByText('work')).not.toBeInTheDocument();
+    });
+  });
+
   describe('loading state', () => {
     it('renders a loading indicator when loading prop is true', () => {
       render(<DayDetail wins={[]} date="2026-03-09" loading={true} />);

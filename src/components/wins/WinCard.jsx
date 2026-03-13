@@ -83,6 +83,13 @@ export default function WinCard({
         </div>
       </div>
 
+      {/* Category badge — suppressed for default 'work' category */}
+      {win.category && win.category !== 'work' && (
+        <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground border border-border px-1.5 py-0.5 ml-7 mt-1 inline-block">
+          {win.category}
+        </span>
+      )}
+
       {/* STOPWATCH REMOVED — Timer + controls row
       <div className="flex items-center justify-between mt-3">
         <span className="text-3xl tabular-nums text-muted-foreground/50 font-light tracking-tight">

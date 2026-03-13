@@ -27,12 +27,20 @@ function TimelineItem({ win, isLast }) {
         completed ? 'border-foreground' : 'border-border/40',
       ].join(' ')}>
         <div className="flex items-start justify-between gap-2">
-          <span className={[
-            'font-mono text-sm block',
-            completed ? 'line-through text-muted-foreground' : 'text-foreground',
-          ].join(' ')}>
-            {win.title}
-          </span>
+          <div className="flex flex-col">
+            <span className={[
+              'font-mono text-sm block',
+              completed ? 'line-through text-muted-foreground' : 'text-foreground',
+            ].join(' ')}>
+              {win.title}
+            </span>
+            {/* Category badge — suppressed for default 'work' category */}
+            {win.category && win.category !== 'work' && (
+              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground border border-border px-1.5 py-0.5 mt-1 inline-block self-start">
+                {win.category}
+              </span>
+            )}
+          </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className={[
               'font-mono text-xs border px-1.5 py-0.5 rounded',
