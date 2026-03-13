@@ -18,6 +18,7 @@ import { USER_ID } from '@/lib/env';
  *   editWin: (id: string, newTitle: string) => Promise<void>,
  *   deleteWin: (id: string) => Promise<void>,
  *   rollForward: () => Promise<void>,
+ *   toggleWinCompleted: (id: string) => Promise<void>,
  * }}
  *
  * STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer commented out
@@ -83,6 +84,7 @@ export function useWins() {
       title,
       win_date: today,
       status: 'pending',
+      completed: false,
       // STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null,
       created_at: new Date().toISOString(),
     };
@@ -140,6 +142,31 @@ export function useWins() {
       setError(deleteError.message);
     }
   }, []);
+
+  /**
+   * toggleWinCompleted(id) — flip the completed state of a win optimistically
+   */
+  const toggleWinCompleted = useCallback(async (id) => {
+    const win = wins.find((w) => w.id === id);
+    if (!win) return;
+
+    const newValue = !win.completed;
+
+    // Optimistic update
+    setWins((prev) => prev.map((w) => (w.id === id ? { ...w, completed: newValue } : w)));
+
+    const { error: updateError } = await supabase
+      .from('wins')
+      .update({ completed: newValue })
+      .eq('id', id)
+      .eq('user_id', USER_ID);
+
+    if (updateError) {
+      // Rollback
+      setWins((prev) => prev.map((w) => (w.id === id ? { ...w, completed: !newValue } : w)));
+      setError(updateError.message);
+    }
+  }, [wins]);
 
   /**
    * rollForward() — copy yesterday's wins to today
@@ -221,6 +248,7 @@ export function useWins() {
     editWin,
     deleteWin,
     rollForward,
+    toggleWinCompleted,
     // STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer,
   };
 }
