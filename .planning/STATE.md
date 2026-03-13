@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 01-03-PLAN.md — journal entry categories
-last_updated: "2026-03-13T15:17:21.117Z"
+last_updated: "2026-03-13T15:17:25.267Z"
 last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
 progress:
   total_phases: 5
@@ -185,6 +185,8 @@ Recent decisions affecting current work:
 - [Phase 01-ux-revisions]: clearToday deletes journal entries by created_at range — journal_entries has no win_date column
 - [Phase 01-03]: Category badge suppressed for 'daily' entries — default value adds no visual information
 - [Phase 01-03]: initialCategory prop on JournalEditorOverlay resets inside open useEffect — ensures correct category pre-selected when editing different entries
+- [Phase 01-ux-revisions]: Lucide Flame replaces fire emoji in SideNav and StreakCelebration — full monochrome consistency across src/
+- [Phase 01-ux-revisions]: StreakCelebration auto-close (setTimeout 4000ms) removed — click-to-dismiss only for celebration moments
 
 ### Roadmap Evolution
 
