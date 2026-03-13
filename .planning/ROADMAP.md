@@ -88,3 +88,23 @@ Plans:
 
 Plans:
 - [ ] TBD (run /gsd:plan-phase 5 to break down)
+
+### Phase 6: UI simplification — remove check-in flow, journal FAB button with Nothing design
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 5
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 6 to break down)
+
+### Phase 7: Unified daily view — merge Today and History pages with DayStrip carousel navigation
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 6
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 7 to break down)

@@ -212,6 +212,9 @@ Recent decisions affecting current work:
 - Phase 4 added (v1.1): User profiles and settings — user system, night owl day cycle, check-in schedule, consistency graph and streak
 - Phase 5 added (v1.1): Push notifications — web push with service workers and cloud compute setup
 
+- Phase 6 added (v1.1): UI simplification — remove check-in flow, journal FAB button with Nothing design
+- Phase 7 added (v1.1): Unified daily view — merge Today and History pages with DayStrip carousel navigation
+
 ### Pending Todos
 
 None yet.
