@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
 function TimelineItem({ win, isLast }) {
-  const completed = win.check_ins?.[0]?.completed
+  const completed = win.completed
   const note = win.check_ins?.[0]?.note
   const [expanded, setExpanded] = useState(false)
 
@@ -93,7 +93,6 @@ export default function DayDetail({ date, wins = [], loading = false }) {
   if (!wins || wins.length === 0) {
     return (
       <div>
-        <p className="font-mono text-xs text-muted-foreground mb-2">{date}</p>
         <p className="font-mono text-sm text-muted-foreground">No wins for this day</p>
       </div>
     )
@@ -101,7 +100,6 @@ export default function DayDetail({ date, wins = [], loading = false }) {
 
   return (
     <div>
-      <p className="font-mono text-xs text-muted-foreground mb-3">{date}</p>
       {/* Vertical connecting line behind the dots */}
       <div className="border-l border-border ml-[7px]">
         {wins.map((win, index) => (

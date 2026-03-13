@@ -10,15 +10,14 @@ export function useHistory() {
     async function fetchMap() {
       const { data, error } = await supabase
         .from('wins')
-        .select('win_date, check_ins(completed)')
+        .select('win_date, completed')
         .eq('user_id', USER_ID)
 
       if (error || !data) { setLoading(false); return }
 
       const map = {}
       for (const win of data) {
-        const hasCompleted = win.check_ins?.some(ci => ci.completed)
-        if (hasCompleted) {
+        if (win.completed) {
           map[win.win_date] = true
         } else if (!map[win.win_date]) {
           map[win.win_date] = false
@@ -33,7 +32,7 @@ export function useHistory() {
   const fetchWinsForDate = useCallback(async (date) => {
     const { data } = await supabase
       .from('wins')
-      .select('id, title, category, check_ins(completed, note)')
+      .select('id, title, category, completed, check_ins(note)')
       .eq('user_id', USER_ID)
       .eq('win_date', date)
       .order('created_at', { ascending: true })

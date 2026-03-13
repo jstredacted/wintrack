@@ -7,8 +7,8 @@ import DayDetail from './DayDetail';
 // Wave 0 stub — all tests fail with module-not-found until Wave 2 creates DayDetail.jsx
 
 const mockWinsCompleted = [
-  { id: 'win-1', title: 'Ship the feature', check_ins: [{ completed: true, note: null }] },
-  { id: 'win-2', title: 'Write the tests', check_ins: [{ completed: false, note: 'Got distracted' }] },
+  { id: 'win-1', title: 'Ship the feature', completed: true, check_ins: [{ note: null }] },
+  { id: 'win-2', title: 'Write the tests', completed: false, check_ins: [{ note: 'Got distracted' }] },
 ];
 
 describe('DayDetail', () => {
@@ -43,18 +43,10 @@ describe('DayDetail', () => {
     });
   });
 
-  describe('date display', () => {
-    it('renders the selected date in the component', () => {
-      render(<DayDetail wins={mockWinsCompleted} date="2026-03-09" />);
-      // Date should appear somewhere in the component
-      expect(screen.getByText(/2026-03-09|Mar 9|March 9/i)).toBeInTheDocument();
-    });
-  });
-
   describe('category badges', () => {
     it('renders category badge for non-default category on timeline item', () => {
       const winsWithCategory = [
-        { id: 'win-1', title: 'Exercise', category: 'health', check_ins: [{ completed: true, note: null }] },
+        { id: 'win-1', title: 'Exercise', category: 'health', completed: true, check_ins: [{ note: null }] },
       ];
       render(<DayDetail wins={winsWithCategory} date="2026-03-09" />);
       expect(screen.getByText('health')).toBeInTheDocument();
@@ -62,7 +54,7 @@ describe('DayDetail', () => {
 
     it('does not render category badge for default work category', () => {
       const winsWithWork = [
-        { id: 'win-1', title: 'Write tests', category: 'work', check_ins: [{ completed: false, note: null }] },
+        { id: 'win-1', title: 'Write tests', category: 'work', completed: false, check_ins: [{ note: null }] },
       ];
       render(<DayDetail wins={winsWithWork} date="2026-03-09" />);
       expect(screen.queryByText('work')).not.toBeInTheDocument();

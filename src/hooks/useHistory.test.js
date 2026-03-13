@@ -13,16 +13,16 @@ vi.mock('@/lib/supabase', () => ({
   },
 }));
 
-// HISTORY-01: fetchWinsForDate returns wins with check_in completion status
-// HISTORY-02: completionMap builds { 'YYYY-MM-DD': boolean } from wins + check_ins data
+// HISTORY-01: fetchWinsForDate returns wins with completion status
+// HISTORY-02: completionMap builds { 'YYYY-MM-DD': boolean } from wins.completed
 // Wave 0 stub — all tests fail with module-not-found until Wave 1 creates useHistory.js
 
 /**
  * buildHistoryMock(resolvedValue)
  *
  * Creates a chainable Supabase query mock that supports:
- *   supabase.from('wins').select('win_date, check_ins(completed)').eq('user_id', USER_ID)
- *   supabase.from('wins').select('id, title, check_ins(completed, note)').eq(...).eq('win_date', date)
+ *   supabase.from('wins').select('win_date, completed').eq('user_id', USER_ID)
+ *   supabase.from('wins').select('id, title, category, completed, check_ins(note)').eq(...).eq('win_date', date)
  *
  * The mock object is thenable so it can be awaited at any point in the chain.
  */
@@ -56,11 +56,11 @@ describe('useHistory', () => {
       expect(result.current.completionMap).toEqual({});
     });
 
-    it('completionMap["2026-03-09"] === true when win has a completed check_in', async () => {
+    it('completionMap["2026-03-09"] === true when win.completed is true', async () => {
       const { supabase } = await import('@/lib/supabase');
       supabase.from.mockReturnValue(
         buildHistoryMock({
-          data: [{ win_date: '2026-03-09', check_ins: [{ completed: true }] }],
+          data: [{ win_date: '2026-03-09', completed: true }],
           error: null,
         })
       );
@@ -71,11 +71,11 @@ describe('useHistory', () => {
       expect(result.current.completionMap['2026-03-09']).toBe(true);
     });
 
-    it('completionMap["2026-03-08"] === false when win has only incomplete check_ins', async () => {
+    it('completionMap["2026-03-08"] === false when win.completed is false', async () => {
       const { supabase } = await import('@/lib/supabase');
       supabase.from.mockReturnValue(
         buildHistoryMock({
-          data: [{ win_date: '2026-03-08', check_ins: [{ completed: false }] }],
+          data: [{ win_date: '2026-03-08', completed: false }],
           error: null,
         })
       );
@@ -86,12 +86,13 @@ describe('useHistory', () => {
       expect(result.current.completionMap['2026-03-08']).toBe(false);
     });
 
-    it('completionMap is true for date when at least one of multiple check_ins is completed', async () => {
+    it('completionMap is true for date when at least one win is completed', async () => {
       const { supabase } = await import('@/lib/supabase');
       supabase.from.mockReturnValue(
         buildHistoryMock({
           data: [
-            { win_date: '2026-03-07', check_ins: [{ completed: false }, { completed: true }] },
+            { win_date: '2026-03-07', completed: true },
+            { win_date: '2026-03-07', completed: false },
           ],
           error: null,
         })
@@ -108,8 +109,8 @@ describe('useHistory', () => {
       supabase.from.mockReturnValue(
         buildHistoryMock({
           data: [
-            { win_date: '2026-03-09', check_ins: [{ completed: true }] },
-            { win_date: '2026-03-08', check_ins: [{ completed: false }] },
+            { win_date: '2026-03-09', completed: true },
+            { win_date: '2026-03-08', completed: false },
           ],
           error: null,
         })
@@ -149,7 +150,7 @@ describe('useHistory', () => {
       const mapMock = buildHistoryMock({ data: [], error: null });
       const dateMock = buildHistoryMock({
         data: [
-          { id: 'win-1', title: 'Ship the feature', check_ins: [{ completed: true, note: null }] },
+          { id: 'win-1', title: 'Ship the feature', completed: true, check_ins: [{ note: null }] },
         ],
         error: null,
       });
