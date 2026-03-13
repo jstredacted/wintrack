@@ -7,7 +7,7 @@ import { USER_ID } from '@/lib/env';
  * useWins()
  *
  * Primary data hook: fetches today's wins, provides CRUD actions,
- * timer controls, and roll-forward from yesterday's wins.
+ * and roll-forward from yesterday's wins.
  *
  * @returns {{
  *   wins: Array,
@@ -18,10 +18,9 @@ import { USER_ID } from '@/lib/env';
  *   editWin: (id: string, newTitle: string) => Promise<void>,
  *   deleteWin: (id: string) => Promise<void>,
  *   rollForward: () => Promise<void>,
- *   startTimer: (winId: string) => Promise<void>,
- *   pauseTimer: (winId: string, displaySeconds: number) => Promise<void>,
- *   stopTimer: (winId: string, displaySeconds: number) => Promise<void>,
  * }}
+ *
+ * STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer commented out
  */
 export function useWins() {
   const [wins, setWins] = useState([]);
@@ -84,8 +83,7 @@ export function useWins() {
       title,
       win_date: today,
       status: 'pending',
-      timer_elapsed_seconds: 0,
-      timer_started_at: null,
+      // STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null,
       created_at: new Date().toISOString(),
     };
 
@@ -93,7 +91,7 @@ export function useWins() {
 
     const { data, error: insertError } = await supabase
       .from('wins')
-      .insert({ user_id: USER_ID, title, win_date: today, timer_elapsed_seconds: 0, timer_started_at: null })
+      .insert({ user_id: USER_ID, title, win_date: today /* STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null */ })
       .eq('user_id', USER_ID)
       .select()
       .single();
@@ -144,7 +142,7 @@ export function useWins() {
   }, []);
 
   /**
-   * rollForward() — copy yesterday's wins to today with zeroed timer fields
+   * rollForward() — copy yesterday's wins to today
    */
   const rollForward = useCallback(async () => {
     if (yesterdayWins.length === 0) return;
@@ -154,8 +152,7 @@ export function useWins() {
       user_id: USER_ID,
       title,
       win_date: today,
-      timer_elapsed_seconds: 0,
-      timer_started_at: null,
+      // STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null,
     }));
 
     const { data, error: insertError } = await supabase
@@ -172,9 +169,7 @@ export function useWins() {
     setWins((prev) => [...prev, ...(data ?? [])]);
   }, [yesterdayWins]);
 
-  /**
-   * startTimer(winId) — set timer_started_at to now
-   */
+  /* STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer kept for potential re-enable
   const startTimer = useCallback(async (winId) => {
     const startedAt = new Date().toISOString();
     setWins((prev) =>
@@ -192,10 +187,6 @@ export function useWins() {
     }
   }, []);
 
-  /**
-   * pauseTimer(winId, displaySeconds) — snapshot elapsed, clear startedAt
-   * Snapshot elapsed BEFORE clearing startedAt (critical ordering).
-   */
   const pauseTimer = useCallback(async (winId, displaySeconds) => {
     setWins((prev) =>
       prev.map((w) =>
@@ -216,12 +207,10 @@ export function useWins() {
     }
   }, []);
 
-  /**
-   * stopTimer(winId, displaySeconds) — identical to pauseTimer for Phase 2
-   */
   const stopTimer = useCallback(async (winId, displaySeconds) => {
     return pauseTimer(winId, displaySeconds);
   }, [pauseTimer]);
+  */ // END STOPWATCH REMOVED
 
   return {
     wins,
@@ -232,8 +221,6 @@ export function useWins() {
     editWin,
     deleteWin,
     rollForward,
-    startTimer,
-    pauseTimer,
-    stopTimer,
+    // STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer,
   };
 }
