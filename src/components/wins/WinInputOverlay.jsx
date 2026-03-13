@@ -1,15 +1,19 @@
 import { createPortal } from 'react-dom';
 import { useRef, useEffect, useState } from 'react';
 
-export default function WinInputOverlay({ open, onSubmit, onClose }) {
+export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
   const inputRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
+  const [submittedTitles, setSubmittedTitles] = useState([]);
+
+  const handleDone = onDone ?? onClose;
 
   useEffect(() => {
     if (open) {
       setVisible(true);
       setExiting(false);
+      setSubmittedTitles([]);
     } else if (visible) {
       setExiting(true);
     }
@@ -19,14 +23,14 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
     if (!open) return;
     const timer = setTimeout(() => inputRef.current?.focus(), 50);
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleDone();
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       clearTimeout(timer);
     };
-  }, [open, onClose]);
+  }, [open, handleDone]);
 
   if (!visible) return null;
 
@@ -34,7 +38,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Log a win"
+      aria-label="Set intentions"
       className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8 ${
         exiting ? 'overlay-exit' : 'overlay-enter'
       }`}
@@ -46,7 +50,12 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
         onSubmit={(e) => {
           e.preventDefault();
           const title = new FormData(e.target).get('title');
-          if (title?.trim()) onSubmit(title.trim());
+          if (title?.trim()) {
+            onSubmit(title.trim());
+            setSubmittedTitles((prev) => [...prev, title.trim()]);
+            e.target.reset();
+            inputRef.current?.focus();
+          }
         }}
       >
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
@@ -62,6 +71,24 @@ export default function WinInputOverlay({ open, onSubmit, onClose }) {
         <button type="submit" className="sr-only">
           Submit
         </button>
+
+        {submittedTitles.length > 0 && (
+          <ul className="mt-6 flex flex-col gap-1">
+            {submittedTitles.map((t, i) => (
+              <li key={i} className="font-mono text-sm text-muted-foreground/60">+ {t}</li>
+            ))}
+          </ul>
+        )}
+
+        {submittedTitles.length > 0 && (
+          <button
+            type="button"
+            onClick={handleDone}
+            className="font-mono text-sm uppercase tracking-[0.2em] border border-foreground px-4 py-2 mt-6"
+          >
+            Done
+          </button>
+        )}
       </form>
     </div>,
     document.body
