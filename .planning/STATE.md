@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-04-PLAN.md — streak theming, monochrome Flame icon, click-to-dismiss celebration
-last_updated: "2026-03-13T15:21:15.588Z"
+stopped_at: Completed 02-02-PLAN.md — timeline history view, TimelineItem replaces WinRow in DayDetail
+last_updated: "2026-03-13T15:57:42.442Z"
 last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
   percent: 5
 ---
 
@@ -91,6 +91,7 @@ Progress: [██████████] 100%
 | Phase 01-ux-revisions P05 | 3min | 2 tasks | 3 files |
 | Phase 01-ux-revisions P03 | 2 | 2 tasks | 4 files |
 | Phase 01-ux-revisions P04 | 2 | 2 tasks | 2 files |
+| Phase 02-win-item-interactions P02-02 | 1 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -187,6 +188,8 @@ Recent decisions affecting current work:
 - [Phase 01-03]: initialCategory prop on JournalEditorOverlay resets inside open useEffect — ensures correct category pre-selected when editing different entries
 - [Phase 01-ux-revisions]: Lucide Flame replaces fire emoji in SideNav and StreakCelebration — full monochrome consistency across src/
 - [Phase 01-ux-revisions]: StreakCelebration auto-close (setTimeout 4000ms) removed — click-to-dismiss only for celebration moments
+- [Phase 02-02]: Timeline connecting line via border-l on container (ml-[7px]) with dots absolutely positioned; dot centered via left: 7px + translateX(-50%)
+- [Phase 02-02]: TimelineItem co-located in DayDetail.jsx; no separate file created
 
 ### Roadmap Evolution
 
@@ -215,6 +218,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T15:17:28.845Z
-Stopped at: Completed 01-04-PLAN.md — streak theming, monochrome Flame icon, click-to-dismiss celebration
+Last session: 2026-03-13T15:57:42.439Z
+Stopped at: Completed 02-02-PLAN.md — timeline history view, TimelineItem replaces WinRow in DayDetail
 Resume file: None
