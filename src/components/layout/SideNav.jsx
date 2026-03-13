@@ -27,7 +27,7 @@ export default function SideNav() {
     const stored = parseInt(localStorage.getItem(STREAK_STORAGE_KEY) || '0', 10);
     if (hasInitialized.current && combinedStreak > stored && combinedStreak > 0) {
       celebrationStreakRef.current = combinedStreak;
-      setShowCelebration(true);
+      setTimeout(() => setShowCelebration(true), 1500);
     }
     localStorage.setItem(STREAK_STORAGE_KEY, String(combinedStreak));
     hasInitialized.current = true;

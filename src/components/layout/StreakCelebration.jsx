@@ -16,8 +16,8 @@ export default function StreakCelebration({ open, streak, onClose }) {
 
   // Animate number from 0 → streak over 2.5s ease-out cubic
   useEffect(() => {
-    if (!open) { setDisplayCount(0); return; }
-    const duration = 2500;
+    if (!open) return;
+    const duration = 4000;
     const start = Date.now();
 
     function tick() {
@@ -42,11 +42,11 @@ export default function StreakCelebration({ open, streak, onClose }) {
       aria-label="Streak celebration"
       onClick={onClose}
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background cursor-pointer ${
-        exiting ? 'overlay-exit' : 'overlay-enter'
+        exiting ? 'celebration-exit' : 'celebration-enter'
       }`}
       onAnimationEnd={(e) => {
         if (e.target !== e.currentTarget) return;
-        if (exiting) setVisible(false);
+        if (exiting) { setDisplayCount(0); setVisible(false); }
       }}
     >
       {/* Fire */}

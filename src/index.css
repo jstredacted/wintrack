@@ -149,6 +149,22 @@
   animation: overlay-slide-out 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
+/* Streak celebration — slow fade in/out */
+@keyframes celebration-fade-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes celebration-fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+.celebration-enter {
+  animation: celebration-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.celebration-exit {
+  animation: celebration-fade-out 0.4s ease-in both;
+}
+
 /* Journal editor — slide up from bottom (separate from generic overlay for future easing control) */
 @keyframes journal-slide-in {
   from { transform: translateY(100vh); }
