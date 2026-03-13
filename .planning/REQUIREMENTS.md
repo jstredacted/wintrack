@@ -55,6 +55,17 @@
 - [x] **UX-07**: Streak celebration requires explicit click to dismiss (no auto-close), shows "You're on a roll" messaging
 - [x] **UX-08**: Dev tools panel accessible via Ctrl+Shift+D for test data seeding and clearing (dev mode only)
 
+### Win Interactions (Phase 2)
+
+- **INT-01**: User can mark a win as complete/incomplete inline on the Today page via always-visible toggle button
+- **INT-02**: Completed wins show line-through text styling and muted foreground color
+- **INT-03**: Toggle persists to Supabase with optimistic update and error rollback
+
+### Timeline Display (Phase 2)
+
+- **TIMELINE-01**: History DayDetail renders as a vertical dot-and-line timeline (no timestamps)
+- **TIMELINE-02**: Completed wins show filled dot and left-border accent; incomplete wins show hollow dot and muted border
+
 ## v2 Requirements
 
 ### Notifications
@@ -119,12 +130,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-06 | v1.1 Phase 1 | Planned |
 | UX-07 | v1.1 Phase 1 | Planned |
 | UX-08 | v1.1 Phase 1 | Planned |
+| INT-01 | v1.1 Phase 2 | Planned |
+| INT-02 | v1.1 Phase 2 | Planned |
+| INT-03 | v1.1 Phase 2 | Planned |
+| TIMELINE-01 | v1.1 Phase 2 | Planned |
+| TIMELINE-02 | v1.1 Phase 2 | Planned |
 
 **Coverage:**
 - v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 8 total — 0 complete, 8 planned
+- v1.1 requirements: 13 total — 0 complete, 13 planned
 - v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-13 — v1.1 UX requirements added for Phase 1*
+*Last updated: 2026-03-13 — v1.1 Phase 2 requirements added (INT-01..03, TIMELINE-01..02)*

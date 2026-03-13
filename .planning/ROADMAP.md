@@ -49,13 +49,14 @@ Plans:
 
 ### Phase 2: Win item interactions and timeline display — inline strikethrough, timeline-style history view
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Add inline win completion toggle with strikethrough styling on the Today page, and redesign the history DayDetail as a vertical dot-and-line timeline with colored accents for completion state.
+**Requirements**: [INT-01, INT-02, INT-03, TIMELINE-01, TIMELINE-02]
 **Depends on:** Phase 1
-**Plans:** 0 plans
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 2 to break down)
+- [ ] 02-01-PLAN.md — Inline strikethrough toggle (DB migration + useWins + WinCard)
+- [ ] 02-02-PLAN.md — Timeline-style history DayDetail redesign
 
 ### Phase 3: Categories and reporting — item categorization dropdown, per-category completion counts
 
