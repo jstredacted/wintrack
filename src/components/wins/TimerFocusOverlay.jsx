@@ -1,3 +1,4 @@
+// STOPWATCH REMOVED — entire file kept for potential re-enable
 import { createPortal } from 'react-dom';
 import { useState, useEffect } from 'react';
 import { X, Plus, Square, Pause, Play } from 'lucide-react';

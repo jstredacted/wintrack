@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+// STOPWATCH REMOVED — useRef kept for potential re-enable: import { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalDateString } from '@/lib/utils/date';
@@ -8,11 +9,13 @@ import { useUIStore } from '@/stores/uiStore';
 import WinList from '@/components/wins/WinList';
 import WinInputOverlay from '@/components/wins/WinInputOverlay';
 import RollForwardPrompt from '@/components/wins/RollForwardPrompt';
-import TotalFocusTime from '@/components/wins/TotalFocusTime';
+// STOPWATCH REMOVED — TotalFocusTime import kept for potential re-enable
+// import TotalFocusTime from '@/components/wins/TotalFocusTime';
 import MorningPrompt from '@/components/checkin/MorningPrompt';
 import EveningPrompt from '@/components/checkin/EveningPrompt';
 import CheckInOverlay from '@/components/checkin/CheckInOverlay';
-import TimerFocusOverlay from '@/components/wins/TimerFocusOverlay';
+// STOPWATCH REMOVED — TimerFocusOverlay import kept for potential re-enable
+// import TimerFocusOverlay from '@/components/wins/TimerFocusOverlay';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -34,9 +37,7 @@ export default function TodayPage() {
     editWin,
     deleteWin,
     rollForward,
-    startTimer,
-    pauseTimer,
-    stopTimer,
+    // STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer,
   } = useWins();
 
   const {
@@ -52,13 +53,12 @@ export default function TodayPage() {
     closeCheckinOverlay,
     dismissMorningPrompt,
     dismissEveningPrompt,
-    timerOverlayOpen,
-    openTimerOverlay,
-    closeTimerOverlay,
+    // STOPWATCH REMOVED — timerOverlayOpen, openTimerOverlay, closeTimerOverlay,
     refreshStreak,
   } = useUIStore();
 
-  const openedFromTimerRef = useRef(false);
+  // STOPWATCH REMOVED — openedFromTimerRef kept for potential re-enable
+  // const openedFromTimerRef = useRef(false);
   const { hasCheckedInToday } = useCheckin();
   const [checkedInToday, setCheckedInToday] = useState(null);
 
@@ -106,9 +106,11 @@ export default function TodayPage() {
         <p className="font-mono text-lg text-muted-foreground mt-3 tracking-[0.1em] uppercase">
           {today}
         </p>
+        {/* STOPWATCH REMOVED — TotalFocusTime display
         <div className="mt-2">
           <TotalFocusTime wins={wins} />
         </div>
+        */}
       </div>
 
       {/* Roll-forward prompt */}
@@ -149,16 +151,11 @@ export default function TodayPage() {
                   {error}
                 </p>
               )}
+              {/* STOPWATCH REMOVED — onStartTimer, onPauseTimer, onStopTimer props removed */}
               <WinList
                 wins={wins}
                 onEdit={(id, newTitle) => editWin(id, newTitle)}
                 onDelete={(id) => deleteWin(id)}
-                onStartTimer={(id) => {
-                  startTimer(id);
-                  openTimerOverlay();
-                }}
-                onPauseTimer={(id, secs) => pauseTimer(id, secs)}
-                onStopTimer={(id, secs) => stopTimer(id, secs)}
               />
             </motion.div>
           )}
@@ -190,16 +187,17 @@ export default function TodayPage() {
       <WinInputOverlay
         open={inputOverlayOpen}
         onSubmit={async (title) => {
-          const newWin = await addWin(title);
+          await addWin(title);
           closeInputOverlay();
-          if (openedFromTimerRef.current && newWin) {
-            openedFromTimerRef.current = false;
-            startTimer(newWin.id);
-            openTimerOverlay();
-          }
+          // STOPWATCH REMOVED — timer start after win add
+          // if (openedFromTimerRef.current && newWin) {
+          //   openedFromTimerRef.current = false;
+          //   startTimer(newWin.id);
+          //   openTimerOverlay();
+          // }
         }}
         onClose={() => {
-          openedFromTimerRef.current = false;
+          // STOPWATCH REMOVED — openedFromTimerRef.current = false;
           closeInputOverlay();
         }}
       />
@@ -234,7 +232,7 @@ export default function TodayPage() {
         onDismiss={dismissEveningPrompt}
       />
 
-      {/* Timer focus overlay — full-screen floating stopwatch view */}
+      {/* STOPWATCH REMOVED — TimerFocusOverlay JSX block
       <TimerFocusOverlay
         open={timerOverlayOpen}
         wins={wins}
@@ -262,6 +260,7 @@ export default function TodayPage() {
           if (remaining.length === 0) closeTimerOverlay();
         }}
       />
+      */}
     </div>
   );
 }
