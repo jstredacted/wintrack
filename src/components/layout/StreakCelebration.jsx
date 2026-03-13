@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
+import { Flame } from 'lucide-react';
 
 export default function StreakCelebration({ open, streak, onClose }) {
   const [visible, setVisible] = useState(false);
@@ -13,10 +14,10 @@ export default function StreakCelebration({ open, streak, onClose }) {
     else if (visible) { setExiting(true); }
   }, [open]);
 
-  // Animate number from 0 → streak over 1.5s ease-out cubic
+  // Animate number from 0 → streak over 2.5s ease-out cubic
   useEffect(() => {
     if (!open) { setDisplayCount(0); return; }
-    const duration = 1500;
+    const duration = 2500;
     const start = Date.now();
 
     function tick() {
@@ -31,13 +32,6 @@ export default function StreakCelebration({ open, streak, onClose }) {
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
   }, [open, streak]);
-
-  // Auto-close after 4s
-  useEffect(() => {
-    if (!open) return;
-    const t = setTimeout(onClose, 4000);
-    return () => clearTimeout(t);
-  }, [open, onClose]);
 
   if (!visible) return null;
 
@@ -56,7 +50,9 @@ export default function StreakCelebration({ open, streak, onClose }) {
       }}
     >
       {/* Fire */}
-      <span className="text-[6rem] leading-none mb-6" aria-hidden="true">🔥</span>
+      <span className="leading-none mb-6" aria-hidden="true">
+        <Flame size={96} strokeWidth={1} />
+      </span>
 
       {/* Ramping number */}
       <span className="font-mono tabular-nums text-foreground"
@@ -67,6 +63,11 @@ export default function StreakCelebration({ open, streak, onClose }) {
       {/* Label */}
       <span className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground mt-4">
         day streak
+      </span>
+
+      {/* Tagline */}
+      <span className="font-mono text-sm uppercase tracking-[0.2em] text-muted-foreground mt-2">
+        You're on a roll
       </span>
 
       {/* Dismiss hint */}
