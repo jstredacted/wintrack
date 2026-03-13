@@ -51,8 +51,8 @@
 - [x] **UX-03**: Win entry wording changed from "Log a win" to intention-oriented language ("Set intentions")
 - [x] **UX-04**: Win input overlay supports multi-win entry (stays open after submit, shows submitted list, Done to close)
 - [x] **UX-05**: Journal entries have categories (Daily, Milestone, Financial) with selector in editor and badge on cards
-- [ ] **UX-06**: Streak display uses monochrome Lucide Flame icon instead of fire emoji
-- [ ] **UX-07**: Streak celebration requires explicit click to dismiss (no auto-close), shows "You're on a roll" messaging
+- [x] **UX-06**: Streak display uses monochrome Lucide Flame icon instead of fire emoji
+- [x] **UX-07**: Streak celebration requires explicit click to dismiss (no auto-close), shows "You're on a roll" messaging
 - [x] **UX-08**: Dev tools panel accessible via Ctrl+Shift+D for test data seeding and clearing (dev mode only)
 
 ## v2 Requirements
