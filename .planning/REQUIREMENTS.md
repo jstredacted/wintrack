@@ -46,8 +46,8 @@
 
 ### UX Revisions (Phase 1)
 
-- [ ] **UX-01**: Stopwatch feature is removed from the UI (code commented out, not deleted)
-- [ ] **UX-02**: DB migration drops timer columns from wins table
+- [x] **UX-01**: Stopwatch feature is removed from the UI (code commented out, not deleted)
+- [x] **UX-02**: DB migration drops timer columns from wins table
 - [ ] **UX-03**: Win entry wording changed from "Log a win" to intention-oriented language ("Set intentions")
 - [ ] **UX-04**: Win input overlay supports multi-win entry (stays open after submit, shows submitted list, Done to close)
 - [ ] **UX-05**: Journal entries have categories (Daily, Milestone, Financial) with selector in editor and badge on cards

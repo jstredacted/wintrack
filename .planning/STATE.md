@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 07-01-PLAN.md — cleanup and contract fixes
-last_updated: "2026-03-11T05:04:47.284Z"
-last_activity: 2026-03-11 — Phase 6 Plan 08 (Visual acceptance checkpoint) approved and phase closed
+milestone: v1.1
+milestone_name: ux-revisions
+status: in_progress
+stopped_at: Completed 01-01-PLAN.md — stopwatch removal and DB migration
+last_updated: "2026-03-13T23:12:34Z"
+last_activity: 2026-03-13 — Phase 01 Plan 01 complete (stopwatch removal, DB migration)
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 34
-  completed_plans: 34
-  percent: 100
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 20
+  completed_plans: 1
+  percent: 5
 ---
 
 # Project State
@@ -25,9 +25,13 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-Phase: 6 of 6 (Animations, micro-interactions, and overlay fixes) — COMPLETE
-Plan: 8 of 8 — Plan 08 complete (Visual acceptance checkpoint — user approved)
-Status: Complete — all 6 phases done, v1.0 feature-complete
+Phase: v1.1 Phase 01 of 5 (UX revisions — stopwatch removal, journal categories, win wording, streak theming, multi-win entry, animation polish) — IN PROGRESS
+Plan: 1 of N — Plan 01 complete (Stopwatch removal + DB migration)
+Status: In progress — v1.1 work started, Plan 01 complete
+
+Last activity: 2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category
+
+Progress: [█░░░░░░░░░] 5%
 
 Last activity: 2026-03-12 - Completed quick task 1: Add logo to website replacing basic w text and tab favicon with dark light mode support
 
@@ -168,11 +172,19 @@ Recent decisions affecting current work:
 - [Phase 06-06]: SideNav NavLink uses active:bg-foreground/10 not scale — absolute-positioned indicator pip would visually shift if container scales
 - [Phase 07-cleanup-and-contract-fixes]: Env import consistency: useHistory uses @/lib/env validated import instead of bare import.meta.env
 - [Phase 07-cleanup-and-contract-fixes]: editingId guard activation: forwarding editingId to JournalEntryCard closes gap between documented Phase 4 intent and actual browser behavior
+- [v1.1 Phase 01-01]: Stopwatch removal uses comment-out pattern (STOPWATCH REMOVED markers) — code preserved for potential re-enable, not deleted
+- [v1.1 Phase 01-01]: DB migration 002 batches timer column drops (wins) + journal category column add in one migration
+- [v1.1 Phase 01-01]: journal_entries.category CHECK constraint: daily|milestone|financial, DEFAULT daily
 
 ### Roadmap Evolution
 
 - Phase 5 added: UX Polish
 - Phase 6 added: Animations, micro-interactions, and overlay fixes
+- Phase 1 added (v1.1): UX revisions — stopwatch removal, journal categories, win wording, streak theming, multi-win entry, animation polish
+- Phase 2 added (v1.1): Win item interactions and timeline display — inline strikethrough, timeline-style history view
+- Phase 3 added (v1.1): Categories and reporting — item categorization dropdown, per-category completion counts
+- Phase 4 added (v1.1): User profiles and settings — user system, night owl day cycle, check-in schedule, consistency graph and streak
+- Phase 5 added (v1.1): Push notifications — web push with service workers and cloud compute setup
 
 ### Pending Todos
 
