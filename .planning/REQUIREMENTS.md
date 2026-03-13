@@ -66,6 +66,14 @@
 - **TIMELINE-01**: History DayDetail renders as a vertical dot-and-line timeline (no timestamps)
 - **TIMELINE-02**: Completed wins show filled dot and left-border accent; incomplete wins show hollow dot and muted border
 
+### Win Categories (Phase 3)
+
+- **CAT-01**: User can assign a category (work/personal/health) to a win when creating it via button-row selector in WinInputOverlay
+- **CAT-02**: Category persists to Supabase wins table with DB migration adding category column
+- **CAT-03**: Category badge is visible on WinCard in TodayPage (suppressed for default 'work')
+- **CAT-04**: Category badge is visible on TimelineItem in DayDetail history view
+- **CAT-05**: TodayPage shows per-category completion counts when multiple categories are in use
+
 ## v2 Requirements
 
 ### Notifications
@@ -135,12 +143,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INT-03 | v1.1 Phase 2 | Planned |
 | TIMELINE-01 | v1.1 Phase 2 | Planned |
 | TIMELINE-02 | v1.1 Phase 2 | Planned |
+| CAT-01 | v1.1 Phase 3 | Planned |
+| CAT-02 | v1.1 Phase 3 | Planned |
+| CAT-03 | v1.1 Phase 3 | Planned |
+| CAT-04 | v1.1 Phase 3 | Planned |
+| CAT-05 | v1.1 Phase 3 | Planned |
 
 **Coverage:**
 - v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 13 total — 0 complete, 13 planned
+- v1.1 requirements: 18 total — 0 complete, 18 planned
 - v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-13 — v1.1 Phase 2 requirements added (INT-01..03, TIMELINE-01..02)*
+*Last updated: 2026-03-14 — v1.1 Phase 3 requirements added (CAT-01..05)*

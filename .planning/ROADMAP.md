@@ -60,13 +60,14 @@ Plans:
 
 ### Phase 3: Categories and reporting — item categorization dropdown, per-category completion counts
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Add win categorization (work/personal/health) with a button-row selector in WinInputOverlay, category badges on WinCard and DayDetail timeline, and per-category completion counts on TodayPage.
+**Requirements**: [CAT-01, CAT-02, CAT-03, CAT-04, CAT-05]
 **Depends on:** Phase 2
-**Plans:** 0 plans
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 3 to break down)
+- [ ] 03-01-PLAN.md — DB migration, useWins category support, WinInputOverlay selector, TodayPage wiring
+- [ ] 03-02-PLAN.md — WinCard and DayDetail badges, CategorySummary component, visual checkpoint
 
 ### Phase 4: User profiles and settings — user system, night owl day cycle, check-in schedule, consistency graph and streak
 
