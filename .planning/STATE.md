@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md — timeline history view, TimelineItem replaces WinRow in DayDetail
-last_updated: "2026-03-13T15:57:42.442Z"
+stopped_at: Completed 02-01-PLAN.md — inline win completion toggle with DB migration
+last_updated: "2026-03-13T15:58:36.736Z"
 last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 5
 ---
 
@@ -92,6 +92,7 @@ Progress: [██████████] 100%
 | Phase 01-ux-revisions P03 | 2 | 2 tasks | 4 files |
 | Phase 01-ux-revisions P04 | 2 | 2 tasks | 2 files |
 | Phase 02-win-item-interactions P02-02 | 1 | 1 tasks | 1 files |
+| Phase 02-win-item-interactions P02-01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -190,6 +191,8 @@ Recent decisions affecting current work:
 - [Phase 01-ux-revisions]: StreakCelebration auto-close (setTimeout 4000ms) removed — click-to-dismiss only for celebration moments
 - [Phase 02-02]: Timeline connecting line via border-l on container (ml-[7px]) with dots absolutely positioned; dot centered via left: 7px + translateX(-50%)
 - [Phase 02-02]: TimelineItem co-located in DayDetail.jsx; no separate file created
+- [Phase 02-01]: toggleWinCompleted reads from wins state — avoids extra DB read when flipping completed
+- [Phase 02-01]: completed:false added to addWin optimistic object to match new column default
 
 ### Roadmap Evolution
 
@@ -218,6 +221,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T15:57:42.439Z
-Stopped at: Completed 02-02-PLAN.md — timeline history view, TimelineItem replaces WinRow in DayDetail
+Last session: 2026-03-13T15:58:36.735Z
+Stopped at: Completed 02-01-PLAN.md — inline win completion toggle with DB migration
 Resume file: None
