@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: ux-revisions
-status: in_progress
-stopped_at: Completed 01-01-PLAN.md — stopwatch removal and DB migration
-last_updated: "2026-03-13T23:12:34Z"
-last_activity: 2026-03-13 — Phase 01 Plan 01 complete (stopwatch removal, DB migration)
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Completed 01-02-PLAN.md — win wording and multi-win entry
+last_updated: "2026-03-13T15:17:06.167Z"
+last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
 progress:
   total_phases: 5
-  completed_phases: 0
-  total_plans: 20
-  completed_plans: 1
+  completed_phases: 1
+  total_plans: 5
+  completed_plans: 5
   percent: 5
 ---
 
@@ -87,6 +87,8 @@ Progress: [██████████] 100%
 | Phase 06-animations-micro-interactions-and-overlay-fixes P06-07 | 2 | 2 tasks | 3 files |
 | Phase 06-animations-micro-interactions-and-overlay-fixes P08 | 5 | 2 tasks | 1 files |
 | Phase 07-cleanup-and-contract-fixes P07-01 | 4 | 7 tasks | 6 files |
+| Phase 01-ux-revisions P01-02 | 1min | 2 tasks | 2 files |
+| Phase 01-ux-revisions P05 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -175,6 +177,10 @@ Recent decisions affecting current work:
 - [v1.1 Phase 01-01]: Stopwatch removal uses comment-out pattern (STOPWATCH REMOVED markers) — code preserved for potential re-enable, not deleted
 - [v1.1 Phase 01-01]: DB migration 002 batches timer column drops (wins) + journal category column add in one migration
 - [v1.1 Phase 01-01]: journal_entries.category CHECK constraint: daily|milestone|financial, DEFAULT daily
+- [Phase v1.1 Phase 01-02]: onDone prop falls back to onClose on WinInputOverlay — backward compatible with existing callers
+- [Phase v1.1 Phase 01-02]: Multi-win entry saves each title to DB immediately via onSubmit — no batch; preserves existing data contract
+- [Phase 01-ux-revisions]: DevToolsPanel: static import + import.meta.env.DEV render gate — tree-shaking removes from production bundle
+- [Phase 01-ux-revisions]: clearToday deletes journal entries by created_at range — journal_entries has no win_date column
 
 ### Roadmap Evolution
 
@@ -203,6 +209,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T05:00:16.735Z
-Stopped at: Completed 07-01-PLAN.md — cleanup and contract fixes
+Last session: 2026-03-13T15:16:57.916Z
+Stopped at: Completed 01-02-PLAN.md — win wording and multi-win entry
 Resume file: None
