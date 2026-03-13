@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-02-PLAN.md — win wording and multi-win entry
-last_updated: "2026-03-13T15:17:06.167Z"
+stopped_at: Completed 01-03-PLAN.md — journal entry categories
+last_updated: "2026-03-13T15:17:21.117Z"
 last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
 progress:
   total_phases: 5
@@ -89,6 +89,8 @@ Progress: [██████████] 100%
 | Phase 07-cleanup-and-contract-fixes P07-01 | 4 | 7 tasks | 6 files |
 | Phase 01-ux-revisions P01-02 | 1min | 2 tasks | 2 files |
 | Phase 01-ux-revisions P05 | 3min | 2 tasks | 3 files |
+| Phase 01-ux-revisions P03 | 2 | 2 tasks | 4 files |
+| Phase 01-ux-revisions P04 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -181,6 +183,8 @@ Recent decisions affecting current work:
 - [Phase v1.1 Phase 01-02]: Multi-win entry saves each title to DB immediately via onSubmit — no batch; preserves existing data contract
 - [Phase 01-ux-revisions]: DevToolsPanel: static import + import.meta.env.DEV render gate — tree-shaking removes from production bundle
 - [Phase 01-ux-revisions]: clearToday deletes journal entries by created_at range — journal_entries has no win_date column
+- [Phase 01-03]: Category badge suppressed for 'daily' entries — default value adds no visual information
+- [Phase 01-03]: initialCategory prop on JournalEditorOverlay resets inside open useEffect — ensures correct category pre-selected when editing different entries
 
 ### Roadmap Evolution
 
@@ -209,6 +213,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T15:16:57.916Z
-Stopped at: Completed 01-02-PLAN.md — win wording and multi-win entry
+Last session: 2026-03-13T15:17:17.310Z
+Stopped at: Completed 01-03-PLAN.md — journal entry categories
 Resume file: None

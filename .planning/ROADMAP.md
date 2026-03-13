@@ -25,7 +25,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Foundation | v1.0 | 5/5 | Complete | 2026-03-09 |
+| 1. Foundation | 5/5 | Complete   | 2026-03-13 | 2026-03-09 |
 | 2. Win Logging & Focus Tracking | v1.0 | 5/5 | Complete | 2026-03-09 |
 | 3. Daily Loop Closure | v1.0 | 5/5 | Complete | 2026-03-09 |
 | 4. History & Journal | v1.0 | 5/5 | Complete | 2026-03-10 |
@@ -38,7 +38,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 **Goal:** Remove the stopwatch feature, add journal categories, update win entry wording to intention-oriented language, replace fire emoji with monochrome streak icon, make streak celebration persistent, add multi-win entry, and create dev tools for testing.
 **Requirements**: [UX-01, UX-02, UX-03, UX-04, UX-05, UX-06, UX-07, UX-08]
 **Depends on:** v1.0 (complete)
-**Plans:** 5 plans
+**Plans:** 5/5 plans complete
 
 Plans:
 - [ ] 01-01-PLAN.md — Stopwatch removal and DB migration
