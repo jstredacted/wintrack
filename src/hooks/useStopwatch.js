@@ -1,3 +1,4 @@
+// STOPWATCH REMOVED — file kept for potential re-enable
 import { useState, useEffect } from 'react';
 
 /**
