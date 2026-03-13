@@ -7,6 +7,7 @@ import { useWins } from '@/hooks/useWins';
 import { useCheckin } from '@/hooks/useCheckin';
 import { useUIStore } from '@/stores/uiStore';
 import WinList from '@/components/wins/WinList';
+import CategorySummary from '@/components/wins/CategorySummary';
 import WinInputOverlay from '@/components/wins/WinInputOverlay';
 import RollForwardPrompt from '@/components/wins/RollForwardPrompt';
 // STOPWATCH REMOVED — TotalFocusTime import kept for potential re-enable
@@ -159,6 +160,11 @@ export default function TodayPage() {
                 onDelete={(id) => deleteWin(id)}
                 onToggle={(id) => toggleWinCompleted(id)}
               />
+              {wins.length > 0 && (
+                <div className="mt-4">
+                  <CategorySummary wins={wins} />
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
