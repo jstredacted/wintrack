@@ -14,7 +14,7 @@ import { USER_ID } from '@/lib/env';
  *   loading: boolean,
  *   error: string|null,
  *   yesterdayWins: Array,
- *   addWin: (title: string) => Promise<void>,
+ *   addWin: (title: string, category?: string) => Promise<void>,
  *   editWin: (id: string, newTitle: string) => Promise<void>,
  *   deleteWin: (id: string) => Promise<void>,
  *   rollForward: () => Promise<void>,
@@ -49,7 +49,7 @@ export function useWins() {
           .order('created_at', { ascending: true }),
         supabase
           .from('wins')
-          .select('title, id')
+          .select('title, id, category')
           .eq('win_date', yesterday)
           .eq('user_id', USER_ID),
       ]);
@@ -74,14 +74,15 @@ export function useWins() {
   }, []);
 
   /**
-   * addWin(title) — insert a new win for today, append optimistically
+   * addWin(title, category) — insert a new win for today, append optimistically
    */
-  const addWin = useCallback(async (title) => {
+  const addWin = useCallback(async (title, category = 'work') => {
     const today = getLocalDateString();
     const optimistic = {
       id: `optimistic-${Date.now()}`,
       user_id: USER_ID,
       title,
+      category,
       win_date: today,
       status: 'pending',
       completed: false,
@@ -93,7 +94,7 @@ export function useWins() {
 
     const { data, error: insertError } = await supabase
       .from('wins')
-      .insert({ user_id: USER_ID, title, win_date: today /* STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null */ })
+      .insert({ user_id: USER_ID, title, category, win_date: today /* STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null */ })
       .eq('user_id', USER_ID)
       .select()
       .single();
@@ -175,9 +176,10 @@ export function useWins() {
     if (yesterdayWins.length === 0) return;
 
     const today = getLocalDateString();
-    const toInsert = yesterdayWins.map(({ title }) => ({
+    const toInsert = yesterdayWins.map(({ title, category }) => ({
       user_id: USER_ID,
       title,
+      category: category ?? 'work',
       win_date: today,
       // STOPWATCH REMOVED — timer_elapsed_seconds: 0, timer_started_at: null,
     }));
