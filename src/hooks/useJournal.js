@@ -18,20 +18,20 @@ export function useJournal() {
       })
   }, [])
 
-  const addEntry = useCallback(async ({ title, body }) => {
+  const addEntry = useCallback(async ({ title, body, category = 'daily' }) => {
     const { data, error } = await supabase
       .from('journal_entries')
-      .insert({ user_id: USER_ID, title, body })
+      .insert({ user_id: USER_ID, title, body, category })
       .select()
       .single()
     if (!error && data) setEntries(prev => [data, ...prev])
   }, [])
 
-  const editEntry = useCallback(async (id, { title, body }) => {
-    setEntries(prev => prev.map(e => e.id === id ? { ...e, title, body } : e))
+  const editEntry = useCallback(async (id, { title, body, category = 'daily' }) => {
+    setEntries(prev => prev.map(e => e.id === id ? { ...e, title, body, category } : e))
     await supabase
       .from('journal_entries')
-      .update({ title, body, updated_at: new Date().toISOString() })
+      .update({ title, body, category, updated_at: new Date().toISOString() })
       .eq('id', id)
       .eq('user_id', USER_ID)
   }, [])

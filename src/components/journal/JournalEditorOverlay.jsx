@@ -7,10 +7,17 @@ function wordCount(text) {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
+const CATEGORIES = [
+  { value: 'daily', label: 'Daily' },
+  { value: 'milestone', label: 'Milestone' },
+  { value: 'financial', label: 'Financial' },
+];
+
 export default function JournalEditorOverlay({
   open,
   initialTitle = '',
   initialBody = '',
+  initialCategory = 'daily',
   onSave,
   onClose,
 }) {
@@ -19,6 +26,7 @@ export default function JournalEditorOverlay({
   const [screen, setScreen] = useState('editing'); // 'editing' | 'summary'
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState(initialBody);
+  const [category, setCategory] = useState(initialCategory ?? 'daily');
   const [liveWordCount, setLiveWordCount] = useState(0);
   const [summaryWordCount, setSummaryWordCount] = useState(0);
   const [summaryMinutes, setSummaryMinutes] = useState(0);
@@ -35,6 +43,7 @@ export default function JournalEditorOverlay({
       setScreen('editing');
       setTitle(initialTitle);
       setBody(initialBody);
+      setCategory(initialCategory ?? 'daily');
       liveWordCountRef.current = wordCount(initialBody);
       setLiveWordCount(liveWordCountRef.current);
       startedAtRef.current = Date.now();
@@ -67,7 +76,7 @@ export default function JournalEditorOverlay({
     setSaving(true);
     const wc = liveWordCountRef.current;
     const minutes = Math.round((Date.now() - startedAtRef.current) / 60000);
-    await onSave({ title: currentTitle, body: body.trim() });
+    await onSave({ title: currentTitle, body: body.trim(), category });
     setSummaryWordCount(wc);
     setSummaryMinutes(minutes);
     setSaving(false);
@@ -113,6 +122,20 @@ export default function JournalEditorOverlay({
 
             {/* Editor form — full-screen writing mode */}
             <form onSubmit={handleSave} className="flex-1 flex flex-col px-12 py-10 sm:px-20 lg:px-32 w-full">
+              {/* Category selector */}
+              <div className="flex gap-3 mb-4">
+                {CATEGORIES.map(c => (
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => setCategory(c.value)}
+                    className={`font-mono text-xs uppercase tracking-[0.2em] px-2 py-1 border
+                      ${category === c.value ? 'border-foreground text-foreground' : 'border-border text-muted-foreground'}`}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
               <input
                 ref={titleRef}
                 type="text"
