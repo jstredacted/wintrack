@@ -15,8 +15,13 @@ export default function JournalEntryCard({ entry, onEdit, onDelete, editingId })
   return (
     <article className="py-10 border-b border-border/30 last:border-0 group">
       {/* Date — editorial metadata */}
-      <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground/40 mb-4">
+      <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground/40 mb-4 flex items-center gap-2">
         {formatEntryDate(entry.created_at)}
+        {entry.category && entry.category !== 'daily' && (
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground border border-border px-1.5 py-0.5">
+            {entry.category}
+          </span>
+        )}
       </p>
 
       {/* Title — the hero */}

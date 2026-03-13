@@ -14,11 +14,11 @@ export default function JournalPage() {
   const overlayOpen = showNewForm || editingId !== null
   const editingEntry = editingId ? entries.find(e => e.id === editingId) : null
 
-  async function handleOverlaySave({ title, body }) {
+  async function handleOverlaySave({ title, body, category }) {
     if (editingId) {
-      await editEntry(editingId, { title, body })
+      await editEntry(editingId, { title, body, category })
     } else {
-      await addEntry({ title, body })
+      await addEntry({ title, body, category })
       refreshStreak()
     }
   }
@@ -71,6 +71,7 @@ export default function JournalPage() {
         open={overlayOpen}
         initialTitle={editingEntry?.title ?? ''}
         initialBody={editingEntry?.body ?? ''}
+        initialCategory={editingEntry?.category ?? 'daily'}
         onSave={handleOverlaySave}
         onClose={handleOverlayClose}
       />
