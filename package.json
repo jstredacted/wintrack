@@ -46,6 +46,9 @@
     "tailwindcss": "^4.2.1",
     "vite": "^7.3.1",
     "vite-plugin-node-polyfills": "^0.25.0",
-    "vitest": "^4.0.18"
+    "vite-plugin-pwa": "^1.2.0",
+    "vitest": "^4.0.18",
+    "workbox-core": "^7.4.0",
+    "workbox-precaching": "^7.4.0"
   }
 }
