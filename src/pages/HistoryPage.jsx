@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useHistory } from '@/hooks/useHistory'
 import { getLocalDateString } from '@/lib/utils/date'
+import { useSettingsStore } from '@/stores/settingsStore'
 import DayStrip from '@/components/history/DayStrip'
 import DayDetail from '@/components/history/DayDetail'
 
@@ -14,7 +15,8 @@ function getGreeting() {
 
 export default function HistoryPage() {
   const { completionMap, loading, fetchWinsForDate } = useHistory()
-  const [selectedDate, setSelectedDate] = useState(() => getLocalDateString(new Date()))
+  const dayStartHour = useSettingsStore(s => s.settings.dayStartHour)
+  const [selectedDate, setSelectedDate] = useState(() => getLocalDateString(new Date(), dayStartHour))
   const [selectedWins, setSelectedWins] = useState([])
   const [detailLoading, setDetailLoading] = useState(false)
 

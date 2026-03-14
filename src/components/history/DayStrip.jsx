@@ -1,8 +1,10 @@
 import { useRef, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { getLocalDateString } from '@/lib/utils/date';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 export default function DayStrip({ completionMap = {}, selectedDate, onSelectDate, days = 28 }) {
+  const dayStartHour = useSettingsStore(s => s.settings.dayStartHour);
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -10,8 +12,9 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
   const cells = [];
   const today = new Date();
   for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(today.getTime() - i * 86400000);
-    const dateStr = getLocalDateString(d);
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = getLocalDateString(d, dayStartHour);
     const dayAbbr = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(d);
     const dateNum = d.getDate();
     const completed = completionMap[dateStr] === true;

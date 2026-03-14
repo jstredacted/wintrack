@@ -6,6 +6,7 @@ import { getLocalDateString } from '@/lib/utils/date';
 import { useWins } from '@/hooks/useWins';
 import { useCheckin } from '@/hooks/useCheckin';
 import { useUIStore } from '@/stores/uiStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import WinList from '@/components/wins/WinList';
 import CategorySummary from '@/components/wins/CategorySummary';
 import WinInputOverlay from '@/components/wins/WinInputOverlay';
@@ -26,7 +27,8 @@ function getGreeting() {
 }
 
 export default function TodayPage() {
-  const today = getLocalDateString();
+  const { dayStartHour, morningPromptHour, eveningPromptHour } = useSettingsStore(s => s.settings);
+  const today = getLocalDateString(new Date(), dayStartHour);
   const currentHour = new Date().getHours();
 
   const {
@@ -87,13 +89,13 @@ export default function TodayPage() {
   // Time-gated prompt visibility
   // Always guard on !loading to prevent false positives during fetch
   const showMorning = !loading
-    && currentHour >= 9
+    && currentHour >= morningPromptHour
     && wins.length === 0
     && morningDismissedDate !== today;
 
   const showEvening = !loading
     && checkedInToday === false
-    && currentHour >= 21
+    && currentHour >= eveningPromptHour
     && wins.length > 0
     && eveningDismissedDate !== today;
 
@@ -121,9 +123,9 @@ export default function TodayPage() {
           count={yesterdayWins.length}
           onConfirm={async () => {
             await rollForward();
-            markRollForwardOffered();
+            markRollForwardOffered(dayStartHour);
           }}
-          onDismiss={markRollForwardOffered}
+          onDismiss={() => markRollForwardOffered(dayStartHour)}
         />
       )}
 
@@ -221,20 +223,20 @@ export default function TodayPage() {
       <MorningPrompt
         show={showMorning}
         onLogWin={() => {
-          dismissMorningPrompt();  // dismiss first — prevent overlap
+          dismissMorningPrompt(dayStartHour);  // dismiss first — prevent overlap
           openInputOverlay();
         }}
-        onDismiss={dismissMorningPrompt}
+        onDismiss={() => dismissMorningPrompt(dayStartHour)}
       />
 
       {/* Evening prompt — 9pm+ if no check-in and not dismissed today */}
       <EveningPrompt
         show={showEvening}
         onStartCheckin={() => {
-          dismissEveningPrompt();   // dismiss first — prevent overlap
+          dismissEveningPrompt(dayStartHour);   // dismiss first — prevent overlap
           openCheckinOverlay();
         }}
-        onDismiss={dismissEveningPrompt}
+        onDismiss={() => dismissEveningPrompt(dayStartHour)}
       />
 
       {/* STOPWATCH REMOVED — TimerFocusOverlay JSX block
