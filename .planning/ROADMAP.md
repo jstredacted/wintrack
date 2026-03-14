@@ -83,13 +83,15 @@ Plans:
 
 ### Phase 5: Push notifications — web push with service workers and cloud compute setup
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Replace notification stubs with real Web Push API delivery using a service worker for push event handling, vite-plugin-pwa for PWA manifest and SW build, client-side push subscription stored in Supabase, and a Supabase Edge Function triggered by pg_cron to send notifications at user-configured morning/evening hours.
+**Requirements**: [PUSH-01, PUSH-02, PUSH-03, PUSH-04, PUSH-05, PUSH-06, PUSH-07]
 **Depends on:** Phase 4
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 5 to break down)
+- [ ] 05-01-PLAN.md — PWA/service worker setup, push subscription library, DB migration
+- [ ] 05-02-PLAN.md — Notification permission UI and Settings page integration
+- [ ] 05-03-PLAN.md — Supabase Edge Function and pg_cron scheduling
 
 ### Phase 6: UI simplification — remove check-in flow, journal FAB button with Nothing design
 

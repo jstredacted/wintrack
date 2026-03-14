@@ -85,6 +85,16 @@
 - **HEATMAP-01**: App shows a GitHub-style 84-day consistency heatmap with colored cells for completed days
 - **SETTINGSUI-01**: User can access a Settings page from SideNav to configure day boundary, prompt hours, and view consistency graph
 
+### Push Notifications (Phase 5)
+
+- **PUSH-01**: Service worker registers at root scope and handles push events (displays notification with title, body, tag)
+- **PUSH-02**: Client subscribes to Web Push API and stores subscription (endpoint, p256dh, auth) in Supabase push_subscriptions table
+- **PUSH-03**: Notification permission UI shows current state (enabled/disabled/blocked) with toggle on Settings page
+- **PUSH-04**: Notification stubs in notifications.js replaced with real push subscription wiring
+- **PUSH-05**: Settings page shows notification toggle section with contextual link to morning/evening hour settings
+- **PUSH-06**: Supabase Edge Function sends web push messages to stored subscriptions using VAPID authentication
+- **PUSH-07**: pg_cron triggers Edge Function hourly; function reads user_settings to determine whether to send at current hour
+
 ## v2 Requirements
 
 ### Notifications
@@ -167,12 +177,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHEDULE-01 | v1.1 Phase 4 | Planned |
 | HEATMAP-01 | v1.1 Phase 4 | Planned |
 | SETTINGSUI-01 | v1.1 Phase 4 | Planned |
+| PUSH-01 | v1.1 Phase 5 | Planned |
+| PUSH-02 | v1.1 Phase 5 | Planned |
+| PUSH-03 | v1.1 Phase 5 | Planned |
+| PUSH-04 | v1.1 Phase 5 | Planned |
+| PUSH-05 | v1.1 Phase 5 | Planned |
+| PUSH-06 | v1.1 Phase 5 | Planned |
+| PUSH-07 | v1.1 Phase 5 | Planned |
 
 **Coverage:**
 - v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 26 total — 8 complete, 18 planned
+- v1.1 requirements: 33 total — 8 complete, 25 planned
 - v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-14 — v1.1 Phase 4 requirements added (SETTINGS-01..02, NIGHTOWL-01..03, SCHEDULE-01, HEATMAP-01, SETTINGSUI-01)*
+*Last updated: 2026-03-14 — v1.1 Phase 5 requirements added (PUSH-01..07)*
