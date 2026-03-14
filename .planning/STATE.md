@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-02-PLAN.md -- Journal FAB button with Nothing design
-last_updated: "2026-03-14T18:52:39.933Z"
-last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
+stopped_at: Completed 06-01-PLAN.md -- Remove check-in flow
+last_updated: "2026-03-14T18:55:44.993Z"
+last_activity: "2026-03-14 - Completed 06-01: remove check-in flow, rewrite streak to query wins.completed"
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 17
-  completed_plans: 16
-  percent: 5
+  completed_plans: 17
+  percent: 50
 ---
 
 # Project State
@@ -21,21 +21,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** The daily discipline loop: declare wins in the morning, complete them through the day, evaluate honestly at night.
-**Current focus:** Phase 6 complete — all phases done, v1.0 shipped
+**Current focus:** Phase 6 (UI Simplification) — removing check-in flow, adding journal FAB
 
 ## Current Position
 
-Phase: v1.1 Phase 01 of 5 (UX revisions — stopwatch removal, journal categories, win wording, streak theming, multi-win entry, animation polish) — IN PROGRESS
-Plan: 1 of N — Plan 01 complete (Stopwatch removal + DB migration)
-Status: In progress — v1.1 work started, Plan 01 complete
+Phase: v1.1 Phase 06 (UI Simplification — remove check-in flow, journal FAB button with Nothing design) — IN PROGRESS
+Plan: 1 of 2 — Plan 01 complete (Remove check-in flow)
+Status: In progress — Plan 06-01 complete
 
-Last activity: 2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category
+Last activity: 2026-03-14 - Completed 06-01: remove check-in flow, rewrite streak to query wins.completed
 
-Progress: [█░░░░░░░░░] 5%
-
-Last activity: 2026-03-12 - Completed quick task 1: Add logo to website replacing basic w text and tab favicon with dark light mode support
-
-Progress: [██████████] 100%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -101,6 +97,7 @@ Progress: [██████████] 100%
 | Phase 05-push-notifications P05-02 | 1min | 2 tasks | 3 files |
 | Phase 05-push-notifications P05-03 | 2min | 2 tasks | 2 files |
 | Phase 06-ui-simplification P06-02 | 1min | 2 tasks | 1 files |
+| Phase 06-ui-simplification P06-01 | 4min | 2 tasks | 19 files |
 
 ## Accumulated Context
 
@@ -215,6 +212,7 @@ Recent decisions affecting current work:
 - [Phase 05-push-notifications]: Hourly cron with Edge Function hour-check over per-setting cron jobs -- no cron update needed when user changes notification times
 - [Phase 05-push-notifications]: UTC hour comparison in Edge Function -- single-user sets hours as UTC-equivalent values
 - [Phase 06-02]: FAB uses bg-foreground text-background for auto light/dark inversion; Plus icon strokeWidth 1.5 for Nothing aesthetic; z-40 below overlays; pb-24 entry list clearance
+- [Phase 06-01]: Streak queries wins.completed=true directly, eliminating check_ins table dependency
 
 ### Roadmap Evolution
 
@@ -246,6 +244,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T18:52:39.930Z
-Stopped at: Completed 06-02-PLAN.md -- Journal FAB button with Nothing design
+Last session: 2026-03-14T18:55:44.989Z
+Stopped at: Completed 06-01-PLAN.md -- Remove check-in flow
 Resume file: None
