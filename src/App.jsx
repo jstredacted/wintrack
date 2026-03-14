@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AppShell from "./components/layout/AppShell";
 import TodayPage from "./pages/TodayPage";
-import HistoryPage from "./pages/HistoryPage";
 import JournalPage from "./pages/JournalPage";
+import SettingsPage from "./pages/SettingsPage";
 
 const router = createBrowserRouter([
   {
@@ -10,8 +10,8 @@ const router = createBrowserRouter([
     Component: AppShell,
     children: [
       { index: true, Component: TodayPage },
-      { path: "history", Component: HistoryPage },
       { path: "journal", Component: JournalPage },
+      { path: "settings", Component: SettingsPage },
     ],
   },
 ]);

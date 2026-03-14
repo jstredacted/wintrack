@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router';
-import { LayoutDashboard, Clock, BookOpen, Flame } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Settings, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '../theme/ThemeToggle';
 import { useStreak } from '@/hooks/useStreak';
@@ -9,8 +9,8 @@ import StreakCelebration from './StreakCelebration';
 
 const TABS = [
   { to: '/', icon: LayoutDashboard, label: 'Today', end: true },
-  { to: '/history', icon: Clock, label: 'History' },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
+  { to: '/settings', icon: Settings, label: 'Settings' },
 ];
 
 const STREAK_STORAGE_KEY = 'lastKnownCombinedStreak';
