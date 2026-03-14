@@ -21,7 +21,7 @@ const corsHeaders = {
 
 const MESSAGES: Record<string, { title: string; body: string }> = {
   morning: { title: "wintrack", body: "What's the grind for today?" },
-  evening: { title: "wintrack", body: "Time for your evening check-in" },
+  evening: { title: "wintrack", body: "Time to reflect on your day" },
 };
 
 Deno.serve(async (req: Request) => {

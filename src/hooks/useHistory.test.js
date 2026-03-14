@@ -22,7 +22,7 @@ vi.mock('@/lib/supabase', () => ({
  *
  * Creates a chainable Supabase query mock that supports:
  *   supabase.from('wins').select('win_date, completed').eq('user_id', USER_ID)
- *   supabase.from('wins').select('id, title, category, completed, check_ins(note)').eq(...).eq('win_date', date)
+ *   supabase.from('wins').select('id, title, category, completed').eq(...).eq('win_date', date)
  *
  * The mock object is thenable so it can be awaited at any point in the chain.
  */
@@ -150,7 +150,7 @@ describe('useHistory', () => {
       const mapMock = buildHistoryMock({ data: [], error: null });
       const dateMock = buildHistoryMock({
         data: [
-          { id: 'win-1', title: 'Ship the feature', completed: true, check_ins: [{ note: null }] },
+          { id: 'win-1', title: 'Ship the feature', completed: true },
         ],
         error: null,
       });

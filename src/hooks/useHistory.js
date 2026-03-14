@@ -34,7 +34,7 @@ export function useHistory() {
   const fetchWinsForDate = useCallback(async (date) => {
     const { data } = await supabase
       .from('wins')
-      .select('id, title, category, completed, check_ins(note)')
+      .select('id, title, category, completed')
       .eq('user_id', USER_ID)
       .eq('win_date', date)
       .order('created_at', { ascending: true })

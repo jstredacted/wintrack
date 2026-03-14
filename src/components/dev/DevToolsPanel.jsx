@@ -24,20 +24,9 @@ export default function DevToolsPanel({ open, onClose }) {
       user_id: USER_ID,
       title: `Dev win ${i + 1}`,
       win_date: yesterday,
+      completed: true,
     }));
-    const { data: insertedWins } = await supabase
-      .from('wins')
-      .insert(wins)
-      .select('id');
-
-    if (insertedWins && insertedWins.length > 0) {
-      const checkIns = insertedWins.map((w) => ({
-        user_id: USER_ID,
-        win_id: w.id,
-        completed: true,
-      }));
-      await supabase.from('check_ins').insert(checkIns);
-    }
+    await supabase.from('wins').insert(wins);
     onClose();
     window.location.reload();
   }

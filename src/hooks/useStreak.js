@@ -26,8 +26,8 @@ export function useStreak(refreshKey = 0) {
       setLoading(true);
 
       const { data, error } = await supabase
-        .from('check_ins')
-        .select('win_id, wins(win_date)')
+        .from('wins')
+        .select('win_date')
         .eq('user_id', USER_ID)
         .eq('completed', true);
 
@@ -37,7 +37,7 @@ export function useStreak(refreshKey = 0) {
       if (!error && data) {
         completedDates = new Set(
           data
-            .map((row) => row.wins?.win_date)
+            .map((row) => row.win_date)
             .filter(Boolean)
         );
 
