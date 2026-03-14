@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
-// CHECKIN-04: Push notification stubs — v1 is code only, no actual delivery
-// Wave 0 stub — all tests fail with module-not-found until Wave 1 creates notifications.js
+// Mock push-subscription so tests run in jsdom (no real service worker)
+vi.mock('./push-subscription', () => ({
+  subscribeToPush: vi.fn().mockResolvedValue(undefined),
+}));
 
 describe('notifications', () => {
   it('exports scheduleMorningReminder as a function', async () => {
@@ -16,11 +18,11 @@ describe('notifications', () => {
 
   it('scheduleMorningReminder() does not throw when called', async () => {
     const { scheduleMorningReminder } = await import('./notifications');
-    expect(() => scheduleMorningReminder()).not.toThrow();
+    await expect(scheduleMorningReminder()).resolves.not.toThrow();
   });
 
   it('scheduleEveningReminder() does not throw when called', async () => {
     const { scheduleEveningReminder } = await import('./notifications');
-    expect(() => scheduleEveningReminder()).not.toThrow();
+    await expect(scheduleEveningReminder()).resolves.not.toThrow();
   });
 });
