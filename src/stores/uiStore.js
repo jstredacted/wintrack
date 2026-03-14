@@ -22,18 +22,6 @@ export const useUIStore = create((set) => ({
   clearEditingWin: () => set({ editingWinId: null }),
   markRollForwardOffered: (dayStartHour) => set({ rollForwardOfferedDate: writeDate('rollForwardOfferedDate', dayStartHour) }),
 
-  // --- Phase 3 state ---
-  checkinOverlayOpen: false,
-  // *DismissedDate: YYYY-MM-DD string persisted to localStorage.
-  // Suppresses prompt for the rest of the day; resets automatically on next day.
-  morningDismissedDate: readDate('morningDismissedDate'),
-  eveningDismissedDate: readDate('eveningDismissedDate'),
-
-  openCheckinOverlay: () => set({ checkinOverlayOpen: true }),
-  closeCheckinOverlay: () => set({ checkinOverlayOpen: false }),
-  dismissMorningPrompt: (dayStartHour) => set({ morningDismissedDate: writeDate('morningDismissedDate', dayStartHour) }),
-  dismissEveningPrompt: (dayStartHour) => set({ eveningDismissedDate: writeDate('eveningDismissedDate', dayStartHour) }),
-
   // --- Phase 5 state ---
   timerOverlayOpen: false,
   openTimerOverlay: () => set({ timerOverlayOpen: true }),
