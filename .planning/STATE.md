@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-01-PLAN.md -- Remove check-in flow
-last_updated: "2026-03-14T18:55:44.993Z"
+stopped_at: Completed 07-01-PLAN.md -- Unified daily view
+last_updated: "2026-03-14T19:13:36.559Z"
 last_activity: "2026-03-14 - Completed 06-01: remove check-in flow, rewrite streak to query wins.completed"
 progress:
   total_phases: 7
-  completed_phases: 6
-  total_plans: 17
-  completed_plans: 17
+  completed_phases: 7
+  total_plans: 18
+  completed_plans: 18
   percent: 50
 ---
 
@@ -98,6 +98,7 @@ Progress: [█████░░░░░] 50%
 | Phase 05-push-notifications P05-03 | 2min | 2 tasks | 2 files |
 | Phase 06-ui-simplification P06-02 | 1min | 2 tasks | 1 files |
 | Phase 06-ui-simplification P06-01 | 4min | 2 tasks | 19 files |
+| Phase 07-unified-daily-view P07-01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -213,6 +214,9 @@ Recent decisions affecting current work:
 - [Phase 05-push-notifications]: UTC hour comparison in Edge Function -- single-user sets hours as UTC-equivalent values
 - [Phase 06-02]: FAB uses bg-foreground text-background for auto light/dark inversion; Plus icon strokeWidth 1.5 for Nothing aesthetic; z-40 below overlays; pb-24 entry list clearance
 - [Phase 06-01]: Streak queries wins.completed=true directly, eliminating check_ins table dependency
+- [Phase 07-unified-daily-view]: pastDateFormatter uses Intl.DateTimeFormat for past date headings in unified view
+- [Phase 07-unified-daily-view]: DayStrip always mounted outside conditional blocks to prevent unmount/remount flicker
+- [Phase 07-unified-daily-view]: mergedCompletionMap uses || undefined to remove false keys from DayStrip checkmark display
 
 ### Roadmap Evolution
 
@@ -244,6 +248,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T18:55:44.989Z
-Stopped at: Completed 06-01-PLAN.md -- Remove check-in flow
+Last session: 2026-03-14T19:13:36.556Z
+Stopped at: Completed 07-01-PLAN.md -- Unified daily view
 Resume file: None
