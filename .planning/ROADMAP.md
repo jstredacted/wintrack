@@ -29,7 +29,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 | 2. Win Logging & Focus Tracking | v1.0 | 5/5 | Complete | 2026-03-09 |
 | 3. Daily Loop Closure | v1.0 | 5/5 | Complete | 2026-03-09 |
 | 4. History & Journal | 1/3 | In Progress|  | 2026-03-10 |
-| 5. UX Polish | v1.0 | 5/5 | Complete | 2026-03-10 |
+| 5. UX Polish | 1/3 | In Progress|  | 2026-03-10 |
 | 6. Animations & Overlay Fixes | v1.0 | 8/8 | Complete | 2026-03-11 |
 | 7. Cleanup & Contract Fixes | v1.0 | 1/1 | Complete | 2026-03-11 |
 
@@ -86,7 +86,7 @@ Plans:
 **Goal:** Replace notification stubs with real Web Push API delivery using a service worker for push event handling, vite-plugin-pwa for PWA manifest and SW build, client-side push subscription stored in Supabase, and a Supabase Edge Function triggered by pg_cron to send notifications at user-configured morning/evening hours.
 **Requirements**: [PUSH-01, PUSH-02, PUSH-03, PUSH-04, PUSH-05, PUSH-06, PUSH-07]
 **Depends on:** Phase 4
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 05-01-PLAN.md — PWA/service worker setup, push subscription library, DB migration
