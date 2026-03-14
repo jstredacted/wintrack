@@ -4,20 +4,26 @@ import SettingsPage from './SettingsPage';
 
 const mockSaveSettings = vi.fn();
 
+// Stable reference — avoids infinite re-render from useEffect dep on `settings`
+const MOCK_SETTINGS = { dayStartHour: 0, morningPromptHour: 9, eveningPromptHour: 21 };
+
 vi.mock('@/hooks/useSettings', () => ({
   useSettings: () => ({
-    settings: { dayStartHour: 0, morningPromptHour: 9, eveningPromptHour: 21 },
+    settings: MOCK_SETTINGS,
     loading: false,
     saveSettings: mockSaveSettings,
   }),
 }));
 
-vi.mock('@/hooks/useHistory', () => ({
-  useHistory: () => ({
-    completionMap: {},
-    loading: false,
-  }),
-}));
+vi.mock('@/hooks/useHistory', () => {
+  const map = {};
+  return {
+    useHistory: () => ({
+      completionMap: map,
+      loading: false,
+    }),
+  };
+});
 
 vi.mock('@/components/history/ConsistencyGraph', () => ({
   default: ({ completionMap }) => (
