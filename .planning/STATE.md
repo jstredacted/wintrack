@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-02-PLAN.md — notification permission UI
-last_updated: "2026-03-14T11:51:50.976Z"
+stopped_at: Completed 05-03-PLAN.md -- Edge Function push delivery and pg_cron setup
+last_updated: "2026-03-14T11:55:38.230Z"
 last_activity: "2026-03-13 - Completed 01-01: stopwatch removal, DB migration for timer column drops + journal category"
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
   percent: 5
 ---
 
@@ -99,6 +99,7 @@ Progress: [██████████] 100%
 | Phase 04-user-profiles-and-settings P04-01 | 2min | 2 tasks | 7 files |
 | Phase 05-push-notifications P05-01 | 4min | 2 tasks | 6 files |
 | Phase 05-push-notifications P05-02 | 1min | 2 tasks | 3 files |
+| Phase 05-push-notifications P05-03 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -210,6 +211,8 @@ Recent decisions affecting current work:
 - [Phase 05-01]: push_subscriptions keyed by user_id (single subscription per user) — single-device assumption for v1.1
 - [Phase 05-push-notifications]: Permission prompt on user click only — never on page load to avoid browser blocking
 - [Phase 05-push-notifications]: Three-state notification component: loading (null), denied (informational text), default/granted (toggle button)
+- [Phase 05-push-notifications]: Hourly cron with Edge Function hour-check over per-setting cron jobs -- no cron update needed when user changes notification times
+- [Phase 05-push-notifications]: UTC hour comparison in Edge Function -- single-user sets hours as UTC-equivalent values
 
 ### Roadmap Evolution
 
@@ -241,6 +244,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T11:51:50.974Z
-Stopped at: Completed 05-02-PLAN.md — notification permission UI
+Last session: 2026-03-14T11:55:38.228Z
+Stopped at: Completed 05-03-PLAN.md -- Edge Function push delivery and pg_cron setup
 Resume file: None
