@@ -95,6 +95,24 @@
 - **PUSH-06**: Supabase Edge Function sends web push messages to stored subscriptions using VAPID authentication
 - **PUSH-07**: pg_cron triggers Edge Function hourly; function reads user_settings to determine whether to send at current hour
 
+### UI Simplification (Phase 6)
+
+- **SIMPLIFY-01**: CheckInOverlay component and all its imports are removed
+- **SIMPLIFY-02**: MorningPrompt and EveningPrompt check-in trigger components are removed
+- **SIMPLIFY-03**: useCheckin hook is removed entirely
+- **SIMPLIFY-04**: uiStore cleaned of check-in-related state (checkinOverlayOpen, morning/eveningDismissedDate)
+- **SIMPLIFY-05**: useStreak queries wins.completed directly instead of check_ins table
+- **SIMPLIFY-06**: useHistory.fetchWinsForDate drops check_ins join from select
+- **SIMPLIFY-07**: DayDetail TimelineItem removes check_ins note display
+- **SIMPLIFY-08**: DevToolsPanel seedYesterdayComplete sets wins.completed=true instead of inserting check_ins
+- **SIMPLIFY-09**: Edge Function evening message copy updated (remove "check-in" wording)
+- **SIMPLIFY-10**: TodayPage cleaned of all check-in imports, state, effects, and UI elements
+
+### Journal FAB (Phase 6)
+
+- **FAB-01**: JournalPage has a fixed-position circular FAB button in Nothing Phone dot-matrix aesthetic (lower-right, monochrome, Plus icon)
+- **FAB-02**: JournalPage inline "New Entry" button replaced with FAB
+
 ## v2 Requirements
 
 ### Notifications
@@ -184,12 +202,24 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PUSH-05 | v1.1 Phase 5 | Planned |
 | PUSH-06 | v1.1 Phase 5 | Planned |
 | PUSH-07 | v1.1 Phase 5 | Planned |
+| SIMPLIFY-01 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-02 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-03 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-04 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-05 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-06 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-07 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-08 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-09 | v1.1 Phase 6 | Planned |
+| SIMPLIFY-10 | v1.1 Phase 6 | Planned |
+| FAB-01 | v1.1 Phase 6 | Planned |
+| FAB-02 | v1.1 Phase 6 | Planned |
 
 **Coverage:**
 - v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 33 total — 8 complete, 25 planned
+- v1.1 requirements: 45 total — 8 complete, 37 planned
 - v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-14 — v1.1 Phase 5 requirements added (PUSH-01..07)*
+*Last updated: 2026-03-15 — v1.1 Phase 6 requirements added (SIMPLIFY-01..10, FAB-01..02)*

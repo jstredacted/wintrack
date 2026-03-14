@@ -95,13 +95,14 @@ Plans:
 
 ### Phase 6: UI simplification — remove check-in flow, journal FAB button with Nothing design
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Remove the entire check-in flow (overlay, prompts, hook, store state), rewrite streak calculation to use wins.completed directly, and replace the inline journal "New Entry" button with a fixed-position FAB in Nothing Phone monochrome aesthetic.
+**Requirements**: [SIMPLIFY-01, SIMPLIFY-02, SIMPLIFY-03, SIMPLIFY-04, SIMPLIFY-05, SIMPLIFY-06, SIMPLIFY-07, SIMPLIFY-08, SIMPLIFY-09, SIMPLIFY-10, FAB-01, FAB-02]
 **Depends on:** Phase 5
-**Plans:** 0 plans
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 6 to break down)
+- [ ] 06-01-PLAN.md — Remove check-in flow, rewrite useStreak, clean data layer and DevTools
+- [ ] 06-02-PLAN.md — Journal FAB button with Nothing design aesthetic
 
 ### Phase 7: Unified daily view — merge Today and History pages with DayStrip carousel navigation
 
