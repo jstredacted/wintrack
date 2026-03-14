@@ -14,11 +14,12 @@ const renderWithRouter = (ui, { route = '/' } = {}) =>
   render(<MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>);
 
 describe('SideNav', () => {
-  it('renders the three nav links', () => {
+  it('renders nav links without History tab', () => {
     renderWithRouter(<SideNav />);
     expect(screen.getByRole('link', { name: /today/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /history/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /journal/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /history/i })).not.toBeInTheDocument();
   });
 
   it('displays the streak value', () => {
