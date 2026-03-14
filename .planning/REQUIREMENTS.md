@@ -113,6 +113,14 @@
 - **FAB-01**: JournalPage has a fixed-position circular FAB button in Nothing Phone dot-matrix aesthetic (lower-right, monochrome, Plus icon)
 - **FAB-02**: JournalPage inline "New Entry" button replaced with FAB
 
+### Unified Daily View (Phase 7)
+
+- **UNIFIED-01**: DayStrip carousel is visible on the main "/" page with today selected by default
+- **UNIFIED-02**: Selecting today in DayStrip shows editable WinList with full CRUD (add, edit, delete, toggle)
+- **UNIFIED-03**: Selecting a past date in DayStrip shows read-only DayDetail timeline for that date
+- **UNIFIED-04**: /history route is removed and History tab is removed from SideNav
+- **UNIFIED-05**: DayStrip checkmark for today updates live when user toggles a win complete/incomplete
+
 ## v2 Requirements
 
 ### Notifications
@@ -214,12 +222,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SIMPLIFY-10 | v1.1 Phase 6 | Planned |
 | FAB-01 | v1.1 Phase 6 | Planned |
 | FAB-02 | v1.1 Phase 6 | Planned |
+| UNIFIED-01 | v1.1 Phase 7 | Planned |
+| UNIFIED-02 | v1.1 Phase 7 | Planned |
+| UNIFIED-03 | v1.1 Phase 7 | Planned |
+| UNIFIED-04 | v1.1 Phase 7 | Planned |
+| UNIFIED-05 | v1.1 Phase 7 | Planned |
 
 **Coverage:**
 - v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 45 total — 8 complete, 37 planned
+- v1.1 requirements: 50 total — 8 complete, 42 planned
 - v2 requirements: 5 total — unmapped (future)
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-15 — v1.1 Phase 6 requirements added (SIMPLIFY-01..10, FAB-01..02)*
+*Last updated: 2026-03-15 — v1.1 Phase 7 requirements added (UNIFIED-01..05)*

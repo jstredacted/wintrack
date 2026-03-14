@@ -106,10 +106,10 @@ Plans:
 
 ### Phase 7: Unified daily view — merge Today and History pages with DayStrip carousel navigation
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Merge TodayPage and HistoryPage into a single unified daily view with DayStrip carousel at the top. Selecting today shows the editable win list; selecting a past date shows the read-only DayDetail timeline. Remove the /history route and History nav tab entirely.
+**Requirements**: [UNIFIED-01, UNIFIED-02, UNIFIED-03, UNIFIED-04, UNIFIED-05]
 **Depends on:** Phase 6
-**Plans:** 0 plans
+**Plans:** 1 plan
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 7 to break down)
+- [ ] 07-01-PLAN.md — Unified daily view with DayStrip, conditional today/history content, route and nav cleanup
