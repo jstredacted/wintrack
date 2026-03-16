@@ -163,7 +163,7 @@ export default function ConsistencyGraph({ completionMap = {}, days = 84, daySta
         </svg>
 
         {/* Legend */}
-        <div className="flex items-center justify-end gap-1.5 mt-3 text-[11px] font-mono text-muted-foreground">
+        <div className="flex items-center gap-1.5 mt-3 text-[11px] font-mono text-muted-foreground" style={{ paddingLeft: LABEL_W }}>
           <span>Less</span>
           {INTENSITY_CLASSES.map((cls, i) => (
             <div key={i} className={`w-[14px] h-[14px] rounded-sm ${cls}`} />

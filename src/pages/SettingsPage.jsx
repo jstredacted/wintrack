@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSettings } from '@/hooks/useSettings';
 import { useHistory } from '@/hooks/useHistory';
+import { supabase } from '@/lib/supabase';
+import { USER_ID } from '@/lib/env';
 import ConsistencyGraph from '@/components/history/ConsistencyGraph';
+import CategoryRadar from '@/components/history/CategoryRadar';
 import NotificationPermission from '@/components/NotificationPermission';
 
 const DAY_START_OPTIONS = [
@@ -30,6 +33,7 @@ const EVENING_HOURS = Array.from({ length: 7 }, (_, i) => {
 export default function SettingsPage() {
   const { settings, loading, saveSettings } = useSettings();
   const { completionMap } = useHistory();
+  const [categoryCounts, setCategoryCounts] = useState({});
   const [form, setForm] = useState({
     dayStartHour: 0,
     morningPromptHour: 9,
@@ -46,6 +50,23 @@ export default function SettingsPage() {
       });
     }
   }, [loading, settings]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const { data } = await supabase
+        .from('wins')
+        .select('category')
+        .eq('user_id', USER_ID)
+        .eq('completed', true);
+      if (!data) return;
+      const counts = {};
+      for (const { category } of data) {
+        if (category) counts[category] = (counts[category] || 0) + 1;
+      }
+      setCategoryCounts(counts);
+    }
+    fetchCategories();
+  }, []);
 
   function handleChange(field, value) {
     setForm((prev) => ({ ...prev, [field]: parseInt(value, 10) }));
@@ -150,6 +171,14 @@ export default function SettingsPage() {
           completionMap={completionMap}
           dayStartHour={form.dayStartHour}
         />
+      </div>
+
+      {/* Category Radar */}
+      <div className="space-y-4">
+        <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          Categories
+        </h2>
+        <CategoryRadar categoryCounts={categoryCounts} />
       </div>
     </div>
   );
