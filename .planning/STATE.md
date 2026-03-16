@@ -18,20 +18,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-09)
+See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** The daily discipline loop: declare wins in the morning, complete them through the day, evaluate honestly at night.
-**Current focus:** Phase 6 (UI Simplification) — removing check-in flow, adding journal FAB
+**Current focus:** Milestone v2.0 — Finance & Platform
 
 ## Current Position
 
-Phase: v1.1 Phase 06 (UI Simplification — remove check-in flow, journal FAB button with Nothing design) — IN PROGRESS
-Plan: 1 of 2 — Plan 01 complete (Remove check-in flow)
-Status: In progress — Plan 06-01 complete
-
-Last activity: 2026-03-14 - Completed 06-01: remove check-in flow, rewrite streak to query wins.completed
-
-Progress: [█████░░░░░] 50%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-16 — Milestone v2.0 started
 
 ## Performance Metrics
 

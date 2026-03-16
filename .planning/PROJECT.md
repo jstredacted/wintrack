@@ -30,7 +30,17 @@ The daily discipline loop: set intentions in the morning, complete them through 
 
 ### Active
 
-(None — next milestone not yet planned)
+## Current Milestone: v2.0 Finance & Platform
+
+**Goal:** Integrate full personal finance management (from ₱350), add PIN authentication, migrate to TypeScript, establish dev branch workflow, improve mobile responsiveness, and add journal rich text formatting.
+
+**Target features:**
+- Full finance port from ₱350: budget tracking, bills, investments, salary toggle, transactions, month settings
+- Simple PIN gate authentication (replaces JWT-based access)
+- TypeScript migration across the codebase
+- Dev branch workflow (dev tools only on develop branch, main for production)
+- Mobile-responsive layout (testable via vite --host)
+- Journal rich text formatting (bold, italic, bullet points, etc.)
 
 ### Out of Scope
 
