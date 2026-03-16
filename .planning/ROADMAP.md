@@ -23,15 +23,15 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 ## Progress
 
-| Phase | Milestone | Plans Complete | Status | Completed |
-|-------|-----------|----------------|--------|-----------|
-| 1. Foundation | 5/5 | Complete   | 2026-03-13 | 2026-03-09 |
-| 2. Win Logging & Focus Tracking | v1.0 | 5/5 | Complete | 2026-03-09 |
-| 3. Daily Loop Closure | v1.0 | 5/5 | Complete | 2026-03-09 |
-| 4. History & Journal | 1/3 | In Progress|  | 2026-03-10 |
-| 5. UX Polish | 2/3 | In Progress|  | 2026-03-10 |
-| 6. Animations & Overlay Fixes | v1.0 | 8/8 | Complete | 2026-03-11 |
-| 7. Cleanup & Contract Fixes | v1.0 | 1/1 | Complete | 2026-03-11 |
+| Phase | Plans | Status | Completed |
+|-------|-------|--------|-----------|
+| 1. UX Revisions | 5/5 | Complete | 2026-03-13 |
+| 2. Win Interactions & Timeline | 2/2 | Complete | 2026-03-14 |
+| 3. Categories & Reporting | 2/2 | Complete | 2026-03-14 |
+| 4. User Settings & Night Owl | 3/3 | Complete | 2026-03-14 |
+| 5. Push Notifications | 3/3 | Complete | 2026-03-16 |
+| 6. UI Simplification | 2/2 | Complete | 2026-03-16 |
+| 7. Unified Daily View | 1/1 | Complete | 2026-03-16 |
 
 ### Phase 1: UX revisions — stopwatch removal, journal categories, win wording, streak theming, multi-win entry, animation polish
 

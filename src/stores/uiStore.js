@@ -22,12 +22,7 @@ export const useUIStore = create((set) => ({
   clearEditingWin: () => set({ editingWinId: null }),
   markRollForwardOffered: (dayStartHour) => set({ rollForwardOfferedDate: writeDate('rollForwardOfferedDate', dayStartHour) }),
 
-  // --- Phase 5 state ---
-  timerOverlayOpen: false,
-  openTimerOverlay: () => set({ timerOverlayOpen: true }),
-  closeTimerOverlay: () => set({ timerOverlayOpen: false }),
-
-  // Increment to trigger useStreak refetch (after journal save or checkin complete)
+  // Increment to trigger useStreak refetch (after journal save or win toggle)
   streakRefreshKey: 0,
   refreshStreak: () => set((s) => ({ streakRefreshKey: s.streakRefreshKey + 1 })),
 
