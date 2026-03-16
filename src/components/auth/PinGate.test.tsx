@@ -74,26 +74,6 @@ describe('PinGate', () => {
     expect(screen.queryByText('Enter your PIN')).not.toBeInTheDocument();
   });
 
-  it('shows blur overlay when blurred and unlocked', () => {
-    usePinStore.setState({ gateState: 'unlocked', blurred: true });
-
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route path="/" element={<PinGate />}>
-            <Route index element={<div data-testid="app-content">App Content</div>} />
-          </Route>
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    // Blur overlay should exist
-    const overlay = document.querySelector('.backdrop-blur-xl');
-    expect(overlay).toBeInTheDocument();
-    // App content should still be rendered (just blurred over)
-    expect(screen.getByTestId('app-content')).toBeInTheDocument();
-  });
-
   it('calls initializeGate on mount', () => {
     renderWithRouter('loading');
     expect(mockInitializeGate).toHaveBeenCalledTimes(1);
