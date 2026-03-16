@@ -8,26 +8,12 @@ import PinSetup from './PinSetup';
 
 export default function PinGate() {
   const gateState = usePinStore((s) => s.gateState);
-  const blurred = usePinStore((s) => s.blurred);
   const pinAuth = usePinAuth();
 
   // Initialize gate on mount — determines setup/locked/unlocked state
   useEffect(() => {
     pinAuth.initializeGate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Page Visibility API — blur content when tab is hidden
-  useEffect(() => {
-    const handler = () => {
-      if (document.hidden) {
-        usePinStore.getState().setBlurred(true);
-      } else {
-        usePinStore.getState().setBlurred(false);
-      }
-    };
-    document.addEventListener('visibilitychange', handler);
-    return () => document.removeEventListener('visibilitychange', handler);
   }, []);
 
   // Idle timer — lock after 15 minutes of no interaction (only when unlocked)
@@ -63,12 +49,5 @@ export default function PinGate() {
   }
 
   // gateState === 'unlocked'
-  return (
-    <>
-      <Outlet />
-      {blurred && (
-        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xl" />
-      )}
-    </>
-  );
+  return <Outlet />;
 }

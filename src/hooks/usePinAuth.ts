@@ -3,8 +3,10 @@ import { supabase } from '@/lib/supabase';
 import { USER_ID } from '@/lib/env';
 import { usePinStore } from '@/stores/pinStore';
 
+// Module-level so it persists across re-renders
+let storedHash: string | null = null;
+
 export function usePinAuth() {
-  let storedHash: string | null = null;
 
   async function initializeGate(): Promise<void> {
     // If session flag is already set (e.g. page reload within same tab), keep unlocked

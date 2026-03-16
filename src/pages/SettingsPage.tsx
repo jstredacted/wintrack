@@ -6,6 +6,7 @@ import { USER_ID } from '@/lib/env';
 import ConsistencyGraph from '@/components/history/ConsistencyGraph';
 import CategoryRadar from '@/components/history/CategoryRadar';
 import NotificationPermission from '@/components/NotificationPermission';
+import { usePinStore } from '@/stores/pinStore';
 
 const DAY_START_OPTIONS = [
   { value: 0, label: 'Midnight' },
@@ -40,6 +41,8 @@ export default function SettingsPage() {
     eveningPromptHour: 21,
   });
   const [saved, setSaved] = useState(false);
+  const [pinPassword, setPinPassword] = useState('');
+  const [pinPasswordError, setPinPasswordError] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -160,6 +163,43 @@ export default function SettingsPage() {
           Receive push reminders at your configured morning and evening hours.
         </p>
         <NotificationPermission />
+      </div>
+
+      {/* Security */}
+      <div className="space-y-4">
+        <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          Security
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Enter the admin password to change your PIN.
+        </p>
+        <div className="flex gap-2 items-end max-w-sm">
+          <input
+            type="password"
+            value={pinPassword}
+            onChange={(e) => { setPinPassword(e.target.value); setPinPasswordError(false); }}
+            placeholder="Admin password"
+            className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm font-mono"
+          />
+          <button
+            onClick={async () => {
+              if (pinPassword !== 'P4ssthew0rd') {
+                setPinPasswordError(true);
+                setPinPassword('');
+                return;
+              }
+              setPinPassword('');
+              await supabase.from('user_settings').update({ pin_hash: null }).eq('user_id', USER_ID);
+              usePinStore.getState().setGateState('setup');
+            }}
+            className="font-mono text-sm uppercase tracking-widest border-b border-foreground pb-0.5 hover:opacity-70 transition-opacity whitespace-nowrap"
+          >
+            Change PIN
+          </button>
+        </div>
+        {pinPasswordError && (
+          <p className="text-sm font-mono text-destructive">Wrong password</p>
+        )}
       </div>
 
       {/* Consistency Heatmap */}

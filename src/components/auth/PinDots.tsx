@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+// useState kept for usePrefersReducedMotion
 
 interface PinDotsProps {
   digits: string;
@@ -7,7 +8,7 @@ interface PinDotsProps {
 }
 
 const DOT_COUNT = 4;
-const REVEAL_MS = 150;
+// Digit reveal removed per user preference — dots go straight from empty to filled
 
 function usePrefersReducedMotion(): boolean {
   const [reduced, setReduced] = useState(
@@ -24,32 +25,7 @@ function usePrefersReducedMotion(): boolean {
 
 export function PinDots({ digits, error, onShakeEnd }: PinDotsProps) {
   const reducedMotion = usePrefersReducedMotion();
-  const prevLengthRef = useRef(0);
-  const [revealIndex, setRevealIndex] = useState<number | null>(null);
-  const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Brief digit reveal: show newly entered digit for 150ms
-  useEffect(() => {
-    const prevLen = prevLengthRef.current;
-    const curLen = digits.length;
-    prevLengthRef.current = curLen;
-
-    if (curLen > prevLen && curLen <= DOT_COUNT) {
-      const newIndex = curLen - 1;
-      setRevealIndex(newIndex);
-
-      if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
-      revealTimerRef.current = setTimeout(() => {
-        setRevealIndex(null);
-        revealTimerRef.current = null;
-      }, REVEAL_MS);
-    }
-
-    return () => {
-      if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
-    };
-  }, [digits]);
 
   // Native animationend listener (React synthetic onAnimationEnd unreliable in jsdom)
   useEffect(() => {
@@ -75,7 +51,6 @@ export function PinDots({ digits, error, onShakeEnd }: PinDotsProps) {
       >
         {Array.from({ length: DOT_COUNT }, (_, i) => {
           const filled = i < digits.length;
-          const revealing = revealIndex === i && filled;
           const dotColor = error
             ? 'bg-destructive'
             : filled
@@ -90,15 +65,9 @@ export function PinDots({ digits, error, onShakeEnd }: PinDotsProps) {
           return (
             <div
               key={i}
-              className={`flex h-4 w-4 items-center justify-center rounded-full ${dotColor}`}
+              className={`h-4 w-4 rounded-full ${dotColor}`}
               style={fillStyle}
-            >
-              {revealing && (
-                <span className="text-[10px] font-mono text-background leading-none">
-                  {digits[i]}
-                </span>
-              )}
-            </div>
+            />
           );
         })}
       </div>

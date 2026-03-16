@@ -5,9 +5,7 @@ const SESSION_KEY = 'wintrack-session';
 
 interface PinState {
   gateState: PinGateState;
-  blurred: boolean;
   setGateState: (state: PinGateState) => void;
-  setBlurred: (blurred: boolean) => void;
   markUnlocked: () => void;
   lock: () => void;
 }
@@ -18,9 +16,7 @@ function isSessionUnlocked(): boolean {
 
 export const usePinStore = create<PinState>()((set) => ({
   gateState: isSessionUnlocked() ? 'unlocked' : 'loading',
-  blurred: false,
   setGateState: (gateState) => set({ gateState }),
-  setBlurred: (blurred) => set({ blurred }),
   markUnlocked: () => {
     try { sessionStorage.setItem(SESSION_KEY, '1'); } catch {}
     set({ gateState: 'unlocked' });

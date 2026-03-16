@@ -81,8 +81,8 @@ export default function PinSetup({ onComplete }: PinSetupProps) {
   const { title, subtitle } = COPY[step];
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col items-center bg-background">
-      <div className="pt-12">
+    <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-background">
+      <div>
         <h1 className="text-center text-[1.333rem] font-semibold font-mono text-foreground">
           {title}
         </h1>

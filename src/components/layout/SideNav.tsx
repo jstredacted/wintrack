@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router';
-import { LayoutDashboard, BookOpen, Settings, Flame } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Settings, Flame, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '../theme/ThemeToggle';
 import { useStreak } from '@/hooks/useStreak';
 import { useUIStore } from '@/stores/uiStore';
+import { usePinStore } from '@/stores/pinStore';
 import StreakCelebration from './StreakCelebration';
 
 const TABS = [
@@ -91,6 +92,14 @@ export default function SideNav() {
               </span>
             </span>
           )}
+          <button
+            onClick={() => usePinStore.getState().lock()}
+            title="Lock app"
+            aria-label="Lock app"
+            className="flex items-center justify-center w-10 h-10 rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+          >
+            <Lock className="size-5" strokeWidth={1.5} />
+          </button>
           <ThemeToggle />
         </div>
       </nav>
