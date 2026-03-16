@@ -26,7 +26,7 @@ vi.mock('@/hooks/useHistory', () => {
 });
 
 vi.mock('@/components/history/ConsistencyGraph', () => ({
-  default: ({ completionMap }) => (
+  default: (_props: { completionMap: Record<string, boolean> }) => (
     <div data-testid="consistency-graph" />
   ),
 }));

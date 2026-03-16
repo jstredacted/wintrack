@@ -5,7 +5,7 @@ import { getLocalDateString } from '@/lib/utils/date';
 // Mock settingsStore
 const mockSettings = { dayStartHour: 0, morningPromptHour: 9, eveningPromptHour: 21 };
 vi.mock('@/stores/settingsStore', () => ({
-  useSettingsStore: (selector) => selector({ settings: mockSettings }),
+  useSettingsStore: (selector: (s: { settings: typeof mockSettings }) => unknown) => selector({ settings: mockSettings }),
 }));
 
 // Mock supabase
@@ -19,7 +19,7 @@ vi.mock('@/lib/supabase', () => {
       update: vi.fn().mockReturnThis(),
       delete: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({ data: null, error: null }),
-      then: (cb) => Promise.resolve({ data: [], error: null }).then(cb),
+      then: (cb: (v: unknown) => unknown) => Promise.resolve({ data: [], error: null }).then(cb),
     };
     Object.assign(obj, { from: vi.fn().mockReturnValue(obj) });
     return obj;

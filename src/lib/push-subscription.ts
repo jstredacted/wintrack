@@ -37,7 +37,7 @@ export async function subscribeToPush(): Promise<PushSubscription> {
 
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as BufferSource,
   });
 
   const json = subscription.toJSON();
@@ -48,7 +48,7 @@ export async function subscribeToPush(): Promise<PushSubscription> {
       endpoint: json.endpoint!,
       p256dh: json.keys!.p256dh!,
       auth: json.keys!.auth!,
-      expiration_time: json.expirationTime ?? null,
+      expiration_time: json.expirationTime != null ? String(json.expirationTime) : null,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'user_id' }

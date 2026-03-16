@@ -11,8 +11,10 @@ const mockEntry = {
   id: 'entry-1',
   title: 'My journal entry',
   body: 'Today was a good day.',
+  category: 'daily',
   created_at: '2026-03-09T10:00:00Z',
   updated_at: '2026-03-09T10:00:00Z',
+  user_id: 'test-user',
 };
 
 describe('JournalEntryCard', () => {

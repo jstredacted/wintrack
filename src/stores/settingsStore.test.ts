@@ -39,7 +39,7 @@ describe('settingsStore', () => {
     const state = useSettingsStore.getState();
     expect(state.settings.dayStartHour).toBe(3);
     expect(state.loaded).toBe(true);
-    const cached = JSON.parse(localStorage.getItem('wintrack-settings'));
+    const cached = JSON.parse(localStorage.getItem('wintrack-settings')!);
     expect(cached.dayStartHour).toBe(3);
   });
 });

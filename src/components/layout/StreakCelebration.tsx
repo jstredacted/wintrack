@@ -36,7 +36,7 @@ export default function StreakCelebration({ open, streak, onClose }: StreakCeleb
       }
     }
     rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
+    return () => { if (rafRef.current !== null) cancelAnimationFrame(rafRef.current); };
   }, [open, streak]);
 
   if (!visible) return null;

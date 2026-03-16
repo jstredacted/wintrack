@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useJournal } from './useJournal';
 
@@ -32,7 +32,7 @@ vi.mock('@/lib/supabase', () => ({
  *
  * The mock object is thenable so it can be awaited at any point in the chain.
  */
-function buildJournalMock(resolvedValue) {
+function buildJournalMock(resolvedValue: unknown) {
   const mock = {
     select: vi.fn(),
     eq: vi.fn(),
@@ -41,8 +41,8 @@ function buildJournalMock(resolvedValue) {
     update: vi.fn(),
     delete: vi.fn(),
     single: vi.fn(),
-    then: (resolve) => Promise.resolve(resolvedValue).then(resolve),
-    catch: (reject) => Promise.resolve(resolvedValue).catch(reject),
+    then: (resolve: (v: unknown) => unknown) => Promise.resolve(resolvedValue).then(resolve),
+    catch: (reject: (v: unknown) => unknown) => Promise.resolve(resolvedValue).catch(reject),
   };
   mock.select.mockReturnValue(mock);
   mock.eq.mockReturnValue(mock);
@@ -62,7 +62,7 @@ describe('useJournal', () => {
   describe('initial state', () => {
     it('starts with entries=[] and loading=true then loading=false after fetch', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(buildJournalMock({ data: [], error: null }));
+      (supabase.from as Mock).mockReturnValue(buildJournalMock({ data: [], error: null }));
 
       const { result } = renderHook(() => useJournal());
 
@@ -76,7 +76,7 @@ describe('useJournal', () => {
         { id: 'entry-1', title: 'Day one', body: 'It went well.', created_at: '2026-03-09T10:00:00Z', updated_at: '2026-03-09T10:00:00Z' },
       ];
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(buildJournalMock({ data: mockEntries, error: null }));
+      (supabase.from as Mock).mockReturnValue(buildJournalMock({ data: mockEntries, error: null }));
 
       const { result } = renderHook(() => useJournal());
 
@@ -95,7 +95,7 @@ describe('useJournal', () => {
         error: null,
       });
       // first call is the initial fetch, second is the insert
-      supabase.from.mockReturnValueOnce(fetchMock).mockReturnValueOnce(insertMock);
+      (supabase.from as Mock).mockReturnValueOnce(fetchMock).mockReturnValueOnce(insertMock);
 
       const { result } = renderHook(() => useJournal());
       await waitFor(() => expect(result.current.loading).toBe(false));
@@ -114,7 +114,7 @@ describe('useJournal', () => {
       const newEntry = { id: 'entry-new', title: 'New Entry', body: 'Content here.', created_at: '2026-03-10T08:00:00Z', updated_at: '2026-03-10T08:00:00Z' };
       const fetchMock = buildJournalMock({ data: [], error: null });
       const insertMock = buildJournalMock({ data: newEntry, error: null });
-      supabase.from.mockReturnValueOnce(fetchMock).mockReturnValueOnce(insertMock);
+      (supabase.from as Mock).mockReturnValueOnce(fetchMock).mockReturnValueOnce(insertMock);
 
       const { result } = renderHook(() => useJournal());
       await waitFor(() => expect(result.current.loading).toBe(false));
@@ -134,7 +134,7 @@ describe('useJournal', () => {
       const { supabase } = await import('@/lib/supabase');
       const fetchMock = buildJournalMock({ data: [existingEntry], error: null });
       const updateMock = buildJournalMock({ error: null });
-      supabase.from.mockReturnValueOnce(fetchMock).mockReturnValueOnce(updateMock);
+      (supabase.from as Mock).mockReturnValueOnce(fetchMock).mockReturnValueOnce(updateMock);
 
       const { result } = renderHook(() => useJournal());
       await waitFor(() => expect(result.current.loading).toBe(false));
@@ -157,7 +157,7 @@ describe('useJournal', () => {
       const { supabase } = await import('@/lib/supabase');
       const fetchMock = buildJournalMock({ data: [existingEntry], error: null });
       const updateMock = buildJournalMock({ error: null });
-      supabase.from.mockReturnValueOnce(fetchMock).mockReturnValueOnce(updateMock);
+      (supabase.from as Mock).mockReturnValueOnce(fetchMock).mockReturnValueOnce(updateMock);
 
       const { result } = renderHook(() => useJournal());
       await waitFor(() => expect(result.current.loading).toBe(false));
@@ -167,8 +167,8 @@ describe('useJournal', () => {
       });
 
       const updated = result.current.entries.find(e => e.id === 'entry-1');
-      expect(updated.title).toBe('Updated Title');
-      expect(updated.body).toBe('Updated body.');
+      expect(updated!.title).toBe('Updated Title');
+      expect(updated!.body).toBe('Updated body.');
     });
   });
 
@@ -178,7 +178,7 @@ describe('useJournal', () => {
       const { supabase } = await import('@/lib/supabase');
       const fetchMock = buildJournalMock({ data: [existingEntry], error: null });
       const deleteMock = buildJournalMock({ error: null });
-      supabase.from.mockReturnValueOnce(fetchMock).mockReturnValueOnce(deleteMock);
+      (supabase.from as Mock).mockReturnValueOnce(fetchMock).mockReturnValueOnce(deleteMock);
 
       const { result } = renderHook(() => useJournal());
       await waitFor(() => expect(result.current.loading).toBe(false));
@@ -195,7 +195,7 @@ describe('useJournal', () => {
       const { supabase } = await import('@/lib/supabase');
       const fetchMock = buildJournalMock({ data: [existingEntry], error: null });
       const deleteMock = buildJournalMock({ error: null });
-      supabase.from.mockReturnValueOnce(fetchMock).mockReturnValueOnce(deleteMock);
+      (supabase.from as Mock).mockReturnValueOnce(fetchMock).mockReturnValueOnce(deleteMock);
 
       const { result } = renderHook(() => useJournal());
       await waitFor(() => expect(result.current.loading).toBe(false));

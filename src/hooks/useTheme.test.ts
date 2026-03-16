@@ -28,8 +28,13 @@ describe("useTheme", () => {
   it("reads system dark preference as default when no localStorage value", async () => {
     vi.spyOn(window, "matchMedia").mockReturnValue({
       matches: true,
+      media: "",
+      onchange: null,
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
     });
     document.documentElement.classList.add("dark");
     const { renderHook } = await import("@testing-library/react");

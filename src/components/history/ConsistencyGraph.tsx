@@ -21,8 +21,10 @@ interface ConsistencyGraphProps {
   dayStartHour?: number;
 }
 
-function getIntensity(entry: CompletionEntry | null): number {
-  if (!entry || entry.total === 0) return 0;
+function getIntensity(entry: CompletionEntry | boolean | null): number {
+  if (!entry) return 0;
+  if (typeof entry === 'boolean') return entry ? 4 : 0;
+  if (entry.total === 0) return 0;
   const ratio = entry.completed / entry.total;
   if (ratio === 0) return 0;
   if (ratio <= 0.25) return 1;
@@ -78,7 +80,7 @@ export default function ConsistencyGraph({ completionMap = {}, days = 84, daySta
   while (lastWeek.length < 7) lastWeek.push(null);
 
   // Month labels — find first week where a month starts
-  const monthLabels = [];
+  const monthLabels: Array<{ weekIdx: number; label: string }> = [];
   let lastMonth = -1;
   weeks.forEach((week, weekIdx) => {
     for (const cell of week) {
@@ -95,7 +97,7 @@ export default function ConsistencyGraph({ completionMap = {}, days = 84, daySta
   // Total wins summary
   let totalCompleted = 0;
   for (const cell of cells) {
-    if (cell.entry) totalCompleted += cell.entry.completed;
+    if (cell.entry) totalCompleted += typeof cell.entry === 'boolean' ? 1 : cell.entry.completed;
   }
 
   const gridW = weeks.length * COL - GAP;

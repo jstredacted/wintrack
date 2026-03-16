@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useStreak } from './useStreak';
 
@@ -17,12 +17,12 @@ vi.mock('@/lib/supabase', () => ({
  * Creates a chainable Supabase query mock that supports:
  *   supabase.from('wins').select('win_date').eq('user_id', ...).eq('completed', true)
  */
-function buildStreakMock(resolvedValue) {
+function buildStreakMock(resolvedValue: unknown) {
   const mock = {
     select: vi.fn(),
     eq: vi.fn(),
-    then: (resolve) => Promise.resolve(resolvedValue).then(resolve),
-    catch: (reject) => Promise.resolve(resolvedValue).catch(reject),
+    then: (resolve: (v: unknown) => unknown) => Promise.resolve(resolvedValue).then(resolve),
+    catch: (reject: (v: unknown) => unknown) => Promise.resolve(resolvedValue).catch(reject),
   };
   mock.select.mockReturnValue(mock);
   mock.eq.mockReturnValue(mock);
@@ -36,7 +36,7 @@ describe('useStreak', () => {
 
   it('returns 0 and loading=false when there are no completed wins', async () => {
     const { supabase } = await import('@/lib/supabase');
-    supabase.from.mockReturnValue(buildStreakMock({ data: [], error: null }));
+    (supabase.from as Mock).mockReturnValue(buildStreakMock({ data: [], error: null }));
 
     const { result } = renderHook(() => useStreak());
 
@@ -50,7 +50,7 @@ describe('useStreak', () => {
     }).format(new Date());
 
     const { supabase } = await import('@/lib/supabase');
-    supabase.from.mockReturnValue(buildStreakMock({
+    (supabase.from as Mock).mockReturnValue(buildStreakMock({
       data: [{ win_date: today }],
       error: null,
     }));
@@ -63,12 +63,12 @@ describe('useStreak', () => {
 
   it('returns N for N consecutive completed days counting back from today', async () => {
     const today = new Date();
-    const dateFor = (daysAgo) => new Intl.DateTimeFormat('en-CA', {
+    const dateFor = (daysAgo: number) => new Intl.DateTimeFormat('en-CA', {
       year: 'numeric', month: '2-digit', day: '2-digit',
     }).format(new Date(today.getTime() - daysAgo * 86400000));
 
     const { supabase } = await import('@/lib/supabase');
-    supabase.from.mockReturnValue(buildStreakMock({
+    (supabase.from as Mock).mockReturnValue(buildStreakMock({
       data: [
         { win_date: dateFor(0) },
         { win_date: dateFor(1) },
@@ -85,12 +85,12 @@ describe('useStreak', () => {
 
   it('breaks the streak on a gap day — returns count only up to the gap', async () => {
     const today = new Date();
-    const dateFor = (daysAgo) => new Intl.DateTimeFormat('en-CA', {
+    const dateFor = (daysAgo: number) => new Intl.DateTimeFormat('en-CA', {
       year: 'numeric', month: '2-digit', day: '2-digit',
     }).format(new Date(today.getTime() - daysAgo * 86400000));
 
     const { supabase } = await import('@/lib/supabase');
-    supabase.from.mockReturnValue(buildStreakMock({
+    (supabase.from as Mock).mockReturnValue(buildStreakMock({
       data: [
         { win_date: dateFor(0) },
         // day 1 is missing — gap
@@ -112,7 +112,7 @@ describe('useStreak', () => {
     }).format(new Date());
 
     const { supabase } = await import('@/lib/supabase');
-    supabase.from.mockReturnValue(buildStreakMock({
+    (supabase.from as Mock).mockReturnValue(buildStreakMock({
       data: [{ win_date: todayViaDtf }],
       error: null,
     }));
@@ -128,7 +128,7 @@ describe('useStreak — journalStreak', () => {
   it('returns journalStreak: 0 when there are no journal entries', async () => {
     const { supabase } = await import('@/lib/supabase');
     // First call: wins query (win streak), second call: journal_entries query
-    supabase.from
+    (supabase.from as Mock)
       .mockReturnValueOnce(buildStreakMock({ data: [], error: null }))
       .mockReturnValueOnce(buildStreakMock({ data: [], error: null }));
 
@@ -139,7 +139,7 @@ describe('useStreak — journalStreak', () => {
 
   it('returns journalStreak: 1 when today has at least one journal entry', async () => {
     const { supabase } = await import('@/lib/supabase');
-    supabase.from
+    (supabase.from as Mock)
       .mockReturnValueOnce(buildStreakMock({ data: [], error: null }))
       .mockReturnValueOnce(buildStreakMock({
         data: [{ created_at: new Date().toISOString() }],
@@ -154,7 +154,7 @@ describe('useStreak — journalStreak', () => {
   it('does not double-count multiple entries on the same day', async () => {
     const todayIso = new Date().toISOString();
     const { supabase } = await import('@/lib/supabase');
-    supabase.from
+    (supabase.from as Mock)
       .mockReturnValueOnce(buildStreakMock({ data: [], error: null }))
       .mockReturnValueOnce(buildStreakMock({
         data: [{ created_at: todayIso }, { created_at: todayIso }],

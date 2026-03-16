@@ -37,7 +37,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }: Win
   useEffect(() => {
     if (!open) return;
     const timer = setTimeout(() => inputRef.current?.focus(), 50);
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleDone();
     };
     document.addEventListener('keydown', handleKeyDown);

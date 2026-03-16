@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 
-function buildQueryMock(resolvedValue) {
+function buildQueryMock(resolvedValue: unknown) {
   const mock = {
     select: vi.fn(),
     upsert: vi.fn(),
     eq: vi.fn(),
     single: vi.fn(),
-    then: (resolve) => Promise.resolve(resolvedValue).then(resolve),
-    catch: (reject) => Promise.resolve(resolvedValue).catch(reject),
+    then: (resolve: (v: unknown) => unknown) => Promise.resolve(resolvedValue).then(resolve),
+    catch: (reject: (v: unknown) => unknown) => Promise.resolve(resolvedValue).catch(reject),
   };
   mock.select.mockReturnValue(mock);
   mock.upsert.mockReturnValue(mock);
@@ -41,7 +41,7 @@ describe('useSettings', () => {
       morning_prompt_hour: 10,
       evening_prompt_hour: 22,
     };
-    supabase.from.mockReturnValue(buildQueryMock({ data: mockData, error: null }));
+    (supabase.from as Mock).mockReturnValue(buildQueryMock({ data: mockData, error: null }));
 
     const { useSettings } = await import('./useSettings');
     const { result } = renderHook(() => useSettings());
@@ -56,7 +56,7 @@ describe('useSettings', () => {
     const { supabase } = await import('@/lib/supabase');
     const upsertMock = buildQueryMock({ error: null });
     let callCount = 0;
-    supabase.from.mockImplementation(() => {
+    (supabase.from as Mock).mockImplementation(() => {
       callCount++;
       if (callCount === 1) {
         // First call: SELECT returns null data
@@ -78,7 +78,7 @@ describe('useSettings', () => {
 
   it('saveSettings calls Supabase upsert and updates store', async () => {
     const { supabase } = await import('@/lib/supabase');
-    supabase.from.mockReturnValue(buildQueryMock({ data: { day_start_hour: 0, morning_prompt_hour: 9, evening_prompt_hour: 21 }, error: null }));
+    (supabase.from as Mock).mockReturnValue(buildQueryMock({ data: { day_start_hour: 0, morning_prompt_hour: 9, evening_prompt_hour: 21 }, error: null }));
 
     const { useSettings } = await import('./useSettings');
     const { result } = renderHook(() => useSettings());
@@ -89,7 +89,7 @@ describe('useSettings', () => {
 
     // Now call saveSettings
     const saveMock = buildQueryMock({ error: null });
-    supabase.from.mockReturnValue(saveMock);
+    (supabase.from as Mock).mockReturnValue(saveMock);
 
     await result.current.saveSettings({ dayStartHour: 5 });
     expect(supabase.from).toHaveBeenCalledWith('user_settings');

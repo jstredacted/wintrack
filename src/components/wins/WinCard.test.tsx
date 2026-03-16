@@ -12,6 +12,11 @@ vi.mock('@/lib/supabase');
 const defaultWin = {
   id: 'win-1',
   title: 'Write unit tests',
+  category: 'work',
+  completed: false,
+  created_at: '2026-03-09T10:00:00Z',
+  user_id: 'test-user',
+  win_date: '2026-03-09',
   timer_elapsed_seconds: 0,
   timer_started_at: null,
 };
@@ -201,7 +206,7 @@ describe('WinCard', () => {
         onDelete={vi.fn()}
       />
     );
-    const root = container.firstChild;
+    const root = container.firstChild as HTMLElement;
     // Phase 5 removes 'border border-border' from WinCard root div
     expect(root.className).not.toContain('border-border');
   });

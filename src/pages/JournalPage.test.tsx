@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, type Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import JournalPage from './JournalPage';
 
@@ -12,7 +12,7 @@ vi.mock('@/lib/supabase', () => ({
     update: vi.fn().mockReturnThis(),
     delete: vi.fn().mockReturnThis(),
     single: vi.fn().mockReturnThis(),
-    then: vi.fn((resolve) => resolve({ data: [], error: null })),
+    then: vi.fn((resolve: (v: unknown) => unknown) => resolve({ data: [], error: null })),
     catch: vi.fn().mockReturnThis(),
   },
 }));
@@ -35,7 +35,7 @@ describe('JournalPage', () => {
   describe('empty state', () => {
     it('renders an empty state message when entries array is empty', async () => {
       const { useJournal } = await import('@/hooks/useJournal');
-      useJournal.mockReturnValue({
+      (useJournal as Mock).mockReturnValue({
         entries: [],
         loading: false,
         addEntry: vi.fn(),
@@ -52,7 +52,7 @@ describe('JournalPage', () => {
   describe('entry list', () => {
     it('renders entry titles from the entries list', async () => {
       const { useJournal } = await import('@/hooks/useJournal');
-      useJournal.mockReturnValue({
+      (useJournal as Mock).mockReturnValue({
         entries: [
           { id: 'entry-1', title: 'First Entry', body: 'Content one.', created_at: '2026-03-09T10:00:00Z', updated_at: '2026-03-09T10:00:00Z' },
           { id: 'entry-2', title: 'Second Entry', body: 'Content two.', created_at: '2026-03-08T10:00:00Z', updated_at: '2026-03-08T10:00:00Z' },
@@ -73,7 +73,7 @@ describe('JournalPage', () => {
       const { useJournal } = await import('@/hooks/useJournal');
       // entries already arrive sorted DESC from useJournal (hook queries with order desc)
       // page should render them in the order provided
-      useJournal.mockReturnValue({
+      (useJournal as Mock).mockReturnValue({
         entries: [
           { id: 'entry-2', title: 'Newer Entry', body: 'Content two.', created_at: '2026-03-10T10:00:00Z', updated_at: '2026-03-10T10:00:00Z' },
           { id: 'entry-1', title: 'Older Entry', body: 'Content one.', created_at: '2026-03-09T10:00:00Z', updated_at: '2026-03-09T10:00:00Z' },
@@ -97,7 +97,7 @@ describe('JournalPage', () => {
   describe('create button', () => {
     it('renders a button to create a new entry', async () => {
       const { useJournal } = await import('@/hooks/useJournal');
-      useJournal.mockReturnValue({
+      (useJournal as Mock).mockReturnValue({
         entries: [],
         loading: false,
         addEntry: vi.fn(),

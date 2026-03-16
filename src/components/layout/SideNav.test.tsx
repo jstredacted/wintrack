@@ -7,10 +7,10 @@ vi.mock('@/hooks/useStreak', () => ({
   useStreak: () => ({ combinedStreak: 5, loading: false }),
 }));
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (sel) => sel({ streakRefreshKey: 0 }),
+  useUIStore: (sel: (s: { streakRefreshKey: number }) => unknown) => sel({ streakRefreshKey: 0 }),
 }));
 
-const renderWithRouter = (ui, { route = '/' } = {}) =>
+const renderWithRouter = (ui: React.ReactNode, { route = '/' } = {}) =>
   render(<MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>);
 
 describe('SideNav', () => {

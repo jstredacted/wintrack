@@ -7,8 +7,8 @@ import DayDetail from './DayDetail';
 // Wave 0 stub — all tests fail with module-not-found until Wave 2 creates DayDetail.jsx
 
 const mockWinsCompleted = [
-  { id: 'win-1', title: 'Ship the feature', completed: true },
-  { id: 'win-2', title: 'Write the tests', completed: false },
+  { id: 'win-1', title: 'Ship the feature', category: 'work', completed: true },
+  { id: 'win-2', title: 'Write the tests', category: 'work', completed: false },
 ];
 
 describe('DayDetail', () => {
@@ -45,7 +45,7 @@ describe('DayDetail', () => {
 
   describe('category badges', () => {
     it('renders category badge for non-default category on timeline item', () => {
-      const winsWithCategory = [
+      const winsWithCategory: Array<{ id: string; title: string; category: string; completed: boolean }> = [
         { id: 'win-1', title: 'Exercise', category: 'health', completed: true },
       ];
       render(<DayDetail wins={winsWithCategory} date="2026-03-09" />);
@@ -53,7 +53,7 @@ describe('DayDetail', () => {
     });
 
     it('does not render category badge for default work category', () => {
-      const winsWithWork = [
+      const winsWithWork: Array<{ id: string; title: string; category: string; completed: boolean }> = [
         { id: 'win-1', title: 'Write tests', category: 'work', completed: false },
       ];
       render(<DayDetail wins={winsWithWork} date="2026-03-09" />);
@@ -85,36 +85,36 @@ describe('DayDetail', () => {
 
     // TIMELINE-02: Completed win dot is filled (bg-foreground)
     it('renders a filled dot for completed wins', () => {
-      const completedOnly = [{ id: 'win-1', title: 'Done task', completed: true }];
+      const completedOnly = [{ id: 'win-1', title: 'Done task', category: 'work', completed: true }];
       const { container } = render(<DayDetail wins={completedOnly} date="2026-03-09" />);
       const dot = container.querySelector('.rounded-full.border-2');
-      expect(dot.className).toContain('bg-foreground');
-      expect(dot.className).toContain('border-foreground');
+      expect(dot!.className).toContain('bg-foreground');
+      expect(dot!.className).toContain('border-foreground');
     });
 
     // TIMELINE-02: Incomplete win dot is hollow (bg-background)
     it('renders a hollow dot for incomplete wins', () => {
-      const incompleteOnly = [{ id: 'win-1', title: 'Open task', completed: false }];
+      const incompleteOnly = [{ id: 'win-1', title: 'Open task', category: 'work', completed: false }];
       const { container } = render(<DayDetail wins={incompleteOnly} date="2026-03-09" />);
       const dot = container.querySelector('.rounded-full.border-2');
-      expect(dot.className).toContain('bg-background');
-      expect(dot.className).toContain('border-border');
+      expect(dot!.className).toContain('bg-background');
+      expect(dot!.className).toContain('border-border');
     });
 
     // TIMELINE-02: Completed win card has foreground left border accent
     it('renders foreground left border accent for completed wins', () => {
-      const completedOnly = [{ id: 'win-1', title: 'Done task', completed: true }];
+      const completedOnly = [{ id: 'win-1', title: 'Done task', category: 'work', completed: true }];
       const { container } = render(<DayDetail wins={completedOnly} date="2026-03-09" />);
       const card = container.querySelector('.border-l-2.pl-4');
-      expect(card.className).toContain('border-foreground');
+      expect(card!.className).toContain('border-foreground');
     });
 
     // TIMELINE-02: Incomplete win card has muted left border accent
     it('renders muted left border accent for incomplete wins', () => {
-      const incompleteOnly = [{ id: 'win-1', title: 'Open task', completed: false }];
+      const incompleteOnly = [{ id: 'win-1', title: 'Open task', category: 'work', completed: false }];
       const { container } = render(<DayDetail wins={incompleteOnly} date="2026-03-09" />);
       const card = container.querySelector('.border-l-2.pl-4');
-      expect(card.className).toContain('border-border/40');
+      expect(card!.className).toContain('border-border/40');
     });
   });
 

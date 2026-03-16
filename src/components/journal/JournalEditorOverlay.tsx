@@ -64,7 +64,7 @@ export default function JournalEditorOverlay({
 
   useEffect(() => {
     if (!open) return;
-    const handleKeyDown = (e) => { if (e.key === 'Escape') onClose(); };
+    const handleKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
@@ -84,7 +84,7 @@ export default function JournalEditorOverlay({
     savingRef.current = true;
     setSaving(true);
     const wc = liveWordCountRef.current;
-    const minutes = Math.round((Date.now() - startedAtRef.current) / 60000);
+    const minutes = Math.round((Date.now() - (startedAtRef.current ?? Date.now())) / 60000);
     await onSave({ title: currentTitle, body: body.trim(), category });
     setSummaryWordCount(wc);
     setSummaryMinutes(minutes);

@@ -36,28 +36,28 @@ vi.mock('@/stores/uiStore', () => ({
 }));
 
 vi.mock('@/stores/settingsStore', () => ({
-  useSettingsStore: vi.fn((sel) => sel({ settings: { dayStartHour: 0 } })),
+  useSettingsStore: vi.fn((sel: (s: { settings: { dayStartHour: number } }) => unknown) => sel({ settings: { dayStartHour: 0 } })),
 }));
 
 // Stub heavy child components
 vi.mock('@/components/wins/WinInputOverlay', () => ({ default: () => null }));
 vi.mock('@/components/wins/RollForwardPrompt', () => ({ default: () => null }));
 vi.mock('@/components/wins/WinList', () => ({
-  default: ({ wins }) => <ul>{wins.map(w => <li key={w.id}>{w.title}</li>)}</ul>,
+  default: ({ wins }: { wins: Array<{ id: string; title: string }> }) => <ul>{wins.map((w: { id: string; title: string }) => <li key={w.id}>{w.title}</li>)}</ul>,
 }));
 vi.mock('@/components/wins/CategorySummary', () => ({ default: () => null }));
 
 vi.mock('@/components/history/DayStrip', () => ({
-  default: ({ selectedDate, onSelectDate }) => (
+  default: ({ selectedDate, onSelectDate }: { selectedDate: string; onSelectDate?: (d: string) => void }) => (
     <div data-testid="day-strip" onClick={() => onSelectDate?.('2026-03-10')}>
       {selectedDate}
     </div>
   ),
 }));
 vi.mock('@/components/history/DayDetail', () => ({
-  default: ({ date, wins, loading }) => (
+  default: ({ date, wins, loading }: { date: string; wins?: Array<{ id: string; title: string }>; loading?: boolean }) => (
     <div data-testid="day-detail">
-      {loading ? 'Loading...' : wins?.map(w => <span key={w.id}>{w.title}</span>)}
+      {loading ? 'Loading...' : wins?.map((w: { id: string; title: string }) => <span key={w.id}>{w.title}</span>)}
     </div>
   ),
 }));

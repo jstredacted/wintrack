@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useHistory } from './useHistory';
 
@@ -26,13 +26,13 @@ vi.mock('@/lib/supabase', () => ({
  *
  * The mock object is thenable so it can be awaited at any point in the chain.
  */
-function buildHistoryMock(resolvedValue) {
+function buildHistoryMock(resolvedValue: unknown) {
   const mock = {
     select: vi.fn(),
     eq: vi.fn(),
     order: vi.fn(),
-    then: (resolve) => Promise.resolve(resolvedValue).then(resolve),
-    catch: (reject) => Promise.resolve(resolvedValue).catch(reject),
+    then: (resolve: (v: unknown) => unknown) => Promise.resolve(resolvedValue).then(resolve),
+    catch: (reject: (v: unknown) => unknown) => Promise.resolve(resolvedValue).catch(reject),
   };
   mock.select.mockReturnValue(mock);
   mock.eq.mockReturnValue(mock);
@@ -48,7 +48,7 @@ describe('useHistory', () => {
   describe('completionMap', () => {
     it('starts with loading=true then loading=false after fetch', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(buildHistoryMock({ data: [], error: null }));
+      (supabase.from as Mock).mockReturnValue(buildHistoryMock({ data: [], error: null }));
 
       const { result } = renderHook(() => useHistory());
 
@@ -58,7 +58,7 @@ describe('useHistory', () => {
 
     it('completionMap["2026-03-09"] === true when win.completed is true', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(
+      (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
           data: [{ win_date: '2026-03-09', completed: true }],
           error: null,
@@ -73,7 +73,7 @@ describe('useHistory', () => {
 
     it('completionMap["2026-03-08"] === false when win.completed is false', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(
+      (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
           data: [{ win_date: '2026-03-08', completed: false }],
           error: null,
@@ -88,7 +88,7 @@ describe('useHistory', () => {
 
     it('completionMap is true for date when at least one win is completed', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(
+      (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
           data: [
             { win_date: '2026-03-07', completed: true },
@@ -106,7 +106,7 @@ describe('useHistory', () => {
 
     it('completionMap contains both true and false entries for multiple wins on different dates', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(
+      (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
           data: [
             { win_date: '2026-03-09', completed: true },
@@ -125,7 +125,7 @@ describe('useHistory', () => {
 
     it('completionMap is {} when data array is empty', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(buildHistoryMock({ data: [], error: null }));
+      (supabase.from as Mock).mockReturnValue(buildHistoryMock({ data: [], error: null }));
 
       const { result } = renderHook(() => useHistory());
 
@@ -135,7 +135,7 @@ describe('useHistory', () => {
 
     it('completionMap is {} when fetch returns error', async () => {
       const { supabase } = await import('@/lib/supabase');
-      supabase.from.mockReturnValue(buildHistoryMock({ data: null, error: { message: 'DB error' } }));
+      (supabase.from as Mock).mockReturnValue(buildHistoryMock({ data: null, error: { message: 'DB error' } }));
 
       const { result } = renderHook(() => useHistory());
 
@@ -154,31 +154,31 @@ describe('useHistory', () => {
         ],
         error: null,
       });
-      supabase.from.mockReturnValueOnce(mapMock).mockReturnValueOnce(dateMock);
+      (supabase.from as Mock).mockReturnValueOnce(mapMock).mockReturnValueOnce(dateMock);
 
       const { result } = renderHook(() => useHistory());
       await waitFor(() => expect(result.current.loading).toBe(false));
 
-      let wins;
+      let wins: unknown[] | undefined;
       await act(async () => {
         wins = await result.current.fetchWinsForDate('2026-03-09');
       });
 
       expect(dateMock.eq).toHaveBeenCalledWith('win_date', '2026-03-09');
       expect(wins).toHaveLength(1);
-      expect(wins[0].title).toBe('Ship the feature');
+      expect((wins as Array<{ title: string }>)[0].title).toBe('Ship the feature');
     });
 
     it('returns empty array when no wins found for date', async () => {
       const { supabase } = await import('@/lib/supabase');
       const mapMock = buildHistoryMock({ data: [], error: null });
       const dateMock = buildHistoryMock({ data: [], error: null });
-      supabase.from.mockReturnValueOnce(mapMock).mockReturnValueOnce(dateMock);
+      (supabase.from as Mock).mockReturnValueOnce(mapMock).mockReturnValueOnce(dateMock);
 
       const { result } = renderHook(() => useHistory());
       await waitFor(() => expect(result.current.loading).toBe(false));
 
-      let wins;
+      let wins: unknown[] | undefined;
       await act(async () => {
         wins = await result.current.fetchWinsForDate('2026-01-01');
       });
