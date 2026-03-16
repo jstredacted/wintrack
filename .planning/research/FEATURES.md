@@ -1,188 +1,249 @@
-# Feature Research
+# Feature Landscape
 
-**Domain:** Personal accountability / daily win tracking / focus tracker
-**Researched:** 2026-03-09
-**Confidence:** HIGH (validated against Stoic, Streaks, Centered, Reflect, and streak UX literature)
+**Domain:** Personal finance management, rich text journaling, PIN authentication, mobile responsiveness -- integrated into personal accountability tracker (wintrack v2.0)
+**Researched:** 2026-03-16
+**Confidence:** HIGH (finance patterns validated against YNAB, Monarch Money, PocketGuard, Goodbudget; editor validated against Tiptap docs; PIN patterns from PWA best practices)
 
 ---
 
-## Feature Landscape
+## Table Stakes
 
-### Table Stakes (Users Expect These)
+Features users expect once a finance module exists. Missing = feels incomplete or broken.
 
-Features users assume exist. Missing these = product feels incomplete.
+### Finance: Budget Tracking
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Win / intention logging | Core value of the product — without this there is nothing to track | LOW | The freeform, single-entry flow keeps it simple; complexity rises if you add types/categories (deliberately avoided here) |
-| Evening check-in (binary completion) | Every accountability app has a "did you do it?" moment; skipping it removes the closure ritual | LOW | Yes/No per win is the right scope; avoid turning this into a scoring rubric |
-| Streak counter | Users expect some persistence signal — streak is the genre's lingua franca | LOW | Simple increment on "at least one win complete for the day"; opt-in to turn off per Streaks app's design philosophy |
-| Daily journal entry | The Stoic/Reflect pattern proves users want a free-write space separate from task logging | MEDIUM | Separate from wins to keep concerns cleanly split; title+body only is correct scope |
-| Dark/light mode | Standard expectation in any tool used at 9pm in bed | LOW | Tailwind v4 dark mode + shadcn handles most of this structurally |
-| Persistent data across sessions | Users assume notes survive a browser refresh or device switch | LOW | Supabase handles this; the only complexity is an offline-first edge case (defer to v2) |
-| Visual history / past wins | Users need to look back to feel progress; without history the streak is just a number | MEDIUM | Calendar or list view of past days; streak calendar dot grid aligns with the project's aesthetic |
-| Time tracking per win | Focus trackers always offer some form of time measurement; stopwatch on a win card is the minimal viable form | MEDIUM | Stopwatch (start/stop/pause) with cumulative display is right; Pomodoro mode or timers would be scope creep |
-| Notification prompts (morning + evening) | Every app in this space has scheduled reminders; absence feels like the app forgot about you | MEDIUM | v1 stubs 9am/9pm times; actual push/browser notifications are v2 — document this clearly |
+| Month-based budget view | Every budget app organizes by month -- users think in monthly cycles (rent, salary, bills). Without this the finance section has no temporal anchor | LOW | Single month at a time with nav arrows. Match existing DayStrip pattern of temporal navigation |
+| Starting cash / current balance | Users need to know "what do I have right now?" before anything else. Goodbudget and YNAB both open with balance | LOW | Manual entry per month. No bank sync (out of scope for personal tool) |
+| Budget limit with visual progress | The "how much have I spent vs how much can I spend" bar is universal across YNAB, PocketGuard, Monarch Money. Without it, budget tracking is just a list of numbers | LOW | Simple progress bar or pulse visualization. The existing "budget pulse" concept from the source app covers this |
+| Expected salary / income tracking | Users set a monthly income expectation so they can see budget vs actual. EveryDollar, YNAB, Goodbudget all require income as first step | LOW | Single field per month. Salary toggle (received yes/no) is the idempotent pattern from the source app |
+| Transaction CRUD (add/edit/delete) | Core data entry. Users must log expenses and income. Without this the budget is fiction | MEDIUM | Form with amount, description, type, date. Types: expense/income/investment/transfer. Manual entry only -- no bank sync |
+| Transaction categorization | Every finance app categorizes spending (food, transport, utilities, etc.). Users expect to see "where did my money go" | LOW | Freeform text category or predefined set. Keep it simple -- the source app likely had a fixed set |
+| Expense vs income distinction | Users need to know money in vs money out. Every app separates these visually | LOW | Transaction type field. Color or icon differentiation in lists |
+
+### Finance: Bill Management
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Bill list with due dates | Users track recurring obligations (rent, utilities, subscriptions). TimelyBills, Monarch Money, PocketGuard all show bills as a dated list | LOW | Name, amount, due date (day of month), paid status per month |
+| Paid/unpaid toggle per month | The core interaction -- "did I pay this bill?" Feels identical to the win completion toggle already in wintrack | LOW | Binary toggle per bill per month. Direct parallel to win completion UX |
+| Recurring bill rollover | Bills recur monthly by default. Users expect bills to automatically appear in next month without re-entering them | MEDIUM | When a new month starts, unpaid bills from template carry forward. Source app has this pattern |
+| Due date visibility (upcoming/overdue) | Users need to see what's coming up and what's late. Every bill tracker highlights overdue items | LOW | Sort by due date, visual indicator for past-due |
+
+### Finance: Investment Allocation
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Account list with current amounts | Users track money across ETF, crypto, savings, etc. Rebalancer and Empower both show account-level balances | LOW | Manual entry of account name + current value |
+| Target allocation percentages | Users set desired portfolio split (e.g., 60% ETF, 30% crypto, 10% cash). This is the core value prop of allocation tracking | LOW | Percentage per account that sums to 100% |
+| Current vs target comparison | Users need to see drift -- "am I over-allocated in crypto?" Rebalancer's core feature is showing deviation from target | MEDIUM | Visual comparison (bar chart or simple table) of actual % vs target % |
+
+### Finance: Dashboard
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Cash overview (total liquid) | Users want one number: "how much cash do I have across all accounts?" | LOW | Sum of starting cash minus expenses plus income |
+| Monthly summary (spent/remaining) | The top-level "how am I doing this month" signal. Every budget app shows this prominently | LOW | Budget limit minus total expenses = remaining |
+
+### Rich Text Journal
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Bold and italic formatting | Absolute baseline for any "rich text" claim. Users expect Cmd+B and Cmd+I | LOW | Tiptap StarterKit includes both out of the box |
+| Bullet and numbered lists | Second most expected formatting. Journal entries naturally contain lists | LOW | Tiptap StarterKit includes both |
+| Headings (H2, H3) | Users structure longer entries with sections. Bear, Notion, Apple Notes all support headings | LOW | Tiptap StarterKit includes headings |
+| Keyboard shortcuts | Cmd+B for bold, Cmd+I for italic, etc. Users from any text editor expect these | LOW | Tiptap provides these by default with StarterKit |
+| Backward-compatible rendering | Existing plain-text journal entries must still display correctly after migration to rich text | MEDIUM | Treat plain text as paragraphs. Tiptap can render plain strings as content |
+
+### PIN Authentication
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| PIN entry screen on app open | The whole point -- gate access to personal data. Users expect a lock screen before any content shows | MEDIUM | Full-screen overlay with 4-6 digit PIN input. Blocks all routes until authenticated |
+| PIN setup flow (first time) | User must create their PIN. Confirm-twice pattern is standard | LOW | Enter PIN, confirm PIN, save |
+| PIN stored securely | Users expect their lock to actually work. PIN hash stored in Supabase, session token in memory/localStorage | MEDIUM | bcrypt or SHA-256 hash server-side. Session timeout configurable |
+| Session persistence (don't ask on every page) | Users don't want to re-enter PIN on every navigation. Session should persist for reasonable duration | LOW | Session token with TTL (e.g., 30 min idle timeout). Store in memory or sessionStorage |
+
+### Mobile Responsiveness
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Touch-friendly tap targets | Buttons and interactive elements must be easily tappable (44x44px minimum) | MEDIUM | Audit all existing components. shadcn/ui buttons are generally fine, but custom elements may need adjustment |
+| Responsive layout at 320-428px | App must work on iPhone SE through iPhone Pro Max. Current max-w-[1100px] centered layout should scale down | MEDIUM | Existing Tailwind responsive prefixes (sm:, lg:) are partially used. Need comprehensive pass |
+| No horizontal scroll | Content must fit viewport width. Tables and wide layouts must adapt | LOW | Audit finance tables/grids for overflow |
+| Viewport meta tag correct | PWA must declare viewport correctly for mobile rendering | LOW | Should already exist from vite-plugin-pwa setup |
+
+### TypeScript Migration
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Gradual .jsx to .tsx conversion | TypeScript adds safety to a growing codebase. Standard practice for v2+ codebases | HIGH | ~50+ files to convert. Can be done incrementally -- new files in TS, migrate existing file-by-file |
+| Type definitions for Supabase schema | Database types generated from schema ensure data layer safety | MEDIUM | Use Supabase CLI `gen types` or manual type definitions matching migration schema |
+| Strict mode eventually | Full strict TypeScript catches the most bugs | LOW | Start with basic TS (no strict), enable strict after full migration |
 
 ---
 
-### Differentiators (Competitive Advantage)
+## Differentiators
 
-Features that set the product apart. Not required, but valued.
+Features that set wintrack's finance module apart from generic finance apps. Not expected, but valued.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Typeform-style win input (full-screen, one step at a time) | Reduces cognitive load at the moment of commitment — forces you to think about one win, not a list; Typeform's single-field pattern gets 2x industry completion rates | MEDIUM | Animated transitions + one-question-per-screen is the core UX bet; state machine per step, keyboard-forward |
-| Roll incomplete wins forward | Honesty without punishment — most apps just mark you as failed; rollover supports a more compassionate self-accountability loop | LOW | Simple "roll to tomorrow" action on incomplete wins; surfaces carried-over wins distinctly on next day's view |
-| Morning ritual framing (not task management) | The Stoic-energy check-in reframes the act as a deliberate practice, not a to-do list; this is the emotional differentiator vs. Todoist or Habitica | LOW | Whitespace-heavy layout, serif/mono type, meditative pacing — design carries the message |
-| Nothing Phone / dot-grid aesthetic | No other app in this space uses this visual language; it signals "technical precision meets minimalism" and gives the product a distinct identity | LOW | Black/white only, dot grid patterns, monospaced type, structured negative space — enforced aesthetic constraint means this is a design system decision, not ongoing feature work |
-| Stopwatch as first-class citizen on win card | Most habit trackers decouple time tracking; embedding the stopwatch directly on the win card reduces context switching and reinforces "this win is active" | MEDIUM | Per-win stopwatch state needs persistence between sessions (Supabase); cumulative time shown on card |
-| Evening reflection note (optional, per win) | Adds qualitative texture to the binary yes/no — over time these micro-notes become a personal record of how your day actually felt | LOW | Optional text field alongside the check-in binary; kept out of the journal to stay win-specific |
-| Streak opt-out | Streaks are motivating for some and toxic for others; letting users disable the streak counter signals product respect for intrinsic motivation over engagement metrics | LOW | Toggle in settings; Streaks app deliberately implemented this — cite the psychology: streaks should not profit from anxiety |
+| Unified accountability + finance in one app | No other personal tool combines daily win tracking with budget management. Users get "life dashboard" not just "finance app" | LOW | Architecture benefit -- shared Supabase, shared design system, shared navigation. The integration IS the differentiator |
+| Budget pulse visualization | A visual heartbeat/progress indicator instead of a boring progress bar. The source app's signature element | MEDIUM | Custom SVG or canvas animation. Fits the Nothing Phone aesthetic if done in monochrome |
+| Financial journal category integration | Journal entries tagged "Financial" can appear alongside budget data, creating narrative context for spending decisions | LOW | Already exists -- journal_entries has `category = 'financial'`. Just surface these entries in the finance dashboard |
+| Investment drift alerts (visual) | Show when portfolio drifts beyond a threshold from target allocation. Rebalancer's core feature, rare in personal tools | LOW | Simple percentage comparison with visual indicator. No notifications needed -- just visual on the dashboard |
+| Bento grid dashboard layout | A modern, information-dense layout that feels premium. Source app already uses this pattern | MEDIUM | CSS Grid with varied card sizes. Fits the Nothing Phone structured-negative-space aesthetic |
+| PIN with biometric fallback (future) | WebAuthn allows fingerprint/face unlock as alternative to PIN. Premium feel for a personal tool | HIGH | Web Authentication API. Defer to v2.x -- PIN alone is sufficient for v2.0 |
+| Markdown export for journal | Rich text stored as Tiptap JSON, but exportable as Markdown for portability | LOW | Tiptap has built-in Markdown serializer. Low effort, high trust signal |
+| Dev branch isolation | Dev tools only on develop branch, main is clean production. Professional workflow for a personal project | LOW | Vite environment variable or build-time flag. Simple conditional render |
 
 ---
 
-### Anti-Features (Commonly Requested, Often Problematic)
+## Anti-Features
 
-Features that seem good but create problems.
+Features to explicitly NOT build. These seem logical but are wrong for wintrack.
 
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| Win categories / types | Users want to organize wins by area (work, health, personal) | Adds classification overhead at input time — the friction point is exactly when you want zero friction; also means the app needs filter/sort UI everywhere | Freeform text only; users self-organize by what they type. Trust the user |
-| Social sharing / leaderboards | Gamification playbook says add social pressure | Habit formation is a personal journey (Streaks app deliberately excluded this); social comparison creates anxiety that undermines the reflective ritual the product is selling | Build the private streak — let the user's own history be the signal |
-| Journal tags / categories | Power users ask for this within weeks of using any journal app | Tags require a tagging UI, a tag management screen, a filter/search interface, and ongoing taxonomy decisions. The payoff is unclear for a personal single-user tool | Date-based browsing is sufficient; the body is searchable by text |
-| AI coaching / prompts | Every journaling app added AI in 2024-2025 (Stoic, Reflect, Reflection.app all did) | This product's value is the ritual and the aesthetic — AI prompts change the emotional register from deliberate self-accountability to "the app is talking to me"; also requires API cost and latency management | Good prompt defaults ("What do you commit to today?") that the user owns; no AI in v1 |
-| Streak freeze / forgiveness mechanic | Duolingo popularized this; users who miss a day want a safety net | For a single-user personal tool, the streak is a signal to yourself — a freeze feature adds complexity (who grants it? how many?) while solving a problem that's better addressed by making the action small (log one win, that's it) | Keep the required action minimal (one win = streak continues); if you miss a day, the history shows honestly. The rollover mechanic is the compassionate alternative |
-| Pomodoro / interval timer | Time tracking users often want Pomodoro | The project already chose stopwatch as the time tracking primitive; adding Pomodoro adds a second time tracking mental model and a timer-completion notification layer | Stopwatch only in v1; users who want Pomodoro have dedicated apps (Be Focused, Focus To-Do) |
-| Multi-device sync with offline-first | Users expect this once they use the app across devices | True offline-first requires conflict resolution logic, local storage layer, sync queue, and error states; this project has no auth layer and no sync conflict model | Supabase persistence works across devices when online; offline behavior undefined = acceptable for personal tool v1 |
-| Win recurrence / templates | "I log the same wins every day" is common feedback | Recurring wins blur the line between habit tracking (Streaks does this) and daily intention setting; the product thesis is that each day's commitment is a deliberate choice, not a default | User types their wins fresh each morning; the Typeform flow makes this fast; if repetition bothers them, that's signal about the product's job-to-be-done |
-| Push notifications (v1) | Users want to be reminded | Web push notifications require service worker setup, permission UX, and cross-browser testing; browser notification APIs are inconsistent across Safari/Chrome/Firefox | Document the intended 9am/9pm times in the UI; implement as a visible "reminder" UI element in v1 with a note that push notifications are coming |
+| Anti-Feature | Why Avoid | What to Do Instead |
+|--------------|-----------|-------------------|
+| Bank account sync (Plaid/Yodlee) | Massive complexity (API costs, credential management, institution coverage, error handling). YNAB charges $109/yr largely because of this. Single-user personal tool doesn't need it | Manual transaction entry. The discipline of logging transactions is itself an accountability feature that matches wintrack's philosophy |
+| Multi-currency support | Adds conversion logic, API dependency, and UI complexity. The source app uses Philippine Peso -- pick one currency and stay | Single currency, no symbol enforcement. User knows what currency they use |
+| Receipt scanning / OCR | AI/ML feature that requires image upload, processing pipeline, and accuracy management. Completely out of scope | Manual entry. Keep the intentional, mindful logging pattern |
+| Recurring transaction auto-creation | Seems helpful but creates ghost data that users must verify. Better to have users explicitly log each transaction for accountability | Bill management covers recurring obligations. Transactions are logged when they happen |
+| Investment price fetching (API) | Real-time prices require API integration, rate limiting, and staleness management. Not worth it for a personal allocation tracker | Manual entry of current values. User updates when they check their brokerage. The allocation percentages are what matter, not live prices |
+| Complex budget categories (envelope system) | YNAB's envelope system is powerful but adds significant UI complexity (category groups, assignment flows, rolling over unspent). Overkill for a personal tool | Simple budget limit per month + transaction list. The user's brain does the envelope math |
+| Financial reports / charts beyond basics | Monthly spending pie charts, year-over-year trends, etc. -- these require significant charting infrastructure and are the domain of dedicated finance apps | Cash overview + budget pulse + spent/remaining. Three numbers tell the story |
+| Biometric auth as primary (v2.0) | WebAuthn is not universally supported, especially on older mobile browsers. Adding it to v2.0 scope creeps the PIN feature | PIN only for v2.0. WebAuthn is a v2.x differentiator if PIN proves insufficient |
+| Full WYSIWYG editor (tables, images, embeds) | Tiptap supports all of this but each feature adds toolbar complexity, storage size, and edge cases. A journal editor is not Google Docs | Bold, italic, lists, headings only. This covers 95% of journal formatting needs. Add more only if users ask |
+| Offline-first finance | Transaction conflict resolution across devices is genuinely hard. The existing online-only Supabase pattern is fine | Same pattern as v1.0 -- Supabase for persistence, works when online. Offline is undefined and acceptable for personal tool |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Win Logging (Typeform flow)]
-    └──required by──> [Evening Check-in]
-                          └──required by──> [Streak Counter]
-                          └──required by──> [Roll Incomplete Forward]
+[TypeScript Migration]
+    -- independent, can happen in parallel with everything
+    -- but should be FIRST so new finance code is written in TS from day one
 
-[Win Logging]
-    └──required by──> [Per-win Stopwatch]
-    └──required by──> [Evening Reflection Note]
+[PIN Authentication]
+    -- independent of finance features
+    -- should be EARLY because it gates access to all data including finance
+    -- depends on: Supabase (for PIN hash storage)
 
-[Evening Check-in]
-    └──required by──> [Visual History / Calendar]
+[Rich Text Journal]
+    -- depends on: existing journal_entries table (migration needed: body text -> body jsonb)
+    -- independent of finance
+    -- backward compatibility: existing plain text entries must render in Tiptap
 
-[Win Logging + Evening Check-in]
-    └──together power──> [Streak Counter]
+[Finance: Month Settings]
+    -- NEW table: month_settings (starting_cash, budget_limit, expected_salary, salary_received)
+    -- foundation for all other finance features
 
-[Journal Entry]
-    └──independent of──> [Win Logging] (separate concern, separate data model)
+[Finance: Transactions]
+    -- depends on: month_settings (transactions belong to a month context)
+    -- NEW table: transactions (amount, description, type, category, transaction_date)
 
-[Dark/Light Mode]
-    └──independent of──> all features (cross-cutting UI concern)
+[Finance: Bills]
+    -- depends on: month_settings (bills are checked per month)
+    -- NEW table: bills (name, amount, due_day, is_recurring)
+    -- NEW table: bill_payments (bill_id, month, paid_at) OR paid status on bill per month
 
-[Notification Prompts (stubbed)]
-    └──depends on──> [Win Logging] (morning: "have you logged yet?")
-    └──depends on──> [Evening Check-in] (evening: "have you checked in?")
+[Finance: Investments]
+    -- independent of budget/bills (different data model)
+    -- NEW table: investment_accounts (name, current_value, target_percentage)
+    -- can be built in parallel with bills
+
+[Finance: Dashboard]
+    -- depends on: month_settings + transactions + bills + investments
+    -- aggregation layer, must be LAST in the finance build order
+
+[Mobile Responsiveness]
+    -- cross-cutting concern, applies to ALL features
+    -- best done AFTER finance UI exists so there's something to make responsive
+    -- test with vite --host on real devices
+
+[Dev Branch Workflow]
+    -- independent, can happen early
+    -- enables cleaner development of all other features
 ```
 
-### Dependency Notes
+### Critical Dependency Chain
 
-- **Evening check-in requires Win Logging:** There is nothing to check in on without wins declared. Win logging must ship first or in the same release.
-- **Streak counter requires Evening check-in:** The streak increments based on completion status, not just declaration. If check-in is deferred, streak is meaningless.
-- **Roll incomplete forward requires Win Logging + Evening check-in:** You need both the win record and the completion status to identify "incomplete" wins to roll.
-- **Per-win Stopwatch requires Win Logging:** The stopwatch attaches to a win entity; it cannot exist without one.
-- **Journal is independent:** The journal has its own data model (title + body + date) and does not reference wins. This is intentional — ship it independently.
-- **Visual history requires both phases of the daily loop:** Showing past days meaningfully requires knowing which wins existed and whether they were completed.
-
----
-
-## MVP Definition
-
-### Launch With (v1)
-
-Minimum viable product — what is needed to validate the daily discipline loop.
-
-- [ ] Win logging via Typeform-style full-screen flow — this is the core commitment act; everything else depends on it
-- [ ] Evening check-in (binary yes/no per win + optional reflection note) — closes the daily loop; without it there is no accountability
-- [ ] Roll incomplete wins forward — the compassion mechanic; makes honesty feel safe
-- [ ] Per-win stopwatch (start/stop/pause, cumulative time) — makes the focus tracking claim real
-- [ ] Daily journal entry (title + body) — separate from wins; supports the evening ritual
-- [ ] Streak counter — visible signal of consistency; single-digit implementation complexity
-- [ ] Visual history (past days, win/completion status) — without it the streak is just a number
-- [ ] Dark/light mode — expected; Tailwind v4 handles this cheaply
-- [ ] Notification time stubs (show 9am/9pm prominently in UI) — sets expectations for v2 push notifications
-
-### Add After Validation (v1.x)
-
-- [ ] Actual browser push notifications (9am / 9pm) — validate that users want reminders before investing in service worker infrastructure; trigger: users ask "why didn't I get notified?"
-- [ ] Streak opt-out toggle — add when users report streak anxiety; trigger: qualitative feedback that the counter feels punitive
-- [ ] Grace window for streak (e.g., midnight + 1 hour) — small change, meaningful UX; trigger: users report losing streaks due to time zone edge cases
-
-### Future Consideration (v2+)
-
-- [ ] Offline-first / conflict resolution — requires auth layer reconsideration or local-first architecture; defer until the product proves worth the investment
-- [ ] Export / data portability (JSON or CSV) — users will ask for this; not urgent for a single-user tool but important for trust
-- [ ] Weekly review screen (pattern visualization across weeks) — Stoic and Reflect both do this well; adds insight layer on top of the daily loop; defer until daily loop is stable
+```
+TypeScript setup --> PIN auth --> Month Settings --> Transactions --> Bills --> Dashboard
+                                                                 \-> Investments --/
+                                 Rich Text Journal (parallel track)
+                                 Mobile Responsiveness (final pass)
+```
 
 ---
 
-## Feature Prioritization Matrix
+## MVP Recommendation
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Win logging (Typeform flow) | HIGH | MEDIUM | P1 |
-| Evening check-in | HIGH | LOW | P1 |
-| Streak counter | HIGH | LOW | P1 |
-| Roll incomplete wins forward | HIGH | LOW | P1 |
-| Per-win stopwatch | HIGH | MEDIUM | P1 |
-| Daily journal | MEDIUM | LOW | P1 |
-| Visual history / calendar | HIGH | MEDIUM | P1 |
-| Dark/light mode | MEDIUM | LOW | P1 |
-| Notification stubs (UI only) | MEDIUM | LOW | P1 |
-| Browser push notifications | MEDIUM | HIGH | P2 |
-| Streak opt-out toggle | MEDIUM | LOW | P2 |
-| Weekly pattern review | MEDIUM | MEDIUM | P3 |
-| Export / data portability | MEDIUM | LOW | P3 |
+### Phase 1: Foundation (do first)
+1. **TypeScript migration** -- set up tsconfig, convert entry points, establish patterns. All new code in TS
+2. **Dev branch workflow** -- establish develop/main split before feature work begins
 
-**Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+### Phase 2: Security Gate
+3. **PIN authentication** -- gate the app before adding sensitive finance data
+
+### Phase 3: Finance Core
+4. **Month settings** (starting cash, budget limit, salary)
+5. **Transaction CRUD** (the core data entry loop)
+6. **Budget pulse / progress visualization**
+
+### Phase 4: Finance Extended
+7. **Bill management** (list, due dates, paid toggle, recurring rollover)
+8. **Investment allocation** (accounts, targets, drift view)
+9. **Finance dashboard** (bento grid, cash overview, monthly summary)
+
+### Phase 5: Editor & Polish
+10. **Rich text journal** (Tiptap integration, backward-compatible rendering)
+11. **Mobile responsiveness** (comprehensive audit and fixes)
+
+### Defer to v2.x
+- Biometric/WebAuthn authentication
+- Markdown export
+- Investment drift alerts/notifications
+- Financial reports/charts beyond basics
 
 ---
 
-## Competitor Feature Analysis
+## Complexity Budget
 
-| Feature | Stoic | Streaks | Centered | wintrack Approach |
-|---------|-------|---------|----------|-------------------|
-| Morning/evening ritual loop | Morning + evening reflections with scheduled reminders | Not ritual-focused (habit completion only) | Focus session start/end | Full 9am/9pm loop is core; framed as ritual not task management |
-| Streak mechanic | Streak counter + badge rewards; opt-out available | Streak is the primary mechanic; no points/levels; no social | Not streak-based | Simple day streak, opt-out toggle planned for v1.x |
-| Journaling | Full journal with prompts, mood tracking, AI mentor | Not applicable | Not applicable | Title + body only, no prompts, no AI — deliberate restraint |
-| Time tracking | None | None (completion-only) | Focus session timer (Pomodoro-style) | Per-win stopwatch embedded on win card |
-| Social features | Optional community | Explicitly excluded | Peer accountability mode | None — single-user tool, no auth layer |
-| Design language | Clean, wellness/mindfulness aesthetic | Colored circles, minimal | Clean productivity aesthetic | Black/white only, dot-grid, monospaced — Nothing Phone aesthetic |
-| AI features | AI Mentor, personalized prompts (Premium) | None | AI distraction coaching | None in v1 — deliberate restraint |
-| Win/goal input UX | Form-based, multi-step reflections | Tap to complete | Task list | Typeform-style full-screen one-at-a-time — the primary UX bet |
-| Rollover / carry forward | Not a feature | Not a feature | Not applicable | Explicit rollover mechanic — differentiator in the accountability space |
+| Feature Area | Estimated Effort | Risk Level | Notes |
+|--------------|-----------------|------------|-------|
+| TypeScript migration | HIGH | LOW | Tedious but well-understood. No architectural risk |
+| PIN authentication | MEDIUM | LOW | Simple pattern. Hash + session. No auth provider needed |
+| Month settings + transactions | MEDIUM | LOW | Standard CRUD. Mirrors existing wins pattern |
+| Bill management | MEDIUM | MEDIUM | Recurring rollover logic needs careful date handling |
+| Investment allocation | LOW | LOW | Simple percentage math. Manual entry |
+| Finance dashboard | MEDIUM | MEDIUM | Bento grid layout + aggregation queries |
+| Rich text journal (Tiptap) | MEDIUM | MEDIUM | Migration of existing plain text data. Tiptap setup is straightforward but editor UX polish takes time |
+| Mobile responsiveness | MEDIUM | LOW | Audit + fix. Tailwind handles most of it |
+| Dev branch workflow | LOW | LOW | Git + Vite env config |
 
 ---
 
 ## Sources
 
-- [Stoic App Features Page](https://www.getstoic.com/features) — morning/evening loop, streak mechanics, journal UX
-- [Stoic App 2025 Update Blog Post](https://www.getstoic.com/blog/stoic-journal-update-2025-18) — 2025 UX redesign details
-- [Streaks App Gamification Case Study — Trophy.so](https://trophy.so/blog/streaks-gamification-case-study) — deliberate exclusions (no points, no leaderboards), streak philosophy
-- [Designing a Streak System: UX and Psychology — Smashing Magazine](https://smashingmagazine.com/2026/02/designing-streak-system-ux-psychology/) — loss aversion, freeze mechanics, healthy vs toxic streak design
-- [Typeform One-Field Onboarding UX — Startup Spells](https://startupspells.com/p/typeform-one-field-onboarding-ux-gas-snapchat-duolingo-spotify-signup-conversion) — completion rate uplift, cognitive load reduction
-- [What Happens When Users Lose Their Streaks — Trophy.so](https://trophy.so/blog/what-happens-when-users-lose-streaks) — streak forgiveness psychology
-- [The 5 Best Habit Tracker Apps — Zapier](https://zapier.com/blog/best-habit-tracker-app/) — ecosystem overview, morning/evening routine patterns
-- [Nothing Phone 2 Monochrome Theme — Android Authority](https://www.androidauthority.com/nothing-phone-2-monochrome-theme-3382235/) — monochrome aesthetic validation
+- [NerdWallet: Best Budget Apps 2026](https://www.nerdwallet.com/finance/learn/best-budget-apps) -- table stakes for budget apps
+- [Financial Panther: Key Features Every Personal Finance App Needs 2026](https://financialpanther.com/key-features-every-personal-finance-app-needs-in-2026/) -- feature expectations
+- [WalletHub: Best Bill Tracker Apps 2026](https://wallethub.com/edu/b/best-bill-tracker-app/152603) -- bill management patterns
+- [Rebalancer App](https://rebalancer.app/) -- investment allocation tracking UX
+- [Kubera: Portfolio Rebalancing Tools](https://www.kubera.com/blog/portfolio-rebalancing-tools) -- investment tracker comparison
+- [Liveblocks: Rich Text Editor Framework Comparison 2025](https://liveblocks.io/blog/which-rich-text-editor-framework-should-you-choose-in-2025) -- Tiptap vs Slate vs Lexical
+- [DEV Community: Best Rich Text Editor for React 2025](https://dev.to/codeideal/best-rich-text-editor-for-react-in-2025-3cdb) -- editor ecosystem overview
+- [Tiptap React Installation Docs](https://tiptap.dev/docs/editor/getting-started/install/react) -- official setup guide
+- [DEV Community: PWA Authentication Best Practices](https://dev.to/azure/27-best-practices-for-pwa-authentication-29md) -- PIN/auth patterns for PWAs
+- [MDN: PWA Best Practices](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Best_practices) -- responsive design for PWAs
+- [YNAB](https://www.ynab.com/) -- zero-based budgeting UX reference
+- [Goodbudget](https://goodbudget.com/) -- envelope budgeting with manual entry (no bank sync)
+- [Monarch Money bill tracker](https://www.nerdwallet.com/finance/learn/best-budget-apps) -- recurring bill detection and calendar view
 
 ---
 
-*Feature research for: Personal accountability / daily win tracking / focus tracker (wintrack)*
-*Researched: 2026-03-09*
+*Feature research for: wintrack v2.0 -- Finance, rich text journal, PIN auth, TypeScript, mobile responsiveness*
+*Researched: 2026-03-16*

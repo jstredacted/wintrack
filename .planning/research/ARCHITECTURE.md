@@ -1,505 +1,561 @@
-# Architecture Research
+# Architecture Patterns
 
-**Domain:** Personal accountability and focus tracker SPA (single-user, no auth)
-**Researched:** 2026-03-09
-**Confidence:** HIGH (patterns well-established; schema design from first principles with PostgreSQL best practices)
+**Domain:** Personal accountability app — v2.0 finance integration, PIN auth, TypeScript, rich text
+**Researched:** 2026-03-16
+**Confidence:** HIGH (extends well-established existing patterns; no architectural novelty)
 
-## Standard Architecture
-
-### System Overview
+## Current Architecture (v1.0)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Pages / Views                           │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐   │
-│  │  Today   │  │  Journal │  │ History  │  │  Settings    │   │
-│  │  (home)  │  │  View    │  │  View    │  │  (theme)     │   │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬───────┘   │
-├───────┴─────────────┴─────────────┴────────────────┴───────────┤
-│                        Feature Modules                          │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐   │
-│  │   Wins   │  │ Check-in │  │  Timer   │  │   Journal    │   │
-│  │  Module  │  │  Module  │  │  Module  │  │   Module     │   │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬───────┘   │
-├───────┴─────────────┴─────────────┴────────────────┴───────────┤
-│                        Shared Layer                             │
-│  ┌───────────────┐  ┌──────────────┐  ┌──────────────────────┐ │
-│  │  UI Components│  │  DB Client   │  │  Hooks / Utilities   │ │
-│  │  (shadcn/ui)  │  │  (Supabase)  │  │  (useTimer, etc.)    │ │
-│  └───────────────┘  └──────────────┘  └──────────────────────┘ │
-├─────────────────────────────────────────────────────────────────┤
-│                     Persistence Layer                           │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │           Supabase (PostgreSQL via REST/Realtime)        │   │
-│  └─────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
+App.jsx (createBrowserRouter)
+  AppShell (SideNav fixed-left + <Outlet />)
+    TodayPage (wins + DayStrip carousel + history detail)
+    JournalPage (entries list + FAB + JournalEditorOverlay)
+    SettingsPage
+
+Stores: uiStore (UI state), settingsStore (user prefs + localStorage cache)
+Hooks: useWins, useJournal, useStreak, useHistory, useSettings, useTheme
+Data: supabase.js client (anon key + static JWT via VITE_USER_JWT)
+Files: 60+ .jsx/.js files, one .tsx (shadcn button), minimal tsconfig.json
 ```
 
-### Component Responsibilities
+Key architectural characteristics:
+- **No auth layer** — static UUID + JWT in env vars, RLS on all tables
+- **Hook-per-domain pattern** — each data domain (wins, journal, streak) has one hook with useState + useEffect + supabase queries
+- **Overlay state machine** — full-screen overlays use visible/exiting states with onAnimationEnd unmount + createPortal
+- **No global state for data** — Zustand stores hold only UI state (overlay flags, devtools toggle, streak refresh key)
+- **Optimistic updates** — mutations apply locally first, then write to Supabase, rollback on error
+
+## Recommended Architecture for v2.0
+
+### High-Level Structure
+
+```
+main.tsx
+  App.tsx (createBrowserRouter)
+    PinGate (layout route — wraps all children)
+      AppShell (SideNav + Outlet)
+        TodayPage (unchanged)
+        JournalPage (Tiptap replaces textarea)
+        FinancePage (new — dashboard with sub-sections)
+        SettingsPage (PIN management added)
+```
+
+### Component Boundaries
 
 | Component | Responsibility | Communicates With |
 |-----------|---------------|-------------------|
-| `Today` page | Compose the day's view: pending wins, streak, quick-add CTA | Wins module, Check-in module, Timer module |
-| `Journal` page | Render and edit today's journal entry; browse past entries | Journal module |
-| `History` page | Calendar/list view of past days, completion rates | Wins module (read-only) |
-| `Settings` page | Theme toggle (dark/light) | App-level theme state only |
-| `Wins` module | Win CRUD, Typeform-style input flow, roll-forward logic | DB client, Timer module (per-win elapsed time) |
-| `Check-in` module | Evening review: binary yes/no + reflection note per win | DB client, Wins module (reads today's wins) |
-| `Timer` module | Stopwatch per win — start/stop/pause, cumulative display | Local state (running) + DB (persisted elapsed) |
-| `Journal` module | Title + body editor, one entry per day | DB client |
-| `StepFlow` component | Generic Typeform-style wrapper: step index, transitions, keyboard nav | Used by Wins module only |
-| `StreakBadge` component | Reads streak count, renders display | DB client (computed value) |
-| `ThemeProvider` | Wraps app, exposes theme context | Settings page |
+| `PinGate` | Client-side PIN lock screen, session gating | settingsStore (PIN hash), sessionStorage |
+| `AppShell` | Layout: responsive SideNav/bottom-bar + Outlet | Router, uiStore |
+| `FinancePage` | Finance dashboard — month selector + section tabs | Finance hooks |
+| `DashboardOverview` | Summary cards (balance, spent, remaining) | useDashboard RPC |
+| `BudgetCard` | Monthly salary + budget display | useBudget |
+| `BillsList` | Recurring bills with paid toggle | useBills |
+| `InvestmentsList` | Investment contribution tracker | useInvestments |
+| `TransactionList` | Filterable transaction log | useTransactions |
+| `AddTransactionOverlay` | Full-screen transaction input | useTransactions |
+| `MonthSelector` | Month navigation (prev/next) | Lifts month string to FinancePage |
+| `JournalEditorOverlay` | Rich text Tiptap editor (replaces textarea) | useJournal |
+| `JournalToolbar` | Minimal formatting bar (B/I/list/heading) | Tiptap editor instance |
+| `PinInput` | 4-6 digit numpad UI | usePinAuth |
 
----
-
-## Recommended Project Structure
+### Data Flow
 
 ```
-src/
-├── features/
-│   ├── wins/
-│   │   ├── components/
-│   │   │   ├── WinCard.tsx          # Single win display with timer controls
-│   │   │   ├── WinList.tsx          # Today's wins list
-│   │   │   ├── WinInputFlow.tsx     # Typeform-style multi-step entry
-│   │   │   └── RollForwardDialog.tsx
-│   │   ├── hooks/
-│   │   │   └── useWins.ts           # CRUD queries via Supabase
-│   │   └── types.ts
-│   ├── checkin/
-│   │   ├── components/
-│   │   │   ├── CheckInFlow.tsx      # Evening review steps
-│   │   │   └── CheckInItem.tsx      # Per-win yes/no + reflection
-│   │   ├── hooks/
-│   │   │   └── useCheckIn.ts
-│   │   └── types.ts
-│   ├── timer/
-│   │   ├── hooks/
-│   │   │   └── useStopwatch.ts      # Core timer logic (local only)
-│   │   ├── components/
-│   │   │   └── TimerDisplay.tsx
-│   │   └── timerPersistence.ts      # Flush elapsed_ms to DB on stop/pause
-│   ├── journal/
-│   │   ├── components/
-│   │   │   ├── JournalEditor.tsx
-│   │   │   └── JournalEntry.tsx
-│   │   ├── hooks/
-│   │   │   └── useJournal.ts
-│   │   └── types.ts
-│   └── streak/
-│       ├── hooks/
-│       │   └── useStreak.ts         # Computed from wins table
-│       └── StreakBadge.tsx
-├── components/
-│   ├── ui/                          # shadcn/ui primitives (auto-generated)
-│   ├── StepFlow/
-│   │   ├── StepFlow.tsx             # Generic step container
-│   │   ├── StepTransition.tsx       # Animation wrapper
-│   │   └── useStepFlow.ts           # Step index, navigation, keyboard
-│   └── layout/
-│       ├── AppShell.tsx             # Nav + main content area
-│       └── ThemeProvider.tsx
-├── lib/
-│   ├── supabase.ts                  # Supabase client singleton
-│   ├── dates.ts                     # Day boundary helpers (toLocaleDateString, etc.)
-│   └── utils.ts                     # cn(), classname helpers (shadcn default)
-├── pages/
-│   ├── TodayPage.tsx
-│   ├── JournalPage.tsx
-│   ├── HistoryPage.tsx
-│   └── SettingsPage.tsx
-├── App.tsx                          # Router, ThemeProvider, global layout
-└── main.tsx
+App load
+  -> PinGate checks sessionStorage('wintrack-unlocked')
+  -> If not set: render PIN input (full-screen numpad)
+  -> On correct PIN (hash match): sessionStorage.setItem, render <Outlet />
+  -> Tab close clears sessionStorage automatically
+
+Finance data flow:
+  -> FinancePage holds `month` state (e.g. '2026-03')
+  -> Child hooks receive month as parameter
+  -> useTransactions(month) -> supabase.from('transactions').eq('month', month)
+  -> useDashboard(month) -> supabase.rpc('get_dashboard_snapshot', { p_month })
+  -> Mutations follow optimistic update pattern from useWins
+
+Journal rich text flow:
+  -> Tiptap useEditor({ extensions: [StarterKit], content: initialBody })
+  -> Editor produces HTML string via editor.getHTML()
+  -> Stored in existing `body` text column (HTML is valid text)
+  -> Existing plain-text entries render correctly (text nodes in Tiptap)
+  -> Read-only display: dangerouslySetInnerHTML (single-user, no XSS risk)
 ```
 
-### Structure Rationale
+## Integration Architecture Decisions
 
-- **features/**: Each module is a self-contained vertical slice (components + hooks + types). Nothing in `wins/` imports from `checkin/` directly — they communicate through shared DB queries only.
-- **components/**: Shared UI that crosses module boundaries. `StepFlow` is generic enough to live here; it knows nothing about wins or check-ins.
-- **lib/**: Stateless utilities and the Supabase singleton. No React code here.
-- **pages/**: Thin composition layers — they import from features and assemble the view. No business logic.
+### 1. PIN Gate — Client-Side Lock Screen
 
----
+**Confidence: HIGH**
 
-## Supabase Schema
+This is NOT authentication. The Supabase access pattern (static JWT + anon key) remains unchanged. The PIN prevents casual physical access — same as a phone lock screen.
 
-### Table: `wins`
+**Implementation:**
+
+```
+src/components/auth/PinGate.tsx    — Layout route: renders Outlet or lock screen
+src/components/auth/PinInput.tsx   — Numpad UI with dot indicators
+src/hooks/usePinAuth.ts           — verify(pin), setPin(pin), hasPin, clearPin
+```
+
+**How it works:**
+- PIN stored as SHA-256 hash in `user_settings` table (new column: `pin_hash text`)
+- On app load: `PinGate` checks `sessionStorage.getItem('wintrack-unlocked')`
+- If absent and PIN is set: render full-screen lock (PinInput component)
+- On correct entry: `sessionStorage.setItem('wintrack-unlocked', 'true')`, render `<Outlet />`
+- Session clears on tab close (sessionStorage default behavior)
+- No PIN set: skip gate entirely (first-run experience unchanged)
+- Settings page gets a "Set PIN" / "Change PIN" / "Remove PIN" section
+- Rate limiting: 5 failed attempts triggers 30-second coolout (client-side timer)
+
+**Router integration — PinGate as layout route:**
+
+```tsx
+// App.tsx
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: PinGate,       // layout route: renders Outlet when unlocked
+    children: [
+      {
+        Component: AppShell,
+        children: [
+          { index: true, Component: TodayPage },
+          { path: "journal", Component: JournalPage },
+          { path: "finance", Component: FinancePage },
+          { path: "settings", Component: SettingsPage },
+        ],
+      },
+    ],
+  },
+]);
+```
+
+**Why SHA-256, not bcrypt:** Client-side only. No server-side brute force vector. SHA-256 via Web Crypto API is built into browsers, zero dependencies. The PIN is 4-6 digits — if someone has physical access AND developer tools, they can bypass the gate regardless of hash algorithm.
+
+### 2. Finance Feature Integration
+
+**Confidence: HIGH** (mirrors existing hook pattern exactly)
+
+The 350 source app uses Next.js Server Actions with service role key. We port the data model and stored procedures but replace Server Actions with supabase-js client pattern (anon key + RLS).
+
+**Database tables (new migration):**
 
 ```sql
-create table wins (
-  id          uuid primary key default gen_random_uuid(),
-  content     text not null,                    -- freeform win text
-  date        date not null,                    -- the day this win belongs to (local date)
-  status      text not null default 'pending',  -- 'pending' | 'complete' | 'incomplete' | 'rolled'
-  rolled_from uuid references wins(id),         -- set if this win was rolled from a previous day
-  elapsed_ms  integer not null default 0,       -- cumulative timer value in milliseconds
-  created_at  timestamptz not null default now(),
-  updated_at  timestamptz not null default now()
+-- Monthly budget configuration
+CREATE TABLE budgets (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  month text NOT NULL,              -- '2026-03'
+  salary numeric NOT NULL DEFAULT 0,
+  salary_received boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE(user_id, month)
 );
 
-create index wins_date_idx on wins(date);
-```
-
-**Design notes:**
-- `date` stores the *local* date string (e.g. `2026-03-09`). The app always queries by local date, never by UTC timestamp. Store as `date` type, pass as ISO string from the client.
-- `elapsed_ms` is persisted as a plain integer (milliseconds). The running timer is local state; only the accumulated total is written to DB on stop/pause. Avoids frequent writes mid-session.
-- `rolled` status distinguishes "explicitly not done, moved forward" from `incomplete` (checked-in as failed). `rolled_from` provides the lineage chain.
-- No `user_id` column — single user, no RLS needed.
-
-### Table: `check_ins`
-
-```sql
-create table check_ins (
-  id          uuid primary key default gen_random_uuid(),
-  win_id      uuid not null references wins(id) on delete cascade,
-  date        date not null,                    -- the evening this check-in occurred
-  completed   boolean not null,                 -- binary yes/no
-  reflection  text,                             -- optional note
-  created_at  timestamptz not null default now()
+-- Recurring bills
+CREATE TABLE bills (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  name text NOT NULL,
+  amount numeric NOT NULL,
+  due_day integer,                  -- day of month (1-31)
+  is_recurring boolean NOT NULL DEFAULT true,
+  paid boolean NOT NULL DEFAULT false,
+  month text NOT NULL,
+  category text DEFAULT 'utilities',
+  created_at timestamptz NOT NULL DEFAULT now()
 );
 
-create unique index check_ins_win_id_date_idx on check_ins(win_id, date);
-```
-
-**Design notes:**
-- One check-in row per win per day — enforced by unique index.
-- `win_id` cascade delete: if a win is deleted, its check-in goes with it.
-- `completed` maps directly to the evening flow's yes/no question.
-- `reflection` is nullable — the UI prompts for it but does not require it.
-
-### Table: `journal_entries`
-
-```sql
-create table journal_entries (
-  id          uuid primary key default gen_random_uuid(),
-  date        date not null unique,             -- one entry per day
-  title       text,
-  body        text,
-  created_at  timestamptz not null default now(),
-  updated_at  timestamptz not null default now()
+-- Investment contributions
+CREATE TABLE investments (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  name text NOT NULL,
+  target_amount numeric NOT NULL DEFAULT 0,
+  contributed_amount numeric NOT NULL DEFAULT 0,
+  month text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- Individual transactions
+CREATE TABLE transactions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  description text NOT NULL,
+  amount numeric NOT NULL,
+  type text NOT NULL,               -- 'income' | 'expense' | 'investment'
+  category text DEFAULT 'general',
+  transaction_date text NOT NULL,   -- YYYY-MM-DD (matches wins date pattern)
+  month text NOT NULL,              -- '2026-03' for quick month queries
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- RLS on all tables (same pattern as wins)
+-- Indexes on (user_id, month) for all finance tables
 ```
 
-**Design notes:**
-- `date` is unique — upsert pattern (`on conflict (date) do update`) keeps the query simple.
-- `title` is nullable; the UI can treat an absent title as untitled without a database error.
+**Stored procedures via supabase.rpc():**
 
-### Streak Computation
+Port the 350 app's stored procedures to Supabase SQL functions, called from client via RPC:
 
-Do not store streak as a column. Compute it client-side from a simple ordered query:
-
-```sql
--- Fetch distinct dates where at least one win was marked complete,
--- ordered descending. Walk forward until gap > 1 day.
-select distinct date
-from wins
-where status = 'complete'
-order by date desc;
-```
-
-Walk the result in JS: count consecutive days starting from today (or yesterday if today has no complete wins yet). This is simple, always accurate, and avoids a derived-data sync problem. For a single-user app the full result set is tiny.
-
-**Alternative:** A Postgres function/trigger to maintain a `streak_count` integer. Avoid this — it introduces a sync failure mode and adds migration complexity for no real benefit at this scale.
-
----
-
-## Architectural Patterns
-
-### Pattern 1: Feature Hook — DB Query Ownership
-
-**What:** Each feature owns one hook that encapsulates all Supabase queries for that domain. Components never call `supabase` directly.
-
-**When to use:** Always. This is the baseline boundary.
-
-**Trade-offs:** Minimal indirection for a small app, but pays off immediately when queries need optimistic updates or caching added later.
-
-**Example:**
 ```typescript
-// features/wins/hooks/useWins.ts
-export function useWins(date: string) {
-  const [wins, setWins] = useState<Win[]>([]);
+// Dashboard aggregate
+const { data } = await supabase.rpc('get_dashboard_snapshot', {
+  p_user_id: USER_ID,
+  p_month: '2026-03'
+});
+
+// Salary toggle (updates budget + creates income transaction atomically)
+await supabase.rpc('apply_salary_received', {
+  p_user_id: USER_ID,
+  p_month: '2026-03'
+});
+
+// Copy recurring bills to new month
+await supabase.rpc('rollover_recurring_bills', {
+  p_user_id: USER_ID,
+  p_from_month: '2026-02',
+  p_to_month: '2026-03'
+});
+
+// Record investment contribution (updates investment + creates transaction)
+await supabase.rpc('apply_investment_contribution', {
+  p_user_id: USER_ID,
+  p_investment_id: '...',
+  p_amount: 5000
+});
+```
+
+**Hook structure (matches existing convention):**
+
+```
+src/hooks/useTransactions.ts   — CRUD for transactions, filtered by month
+src/hooks/useBudget.ts         — Monthly budget + salary toggle via RPC
+src/hooks/useBills.ts          — Bills CRUD + paid toggle + rollover via RPC
+src/hooks/useInvestments.ts    — Investment contributions + contribute via RPC
+src/hooks/useDashboard.ts      — Calls get_dashboard_snapshot RPC, returns summary
+```
+
+Each hook takes `month: string` as parameter and follows the exact useState + useEffect + useCallback pattern established by useWins and useJournal.
+
+**No Zustand store for finance data.** Finance data is page-scoped (only FinancePage and children use it). The existing pattern of hook-local state works perfectly. FinancePage holds `month` state and passes it down.
+
+**Page and component structure:**
+
+```
+src/pages/FinancePage.tsx
+src/components/finance/DashboardOverview.tsx     — Summary cards (balance, income, expenses)
+src/components/finance/BudgetCard.tsx            — Monthly salary + salary-received toggle
+src/components/finance/BillsList.tsx             — Bills list with paid toggle per bill
+src/components/finance/InvestmentsList.tsx        — Investment progress bars
+src/components/finance/TransactionList.tsx        — Scrollable transaction log
+src/components/finance/AddTransactionOverlay.tsx  — Full-screen overlay (matches WinInputOverlay)
+src/components/finance/MonthSelector.tsx          — Prev/next month navigation
+src/types/finance.ts                             — TypeScript interfaces for all finance entities
+```
+
+### 3. Rich Text Journal Editor (Tiptap)
+
+**Confidence: HIGH** (Tiptap is the standard headless editor for React; well-documented)
+
+Replace the `<textarea>` in JournalEditorOverlay with Tiptap. Use StarterKit for core formatting.
+
+**Packages:**
+```bash
+bun add @tiptap/react @tiptap/pm @tiptap/starter-kit @tiptap/extension-character-count
+```
+
+**StarterKit includes:** Bold, Italic, Strike, Code, Heading (H1-H6), BulletList, OrderedList, ListItem, Blockquote, HorizontalRule, HardBreak, Paragraph, Text, Document, History (undo/redo).
+
+That covers the requested features (bold, italic, bullet points) plus extras at no cost.
+
+**Storage:** HTML string in existing `body` text column. No schema change needed. Existing plain-text entries are valid HTML (text nodes render fine in Tiptap).
+
+**Integration changes to JournalEditorOverlay:**
+
+```tsx
+// Replace:
+<textarea value={body} onChange={handleBodyChange} />
+
+// With:
+const editor = useEditor({
+  extensions: [
+    StarterKit,
+    CharacterCount,  // for word counting
+  ],
+  content: initialBody,
+  onUpdate: ({ editor }) => {
+    bodyRef.current = editor.getHTML();
+    setLiveWordCount(editor.storage.characterCount.words());
+  },
+});
+
+// ...
+<JournalToolbar editor={editor} />
+<EditorContent editor={editor} className="flex-1 prose prose-invert ..." />
+```
+
+**JournalToolbar design:** Minimal bar matching Nothing aesthetic — monochrome toggle buttons. Uses `editor.chain().focus().toggleBold().run()` pattern. Buttons show active state via `editor.isActive('bold')`.
+
+**Word count:** `@tiptap/extension-character-count` replaces the manual `wordCount()` function with accurate counting that handles HTML correctly.
+
+**Read-only rendering in JournalEntryCard:** Use `dangerouslySetInnerHTML={{ __html: entry.body }}`. This is a single-user app with no untrusted input — no sanitization library needed.
+
+### 4. TypeScript Migration Strategy
+
+**Confidence: HIGH** (Vite handles mixed JS/TS natively with zero configuration)
+
+Vite transpiles TypeScript files without needing any config changes — just rename `.jsx` to `.tsx`. The migration is incremental.
+
+**Foundation setup:**
+1. `bun add -D typescript` (types already installed: @types/react, @types/react-dom, @types/node)
+2. Replace minimal `tsconfig.json` with proper config
+3. Add `tsconfig.app.json` (app code) and `tsconfig.node.json` (vite config)
+4. Rename `main.jsx` -> `main.tsx`, update `index.html` script src
+5. Rename `App.jsx` -> `App.tsx`
+
+**tsconfig.app.json:**
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["src"]
+}
+```
+
+**Migration order (leaf-to-root):**
+```
+Phase A: lib/ (env, supabase, utils/date) — no component deps
+Phase B: stores/ (uiStore, settingsStore) — depend only on lib/
+Phase C: hooks/ (useWins, useJournal, etc.) — depend on lib/ + stores/
+Phase D: components/ (leaves first: ui/, theme/, then larger ones)
+Phase E: pages/ + App.tsx + main.tsx — depend on everything
+```
+
+**Critical rule: All new code is TypeScript from day one.** Finance hooks, components, pages, types — all `.ts`/`.tsx`. Only existing v1.0 `.jsx` files need migration. This means the migration happens naturally as files are touched, not as a separate phase.
+
+### 5. Mobile Responsiveness
+
+**Confidence: HIGH** (CSS-only changes, no architectural impact)
+
+Current layout is desktop-fixed: `ml-14` offset for SideNav, `px-16` page padding, fixed 56px left SideNav.
+
+**Responsive strategy:**
+- **Desktop (md+):** Left SideNav, 56px wide, fixed — unchanged
+- **Mobile (<md):** Bottom tab bar, 56px tall, fixed, 4-5 icon tabs
+
+**Changes:**
+- SideNav: add `@media (max-width: md)` styles for bottom bar mode
+- AppShell: `ml-14 md:ml-14 ml-0` + `pb-16 md:pb-0` for bottom nav space
+- TodayPage: `px-4 md:px-16` responsive padding
+- FinancePage: design mobile-first (new code)
+- JournalEditorOverlay: already partially responsive (`px-12 sm:px-20 lg:px-32`)
+
+This is a layout concern, not an architectural one. No new components needed — SideNav becomes responsive.
+
+## Patterns to Follow
+
+### Pattern 1: Data Hook Convention (Existing — Extend)
+
+Every data domain gets a custom hook encapsulating Supabase queries, local state, and optimistic updates. Components never call `supabase` directly.
+
+```typescript
+// src/hooks/useTransactions.ts — follows useWins pattern exactly
+export function useTransactions(month: string) {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     supabase
-      .from('wins')
+      .from('transactions')
       .select('*')
-      .eq('date', date)
-      .order('created_at')
-      .then(({ data }) => {
-        setWins(data ?? []);
-        setLoading(false);
+      .eq('user_id', USER_ID)
+      .eq('month', month)
+      .order('transaction_date', { ascending: false })
+      .then(({ data, error }) => {
+        if (!cancelled && !error) setTransactions(data ?? []);
+        if (!cancelled) setLoading(false);
       });
-  }, [date]);
+    return () => { cancelled = true; };
+  }, [month]);
 
-  async function addWin(content: string) {
-    const { data } = await supabase
-      .from('wins')
-      .insert({ content, date, status: 'pending' })
+  const addTransaction = useCallback(async (tx: NewTransaction) => {
+    const optimistic = { id: `optimistic-${Date.now()}`, ...tx, created_at: new Date().toISOString() };
+    setTransactions(prev => [optimistic, ...prev]);
+
+    const { data, error } = await supabase
+      .from('transactions')
+      .insert({ user_id: USER_ID, ...tx })
       .select()
       .single();
-    if (data) setWins(prev => [...prev, data]);
-  }
 
-  return { wins, loading, addWin, /* updateWin, deleteWin, rollWin */ };
-}
-```
-
-### Pattern 2: Controlled Step Flow (Typeform-style)
-
-**What:** A generic `StepFlow` component manages step index and transition animation. Each step is a child component that receives `onNext` / `onBack`. No routing — purely local state.
-
-**When to use:** Win input flow (4–5 steps), evening check-in flow.
-
-**Trade-offs:** Simpler than URL-based routing for a focused flow; back button is a UI concern, not browser history. Acceptable for an SPA used on one device.
-
-**Example:**
-```typescript
-// components/StepFlow/useStepFlow.ts
-export function useStepFlow(totalSteps: number) {
-  const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState<'forward' | 'back'>('forward');
-
-  const next = () => {
-    setDirection('forward');
-    setStep(s => Math.min(s + 1, totalSteps - 1));
-  };
-  const back = () => {
-    setDirection('back');
-    setStep(s => Math.max(s - 1, 0));
-  };
-
-  return { step, direction, next, back, isFirst: step === 0, isLast: step === totalSteps - 1 };
-}
-```
-
-Step content accumulates in a `formData` object lifted to the `WinInputFlow` parent. On the final step, one Supabase insert fires. Intermediate state never touches the DB.
-
-### Pattern 3: Stopwatch as Local State, Elapsed as Remote State
-
-**What:** The running timer is 100% local (`useRef` for interval ID, `useState` for display tick). The accumulated `elapsed_ms` is written to Supabase only on pause or stop — not on every tick.
-
-**When to use:** Any in-session timer. Do not persist every 100ms tick.
-
-**Trade-offs:** If the page closes mid-run, the current session's time is lost. Acceptable for a personal tool — add a `beforeunload` flush as a best-effort mitigation.
-
-**Example:**
-```typescript
-// features/timer/hooks/useStopwatch.ts
-export function useStopwatch(initialElapsedMs: number) {
-  const [elapsed, setElapsed] = useState(initialElapsedMs);
-  const [running, setRunning] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const startTimeRef = useRef<number>(0);      // wall-clock when last started
-  const baseElapsedRef = useRef(initialElapsedMs); // elapsed before current session
-
-  const start = () => {
-    startTimeRef.current = Date.now();
-    setRunning(true);
-    intervalRef.current = setInterval(() => {
-      setElapsed(baseElapsedRef.current + (Date.now() - startTimeRef.current));
-    }, 100);
-  };
-
-  const pause = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    baseElapsedRef.current = elapsed;
-    setRunning(false);
-    return elapsed; // caller persists this to DB
-  };
-
-  useEffect(() => () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (error) {
+      setTransactions(prev => prev.filter(t => t.id !== optimistic.id));
+      return;
+    }
+    setTransactions(prev => prev.map(t => t.id === optimistic.id ? data : t));
   }, []);
 
-  return { elapsed, running, start, pause };
+  return { transactions, loading, addTransaction /* ... */ };
 }
 ```
 
-The `WinCard` component calls `pause()`, receives the elapsed value, and calls `updateWin({ elapsed_ms: value })` from `useWins`.
+### Pattern 2: Overlay State Machine (Existing — Reuse)
 
----
-
-## Data Flow
-
-### Win Creation Flow (Typeform)
+Full-screen overlays use visible/exiting useState pair with onAnimationEnd unmount and createPortal to document.body.
 
 ```
-User opens Add Win
-    ↓
-WinInputFlow mounts → useStepFlow(4)
-    ↓
-Step 1: "What's the win?" → local formData.content
-Step 2: Confirmation/review → no input
-Step N: Submit
-    ↓
-useWins.addWin(content) → supabase.insert → DB
-    ↓
-Optimistic update: setWins(prev => [...prev, newWin])
-    ↓
-Flow dismisses → Today page re-renders win list
+AddTransactionOverlay -> follows JournalEditorOverlay pattern exactly
+PinGate lock screen -> same portal + animation approach
 ```
 
-### Evening Check-In Flow
+### Pattern 3: Month-Scoped Finance Queries
 
-```
-User opens Check-in
-    ↓
-useCheckIn loads today's wins (reads from wins table)
-    ↓
-CheckInFlow renders one win per step
-    ↓
-Each step: binary yes/no → local formData[winId] = { completed, reflection }
-    ↓
-Final step: submit all
-    ↓
-Batch upsert to check_ins table (one row per win)
-    + update wins.status = 'complete' | 'incomplete' per answer
-    ↓
-Streak recomputed (useStreak re-fetches wins where status = 'complete')
+All finance hooks take `month: string` (format: `'2026-03'`). FinancePage owns the month state and passes it down. This matches how the 350 source app partitions data.
+
+```tsx
+// FinancePage.tsx
+const [month, setMonth] = useState(() => getCurrentMonth()); // '2026-03'
+const { summary, loading } = useDashboard(month);
+const { transactions } = useTransactions(month);
+const { bills } = useBills(month);
 ```
 
-### Timer Flow
+### Pattern 4: RPC for Atomic Multi-Table Operations
 
-```
-User taps Start on WinCard
-    ↓
-useStopwatch.start() → setInterval begins (local only)
-    ↓
-TimerDisplay reads elapsed every 100ms from local state
-    ↓
-User taps Pause / Stop
-    ↓
-useStopwatch.pause() returns final elapsed_ms
-    ↓
-useWins.updateWin({ id, elapsed_ms }) → supabase.update → DB
-```
+Use `supabase.rpc()` for operations that touch multiple tables atomically (salary received, bill rollover, investment contribution). Client-side multi-step can partially fail. Stored procedures run in a single PostgreSQL transaction.
 
-### State Management Ownership
+## Anti-Patterns to Avoid
 
-| State | Owner | Why |
-|-------|-------|-----|
-| `wins[]` for today | `useWins` hook (local React state, loaded from DB) | Single source; optimistic mutations |
-| Timer running/elapsed (active) | `useStopwatch` hook (pure local state) | High-frequency updates; no DB writes mid-session |
-| Timer elapsed (persisted) | `wins.elapsed_ms` in DB | Survives page reload |
-| Step flow index | `useStepFlow` hook (pure local state) | Ephemeral UI concern |
-| Accumulated form data | Parent flow component (`WinInputFlow`, `CheckInFlow`) | Collected before any DB write |
-| Theme preference | `ThemeProvider` + `localStorage` | No DB needed; single user |
-| Streak count | Computed in `useStreak` on demand | Derived; not stored |
+### Anti-Pattern 1: Zustand Store for Finance Data
 
-**No global state library needed.** `useContext` for theme only. Everything else is either feature-hook state or local component state.
+**What:** Putting transactions, budgets, bills into a global Zustand store.
+**Why bad:** Finance data is only needed by FinancePage subtree. Global state adds stale-data risk, unnecessary re-renders, and complexity. Existing pattern (hook-local state) works.
+**Instead:** Custom hooks with useState + useEffect, same as useWins/useJournal.
 
----
+### Anti-Pattern 2: Service Role Key in Client
+
+**What:** Porting the 350 app's `createClient(serviceRoleKey)` to the SPA.
+**Why bad:** Service role key bypasses RLS. Exposing it in client JS is a security hole.
+**Instead:** Anon key + RLS (existing pattern). Stored procedures use `SECURITY DEFINER` only where needed, with internal user_id validation.
+
+### Anti-Pattern 3: Big-Bang TypeScript Migration
+
+**What:** Converting all 60+ files to TypeScript in one phase.
+**Why bad:** Blocks all feature work, huge diff, high breakage risk.
+**Instead:** Write all new code in TS. Migrate existing files incrementally as they are touched.
+
+### Anti-Pattern 4: Markdown for Journal Body
+
+**What:** Storing journal content as Markdown instead of HTML.
+**Why bad:** Requires Markdown parser for display, lossy round-trip conversion, toolbar must generate Markdown syntax (poor UX). Tiptap natively produces/consumes HTML.
+**Instead:** HTML in `body` column. Existing plain-text entries are valid HTML text nodes.
+
+### Anti-Pattern 5: Real Auth for PIN
+
+**What:** Using Supabase Auth with email/password for the PIN feature.
+**Why bad:** Massive complexity for a single-user app. The PIN is a privacy screen, not security. Adding real auth changes the entire data access pattern.
+**Instead:** Client-side SHA-256 hash comparison. Session flag in sessionStorage.
+
+## New vs Modified Files Summary
+
+### New Files (TypeScript from day one)
+
+| Category | Files |
+|----------|-------|
+| Auth | `components/auth/PinGate.tsx`, `components/auth/PinInput.tsx`, `hooks/usePinAuth.ts` |
+| Finance components | `pages/FinancePage.tsx`, `components/finance/DashboardOverview.tsx`, `BudgetCard.tsx`, `BillsList.tsx`, `InvestmentsList.tsx`, `TransactionList.tsx`, `AddTransactionOverlay.tsx`, `MonthSelector.tsx` |
+| Finance hooks | `hooks/useTransactions.ts`, `hooks/useBudget.ts`, `hooks/useBills.ts`, `hooks/useInvestments.ts`, `hooks/useDashboard.ts` |
+| Types | `types/finance.ts`, `types/common.ts` |
+| Journal toolbar | `components/journal/JournalToolbar.tsx` |
+| Database | `supabase/migrations/007_finance_tables.sql`, `008_finance_rpc.sql`, `009_pin_hash.sql` |
+
+### Modified Files (rename to .tsx/.ts during modification)
+
+| File | Change |
+|------|--------|
+| `App.jsx` -> `App.tsx` | Add PinGate layout route, /finance route |
+| `main.jsx` -> `main.tsx` | Rename, update index.html |
+| `AppShell.jsx` -> `AppShell.tsx` | Responsive layout (bottom bar on mobile) |
+| `SideNav.jsx` -> `SideNav.tsx` | Add finance nav item, responsive bottom bar |
+| `JournalEditorOverlay.jsx` -> `JournalEditorOverlay.tsx` | Tiptap integration |
+| `settingsStore.js` -> `settingsStore.ts` | Add PIN hash to settings model |
+| `SettingsPage.jsx` -> `SettingsPage.tsx` | Add PIN management UI section |
+| `tsconfig.json` | Full TypeScript configuration |
+| `package.json` | Add tiptap, typescript deps |
+| `index.html` | Update script src to main.tsx |
+
+### Unchanged Files (migrate later)
+
+All other v1.0 components, hooks, and pages stay `.jsx`/`.js` until explicitly touched. Vite handles mixed JS/TS without any configuration.
 
 ## Suggested Build Order
 
-Dependencies run bottom-up:
+Based on dependency analysis and blocking relationships:
 
 ```
-1. DB schema + Supabase client
-        ↓
-2. Shared StepFlow component (no DB dependency)
-        ↓
-3. Wins feature (useWins hook + WinCard + WinList)
-        ↓
-4. Today page (assembles wins list, add CTA)
-        ↓
-5. Timer feature (useStopwatch + TimerDisplay, integrates into WinCard)
-        ↓
-6. Check-in feature (depends on wins existing)
-        ↓
-7. Journal feature (standalone; no cross-module dependencies)
-        ↓
-8. Streak badge (depends on wins.status data existing)
-        ↓
-9. History page (read-only view; depends on all data existing)
-        ↓
-10. Settings page + ThemeProvider (last; purely cosmetic)
+1. TypeScript foundation (tsconfig, rename main/App, type definitions)
+   -> Unblocks: everything else can be written in TS
+
+2. PIN gate (independent of other features)
+   -> Depends on: TS foundation, settingsStore modification
+   -> Unblocks: nothing (parallel with 3-4)
+
+3. Finance database (migrations, RPC functions, RLS policies)
+   -> Depends on: nothing (pure SQL)
+   -> Unblocks: finance hooks and page
+
+4. Finance hooks + FinancePage
+   -> Depends on: TS foundation, finance database
+   -> Unblocks: nothing (self-contained)
+
+5. Rich text journal (Tiptap)
+   -> Depends on: TS foundation
+   -> Unblocks: nothing (isolated to JournalEditorOverlay)
+
+6. Mobile responsiveness
+   -> Depends on: finance page existing (to make it responsive too)
+   -> CSS-only changes to SideNav, AppShell, page layouts
+
+7. Remaining TS migration (optional, as tech debt)
+   -> Migrate untouched .jsx files leaf-to-root
 ```
 
-**Rationale:** Wins are the core domain object. Timer, check-in, and streak all read/write win records. Build the wins foundation before layering dependent features. Journal and Settings are fully independent and can slot in at any phase.
+Phases 2, 3, and 5 have no interdependencies and can theoretically run in parallel. Phase 4 depends on 3. Phase 6 benefits from 4 being done.
 
----
+## Scalability Considerations
 
-## Anti-Patterns
-
-### Anti-Pattern 1: Per-Tick DB Writes for Timer
-
-**What people do:** Call `supabase.update` inside the `setInterval` callback to keep elapsed time "live" in the DB.
-
-**Why it's wrong:** At 100ms intervals, that is 10 writes/second. Supabase free tier rate limits at ~50 req/s across all operations. Page jitter, quota hits, and wasted compute.
-
-**Do this instead:** Accumulate elapsed in local state. Write to DB only on pause, stop, or page unload (`beforeunload` event as best-effort flush).
-
-### Anti-Pattern 2: Routing Each Step of a Flow
-
-**What people do:** Give each Typeform step its own URL (e.g. `/add-win/step/2`), using React Router params for step state.
-
-**Why it's wrong:** Browser back button exits the flow unexpectedly, form data lives in URL/location state (fragile), and animation between URL transitions requires extra coordination.
-
-**Do this instead:** Keep step index in local state (`useStepFlow`). If deep-linking into a flow matters later (it won't for a single-user personal tool), add it then.
-
-### Anti-Pattern 3: Computed Streak in DB Column
-
-**What people do:** Maintain a `current_streak` column on a `user_stats` table, updated via trigger whenever a win is completed.
-
-**Why it's wrong:** Trigger logic is hard to test, breaks silently on data corrections, and the derived value gets out of sync. For a single user with at most a few hundred win rows, computing streak from the wins table on read is instant.
-
-**Do this instead:** Query `select distinct date from wins where status = 'complete' order by date desc` and compute in JS. Cache the result in React state; recompute when wins change.
-
-### Anti-Pattern 4: Global State for Module Data
-
-**What people do:** Put `wins`, `journalEntry`, and `checkIn` data in a single Zustand or Context store because "it might be needed elsewhere."
-
-**Why it's wrong:** Creates invisible coupling between features. Debugging state mutations becomes hard. Refactoring one module affects every consumer.
-
-**Do this instead:** Each feature hook owns its data. Pass only what a child component needs via props. If two features genuinely share data (e.g., check-in reads today's wins), the downstream feature fetches it independently with the same query — Supabase's connection pool and Postgres query cache absorb the duplication easily.
-
----
-
-## Integration Points
-
-### External Services
-
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| Supabase (PostgreSQL) | `@supabase/supabase-js` REST client; anon key only | No RLS needed (single user, no auth). Store anon key in `.env` (`VITE_SUPABASE_ANON_KEY`). Public project URL is safe to expose. |
-| Vercel | Static SPA deploy (`vite build` → `dist/`) | No SSR. `vercel.json` not required — auto-detects Vite. Add `VITE_SUPABASE_*` env vars in Vercel dashboard. |
-
-### Internal Boundaries
-
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| `wins` module ↔ `timer` module | `WinCard` composes `TimerDisplay`; receives `elapsed_ms` from DB via `useWins`, hands it to `useStopwatch` as initial value | Timer does not import from wins; wins owns the persisted value |
-| `wins` module ↔ `checkin` module | Check-in reads today's wins via its own `useCheckIn` query; updates `wins.status` via direct Supabase call | No direct import between modules; both touch the same DB rows |
-| `checkin` module ↔ `streak` module | After check-in submit, `useStreak` is re-queried (trigger via React key or explicit `refetch`) | Streak reacts to DB state, not to check-in module events |
-| Pages ↔ feature hooks | Pages import from features and compose; features never import from pages | One-directional dependency |
-
----
-
-## Scaling Considerations
-
-This is a single-user personal tool deployed to Vercel. Traditional scaling tiers are irrelevant. What matters instead:
-
-| Concern | Approach |
-|---------|----------|
-| Data volume over time | Wins table grows ~5-10 rows/day. At 3 years of use: ~10,000 rows. Trivial for Postgres. |
-| History page performance | Paginate or limit to last 90 days by default. A full table scan of 10k rows is still <10ms. |
-| Timer accuracy | `setInterval` drifts slightly. Use wall-clock delta (`Date.now() - startTime`) not increment-by-100ms. This is already reflected in the pattern above. |
-| Offline resilience | Not a requirement. If Supabase is unreachable, show an error state. Don't implement local queue. |
-
----
+| Concern | At current scale | At 10K transactions | Mitigation |
+|---------|------------------|---------------------|------------|
+| Finance query speed | Instant | Still fast with month partition | Composite index on (user_id, month) |
+| Journal body size | ~1KB plain text | ~2-5KB HTML | No concern — text column handles it |
+| PIN brute force | N/A | Client-side only | Rate limit: 5 attempts, 30s coolout |
+| Bundle size | ~200KB | +Tiptap ~80KB, +finance ~40KB | React.lazy for FinancePage and Tiptap |
+| RPC function count | 0 | 4 stored procedures | Well within Supabase free tier |
 
 ## Sources
 
-- React state management split recommendation: [React State Management in 2025: What You Actually Need](https://www.developerway.com/posts/react-state-management-2025)
-- Stopwatch pattern with wall-clock delta: [Implementing a stopwatch using React](https://www.frontendgeek.com/blogs/implementing-stopwatch-using-react-frontend-machine-coding) and [Making setInterval Declarative with React Hooks](https://overreacted.io/making-setinterval-declarative-with-react-hooks/)
-- Multi-step wizard architecture: [How to build a smart multi-step form in React](https://medium.com/doctolib/how-to-build-a-smart-multi-step-form-in-react-359469c32bbe)
-- Feature-based folder structure: [Feature-Sliced Design](https://feature-sliced.design/), [React Folder Structure in 5 Steps](https://www.robinwieruch.de/react-folder-structure/)
-- Optimistic updates with Supabase: [Building Scalable Real-Time Systems with Supabase](https://medium.com/@ansh91627/building-scalable-real-time-systems-a-deep-dive-into-supabase-realtime-architecture-and-eccb01852f2b)
-- Supabase schema design: [Schema Design with Supabase: Partitioning and Normalization](https://dev.to/pipipi-dev/schema-design-with-supabase-partitioning-and-normalization-4b7i)
+- [Tiptap React installation](https://tiptap.dev/docs/editor/getting-started/install/react) — HIGH confidence
+- [Tiptap StarterKit extensions](https://tiptap.dev/docs/editor/extensions/overview) — HIGH confidence
+- [Supabase RPC documentation](https://supabase.com/docs/reference/javascript/rpc) — HIGH confidence
+- [Vite JS-to-TS migration](https://dev.to/rashidshamloo/migrating-a-vite-react-app-from-javascript-to-typescript-5dmn) — MEDIUM confidence
+- [Vite mixed JS/TS support (official discussion)](https://github.com/vitejs/vite/discussions/6799) — HIGH confidence
+- [Web Crypto API SubtleCrypto.digest()](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest) — HIGH confidence (for SHA-256 PIN hashing)
 
 ---
-*Architecture research for: wintrack — personal accountability and focus tracker SPA*
-*Researched: 2026-03-09*
+*Architecture research for: wintrack v2.0 — finance integration, PIN auth, TypeScript, rich text*
+*Researched: 2026-03-16*

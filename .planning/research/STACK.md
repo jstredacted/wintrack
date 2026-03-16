@@ -1,231 +1,273 @@
-# Stack Research
+# Technology Stack — v2.0 Additions
 
-**Domain:** Personal productivity / accountability tracker SPA (React + Supabase)
-**Researched:** 2026-03-09
-**Confidence:** HIGH (core stack confirmed via official docs and multiple sources)
+**Project:** wintrack v2.0 Finance & Platform
+**Researched:** 2026-03-16
+**Scope:** NEW dependencies only. Existing stack (Vite, React 19, Tailwind v4, shadcn/ui, Supabase, Zustand, motion, Lucide) is validated and unchanged.
 
 ---
 
-## Recommended Stack
+## Recommended Stack Additions
 
-### Core Technologies (Already in Scaffold — Do Not Change)
+### 1. Rich Text Editor — Tiptap
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| Vite | ^7.3.1 | Build tool + dev server | Fastest HMR in class; ESM-native; zero config for React |
-| React | ^19.2.0 | UI framework | Project constraint. React 19 concurrent features (useTransition, useDeferredValue) help with animated step flows |
-| Tailwind CSS | ^4.2.1 | Utility-first CSS | Project constraint. v4 is CSS-first (no tailwind.config.js); `@custom-variant` replaces darkMode config |
-| shadcn/ui | ^4.0.2 | Component primitives | Project constraint. Nova preset. Copy-paste components built on Radix, fully owned in your codebase |
-| @supabase/supabase-js | ^2.98.0 | Database client | Project constraint. Anon key + RLS-disabled tables is the correct pattern for a single-user, no-auth app |
-| Lucide React | ^0.577.0 | Icon set | Project constraint. Consistent stroke-based icons; tree-shakeable |
-| tw-animate-css | ^1.4.0 | Animation utilities | Already in scaffold as Tailwind v4 replacement for tailwindcss-animate. Handles accordion/fade primitives |
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `@tiptap/react` | ^3.20 | React bindings for headless editor | Fully headless = complete style control. Matches Nothing aesthetic perfectly because you build the toolbar and editor chrome yourself. TypeScript-native. MIT license. 1,750+ dependents on npm. |
+| `@tiptap/pm` | ^3.20 | ProseMirror peer dependency | Required by @tiptap/react for document model |
+| `@tiptap/starter-kit` | ^3.20 | Common extensions bundle | Includes Bold, Italic, BulletList, OrderedList, Heading, Strike, Code, Blockquote, HardBreak, ListItem, Document, Paragraph, Text, Undo/Redo. Covers all v2.0 formatting requirements in one install. |
 
-### State Management
+**Why Tiptap over alternatives:**
+- **vs Slate.js** — Slate requires building every extension from scratch (bold, lists, etc.). Tiptap's StarterKit gives bold/italic/bullets out of the box. Slate's learning curve is steeper for the same output.
+- **vs Lexical (Meta)** — Lexical's "playground" approach means assembling many pieces. Its ecosystem is smaller and docs are less mature. Overkill for a journal editor.
+- **vs Quill** — Quill v2 has a rigid, opinionated UI that fights against custom monochrome styling. Less composable architecture.
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| Zustand | ^5.0.11 | Client-side global state | Minimal boilerplate, no Provider wrapper, React 19 compatible. `persist` middleware handles dark mode preference in localStorage with zero extra code. Surgically re-renders only subscribed components — critical for a live stopwatch ticking every 100ms alongside static UI |
+**Storage format decision:** Store as **Tiptap JSON** (`editor.getJSON()`) in Supabase `journal_entries.body` column. Currently stores plain text strings — migrate the column to JSONB. JSON preserves document structure, enables querying, and round-trips perfectly through Tiptap.
 
-**Decision rationale over alternatives:**
-- React Context: fine for theme; disastrous for stopwatch state — every tick would re-render the entire tree
-- Jotai: atom granularity is overkill for this app's state shape (a handful of stores, not hundreds of atoms)
-- Redux Toolkit: 10x the boilerplate for a personal tool with no team
-
-### Animation
-
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| motion (framer-motion) | ^12.x (install as `framer-motion`) | Typeform-style step transitions, enter/exit animations | `AnimatePresence` handles unmount animations declaratively. Variant orchestration (`staggerChildren`, `when: "beforeChildren"`) makes multi-step flows read like a script. React 19 compatible as of v12. |
-
-**Install note:** The package was rebranded from `framer-motion` to `motion` in late 2024. Both npm packages are maintained and identical. `framer-motion` is the safe install for now; import from `motion/react` if using the new package. The API is identical.
-
-**Decision rationale over alternatives:**
-- React Spring: physics-based, excellent for gesture interactions, but `AnimatePresence` and variant trees are the specific features needed here; Motion's API is more declarative and beginner-friendly
-- CSS Transitions only: fine for hover states, not for orchestrated step sequences with exit animations
-- tw-animate-css (already in scaffold): handles simple class-based enter/exit but cannot do sequential orchestration across components
-
-### Forms
-
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| react-hook-form | ^7.71.2 | Form state, validation | Uncontrolled inputs = zero re-renders during typing. 8.6 kB gzipped. Integrates cleanly with controlled shadcn/ui inputs via `Controller`. For a single text field per Typeform step, `register` is even simpler. |
-
-**Note:** For this app's win-input flow (one field per step), react-hook-form is used lightly — primarily for submit handling and validation. Zod integration (`@hookform/resolvers`) is optional; plain HTML validation rules are sufficient for simple required-text fields.
-
-### Data Access Pattern (Supabase)
-
-No dedicated Supabase data-fetching library is needed. The recommended pattern is:
-
-1. **Singleton client** — create `lib/supabase.ts` exporting one `createClient()` instance (already implied by scaffold)
-2. **Custom hooks** — `useWins()`, `useJournalEntries()` etc. wrapping `useEffect` + Supabase queries. No third-party abstraction layer
-3. **No auth, no RLS** — with a single user and no sensitive data, disable RLS on all tables and use the anon key directly from the client. This is the correct Supabase pattern for a personal tool: no JWT, no session management, direct table access
-
-**Why not TanStack Query (React Query)?**
-React Query adds cache invalidation, background refetch, and deduplication — all valuable in multi-user apps. For a single-user local tool writing to Supabase, optimistic state in Zustand + direct Supabase calls is simpler and has fewer moving parts. Adds it if offline sync or complex cache invalidation becomes needed.
-
-### Dark Mode
-
-| Technology | Purpose | Implementation |
-|------------|---------|----------------|
-| Tailwind v4 `@custom-variant` | Class-based dark mode toggle | Add `@custom-variant dark (&:where(.dark, .dark *));` to `index.css`. Toggle `.dark` class on `<html>`. Persist preference to `localStorage` via Zustand `persist` middleware. |
-
-**Tailwind v4 breaking change:** `darkMode: 'class'` in `tailwind.config.js` no longer exists — the config file is gone entirely in v4. The `@custom-variant` directive in CSS is the only correct approach. The `dark:` utility prefix works identically after this one-line CSS addition.
-
-### Timer / Stopwatch
-
-No library needed. The correct pattern is a custom hook:
-
-```
-useStopwatch(winId):
-  - startTimeRef: useRef<number | null>  — stores Date.now() at last start
-  - accumulatedRef: useRef<number>        — ms accumulated before last pause
-  - intervalRef: useRef<ReturnType<typeof setInterval>>
-  - elapsedMs: useState<number>           — drives re-render display only
-
-On start: record Date.now() in startTimeRef, start interval
-Interval callback: setElapsedMs(accumulatedRef.current + Date.now() - startTimeRef.current)
-On pause: accumulatedRef.current += Date.now() - startTimeRef.current; clearInterval
-On reset: clear all refs, setState(0)
-Persist cumulative time to Supabase on pause/stop, not on every tick
+**Backward compatibility:** Existing plain-text entries render by wrapping in a paragraph node on read:
+```javascript
+// Migration helper for existing plain-text body strings
+const content = typeof entry.body === 'string'
+  ? { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: entry.body }] }] }
+  : entry.body;
 ```
 
-**Why timestamp-based over increment-based:** `setInterval` is not guaranteed to fire exactly on time; accumulated drift over minutes becomes visible. Subtracting `Date.now()` from the start timestamp gives wall-clock accuracy regardless of tab visibility or browser throttling.
+**Integration point:** Replace `<textarea>` in `src/components/journal/JournalEditorOverlay.jsx` with `<EditorContent editor={editor} />`. The `useEditor` hook replaces `useState` for body. Word count via `editor.getText().trim().split(/\s+/).length`.
 
-### Notifications (v2 — stub in v1)
+**What you do NOT need separately:**
+- `@tiptap/extension-bullet-list`, `@tiptap/extension-bold`, etc. — all included in StarterKit
+- `@tiptap/extension-placeholder` — nice-to-have, defer unless explicitly wanted
+- Any Tiptap Pro (paid) extensions — collaboration, AI features are out of scope
 
-Per PROJECT.md, v1 stubs the 9am/9pm times; actual notifications are v2.
-
-**When v2 arrives:** Use the native `Notification` API + a Service Worker for scheduled push. No library needed for basic browser notifications. For scheduled delivery (not just on-tab), a Service Worker is required — Vite + `vite-plugin-pwa` is the standard scaffold for this.
-
-**v1 approach:** Export constants `MORNING_PROMPT_TIME = '09:00'` and `EVENING_CHECKIN_TIME = '21:00'`. No implementation, just documented stubs.
-
-### Date Formatting
-
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| date-fns | ^4.x | Formatting display dates, relative time | Fully tree-shakeable (each function is its own ESM export). Functional API — `format(date, 'MMM d')` not a chained builder. No Moment.js global state. |
-
-**Decision over dayjs:** dayjs is slightly smaller (~6 kB vs date-fns ~18 kB without tree-shaking), but date-fns is already the shadcn/ui ecosystem standard (used in `shadcn/ui` DatePicker components). Consistent choice across the stack.
+**Confidence:** HIGH — verified via [Tiptap npm](https://www.npmjs.com/package/@tiptap/react) (v3.20.1 published 9 days ago) and [official install docs](https://tiptap.dev/docs/editor/getting-started/install/react)
 
 ---
 
-## Supporting Libraries
+### 2. Finance Charts — Recharts via shadcn/ui Chart Component
 
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| zustand | ^5.0.11 | Global state + persist | Install immediately; needed for dark mode and stopwatch state |
-| motion (framer-motion) | ^12.x | Animated step transitions | Install when building Typeform-style win input flow |
-| react-hook-form | ^7.71.2 | Form handling | Install when building win input and journal entry forms |
-| date-fns | ^4.x | Date display | Install when building win cards, streak counter, journal view |
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `recharts` | ^3.8 | SVG chart rendering for finance dashboard | shadcn/ui's official Chart component is built on Recharts. Using the shadcn chart primitives means automatic dark mode support, Nova preset theming, and monochrome styling with zero extra config. |
+
+**Critical insight:** Do NOT install Recharts directly. Use **`bunx shadcn@latest add chart`** which scaffolds `ChartContainer`, `ChartTooltip`, `ChartTooltipContent`, and `ChartLegend` components into your codebase and adds `recharts` as a dependency. This gives you themed chart wrappers that inherit the existing design system.
+
+**Chart types needed for finance port:**
+| Chart Type | Finance Use Case |
+|------------|-----------------|
+| `PieChart` | Budget category breakdown (needs, wants, savings) |
+| `BarChart` | Monthly income vs. expenses comparison |
+| `LineChart` | Investment portfolio value over time |
+| `AreaChart` | Cumulative spending trends |
+
+**Why Recharts over alternatives:**
+- **vs Nivo** — Heavier bundle, requires Canvas for some charts, doesn't integrate with shadcn theming
+- **vs Victory** — Cross-platform focus (React Native) adds weight this project doesn't need
+- **vs Chart.js** — Canvas-based (not SVG), harder to style with Tailwind, no shadcn integration
+- **vs raw D3** — Recharts wraps D3; building from scratch is unnecessary for standard chart types
+
+**Confidence:** HIGH — [shadcn/ui Chart docs](https://ui.shadcn.com/docs/components/radix/chart) confirm Recharts as the chart engine
 
 ---
 
-## Development Tools (Already Configured)
+### 3. TypeScript — Incremental Migration
 
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| ESLint 9 | Linting | Already configured with react-hooks and react-refresh plugins |
-| TypeScript (via @types/*) | Type checking | Types are installed; migrate JSX to TSX for strict prop contracts |
-| Vite | Dev server | `vite.config.js` already has `@vitejs/plugin-react` |
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `typescript` | ^5.8 | Type checking and IDE intelligence | Already have `@types/react` (^19.2.7) and `@types/react-dom` (^19.2.3) installed. Vite handles .tsx transpilation via esbuild natively — zero plugin changes. |
+
+**No new runtime dependencies.** TypeScript is dev-only. Vite already transpiles .ts/.tsx through esbuild without configuration changes.
+
+**Configuration files to create:**
+
+`tsconfig.json` (project references root):
+```json
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+```
+
+`tsconfig.app.json` (incremental migration mode):
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["src"]
+}
+```
+
+`tsconfig.node.json`:
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true
+  },
+  "include": ["vite.config.ts"]
+}
+```
+
+**Migration strategy:**
+1. Add tsconfig files with `allowJs: true`, `strict: false`
+2. Rename `main.jsx` to `main.tsx`, update `index.html` script src
+3. Rename `vite.config.js` to `vite.config.ts`
+4. Migrate leaf components first (no child imports), working inward
+5. .jsx and .tsx coexist during migration — no big-bang rename
+6. After all files migrated, flip to `strict: true`
+
+**What you do NOT need:**
+- `vite-tsconfig-paths` — existing `resolve.alias` in vite.config already handles `@/`; matching `paths` in tsconfig gives IDE support
+- `ts-migrate` or codemods — at ~3,274 LOC, manual migration produces cleaner types than automated `any` injection
+- `@typescript-eslint/parser` — add when ESLint config is updated, not blocking for migration
+
+**Confidence:** HIGH — [Vite TypeScript docs](https://vite.dev/guide/features) confirm native .tsx support via esbuild
 
 ---
 
-## Installation
+### 4. PIN Authentication Gate — Zero New Dependencies
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Web Crypto API | (browser native) | SHA-256 hashing for PIN | Zero dependency. `crypto.subtle.digest('SHA-256', ...)` is available in all modern browsers. |
+| Zustand (existing) | ^5.0.11 | Session unlock state | `isUnlocked: boolean` in a store. Already in project. |
+| Supabase (existing) | ^2.98.0 | PIN hash storage | Store hashed PIN in `user_settings` table (or new `pin_hash` column). |
+
+**Implementation approach:**
+- PIN entry screen renders as a gate before `<App />` in the component tree
+- Hash PIN with `crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin))` — convert to hex string for storage
+- Compare entered PIN hash against stored hash in Supabase
+- Store unlock state in Zustand; optionally persist to `sessionStorage` (survives refresh, clears on tab close)
+- PIN setup flow: first-time user sets PIN, hash stored to Supabase
+
+**What you do NOT need:**
+- Supabase Auth — overkill for single-user PIN gate
+- `bcrypt` / `argon2` / `scrypt` WASM — these are for multi-user password storage with brute-force resistance. A personal PIN on a personal app with no network exposure does not need them.
+- JWT tokens — the existing anon key approach stays; PIN is a UI-only gate
+
+**Confidence:** HIGH — Web Crypto API has universal browser support, no dependencies
+
+---
+
+### 5. Mobile Responsiveness — Zero New Dependencies
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Tailwind v4 (existing) | ^4.2.1 | Responsive breakpoints | `sm:`, `md:`, `lg:` utilities already available. Flex and grid layouts handle reflow. |
+
+**What this involves (implementation, not stack):**
+- Audit fixed desktop widths: `px-32` in JournalEditorOverlay, `max-w-[1100px]` in AppShell
+- Replace with responsive variants: `px-4 sm:px-12 lg:px-32`
+- Touch targets: minimum 44x44px for all interactive elements
+- SideNav likely becomes a bottom tab bar on mobile (responsive layout change)
+- DayStrip horizontal scroll needs touch gesture refinement
+- Test with `bun run dev --host` for real device testing
+
+**What you do NOT need:**
+- `react-responsive` or media query hooks — Tailwind handles responsive at CSS level
+- Container query polyfill — native support covers target browsers
+- Mobile component library — existing shadcn components are responsive-ready
+
+**Confidence:** HIGH — no new technology needed
+
+---
+
+## Complete Installation
 
 ```bash
-# State management
-npm install zustand
+# Rich text editor (3 packages)
+bun add @tiptap/react @tiptap/pm @tiptap/starter-kit
 
-# Animation
-npm install framer-motion
+# Charts (scaffolds components + adds recharts dependency)
+bunx shadcn@latest add chart
 
-# Forms
-npm install react-hook-form
-
-# Date formatting
-npm install date-fns
+# TypeScript (dev only)
+bun add -D typescript
 ```
 
-No dev-only installs needed for these packages — all are runtime dependencies.
+**Total new dependency surface:**
+- **3 runtime packages** — Tiptap trio (@tiptap/react, @tiptap/pm, @tiptap/starter-kit)
+- **1 runtime package** — Recharts (added automatically by shadcn chart scaffold)
+- **1 dev package** — TypeScript
+- **0 packages** — PIN auth (Web Crypto API) and mobile responsiveness (Tailwind)
 
 ---
 
-## Alternatives Considered
-
-| Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|-------------------------|
-| Zustand | Jotai | When you have 50+ independent atoms that need surgical per-atom reactivity (e.g., a spreadsheet or a complex editor) |
-| Zustand | TanStack Query | When you need server-state cache, background refetch, or pagination — multi-user apps, not personal tools |
-| framer-motion | React Spring | When building physics-accurate gesture interactions (drag, throw, spring curves) rather than declarative orchestrated sequences |
-| framer-motion | CSS transitions | When you only need hover/focus state changes — no enter/exit orchestration needed |
-| react-hook-form | Controlled state in Zustand | When form fields need to be observable outside the form (e.g., live preview) |
-| date-fns | dayjs | When bundle size is the primary concern and you won't use shadcn/ui date components |
-| Custom hook | react-timer-hook | When you want a drop-in with no control over timer accuracy or persistence |
-
----
-
-## What NOT to Use
+## What NOT to Add
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Redux Toolkit | 10x the boilerplate for a personal tool with no team, no time-travel debugging need | Zustand |
-| React Context for stopwatch state | Every tick re-renders entire Context consumer tree; causes jank in the rest of the UI | Zustand with granular selectors |
-| Moment.js | Deprecated; 230 kB unminified; mutable API causes subtle bugs | date-fns |
-| tailwindcss-animate | Not compatible with Tailwind v4's CSS-first architecture | tw-animate-css (already in scaffold) |
-| tailwind.config.js `darkMode: 'class'` | Config file does not exist in Tailwind v4 | `@custom-variant dark` in CSS |
-| setInterval-only timer (no timestamp) | Accumulates drift; visible error after 2-3 minutes | `Date.now()` timestamp subtraction pattern |
-| Service Worker for v1 notifications | Unnecessary complexity; PROJECT.md explicitly defers this to v2 | Export time constants as stubs |
-| @supabase/auth-helpers or @supabase/ssr | These packages add auth session management — a personal single-user tool has no auth | Direct `@supabase/supabase-js` client |
+| Slate.js | Must build every extension manually; steeper learning curve for same output | Tiptap + StarterKit |
+| Quill | Opinionated UI fights monochrome styling; less composable | Tiptap (headless) |
+| Nivo / Victory / Chart.js | No shadcn integration; heavier; wrong rendering model | Recharts via shadcn chart |
+| D3 directly | Recharts wraps D3; raw D3 is unnecessary for standard charts | Recharts |
+| bcrypt / argon2 WASM | Overkill for personal single-user PIN; adds WASM dependency | Web Crypto SHA-256 |
+| Supabase Auth | No multi-user auth needed; adds auth session complexity | Simple PIN hash comparison |
+| `ts-migrate` codemods | Produces noisy `any` types at this codebase size | Manual file-by-file migration |
+| `vite-tsconfig-paths` | Existing vite resolve.alias already handles `@/` path | tsconfig `paths` for IDE only |
+| `react-responsive` | Tailwind responsive utilities handle all breakpoint needs | `sm:` / `md:` / `lg:` variants |
+| `date-fns` for finance | Existing `Intl.DateTimeFormat` pattern works; avoid adding a date library for formatting alone | `Intl.DateTimeFormat` + native Date methods |
 
 ---
 
-## Stack Patterns by Variant
+## Database Schema Additions (Supabase)
 
-**For the Typeform-style win input flow:**
-- Use `motion` (`AnimatePresence` + `motion.div`) for slide/fade transitions between steps
-- Use `react-hook-form` with `mode: 'onSubmit'` — validate on Enter key press
-- Use Zustand to hold the current step index so the step counter in the UI stays in sync
-- Wrap each step in a unique `key` prop so `AnimatePresence` treats step changes as unmount/mount
+These are not npm packages but are stack-relevant for the finance port:
 
-**For the stopwatch per win card:**
-- Use the custom `useStopwatch` hook described above
-- Store `accumulatedMs` in Supabase on pause — not in Zustand (it's persistent data, not UI state)
-- Store `isRunning` in Zustand (UI state, not persistent)
+| Table | Purpose | Key Columns |
+|-------|---------|-------------|
+| `month_settings` | Monthly salary, budget allocation | `month` (YYYY-MM), `salary`, `needs_pct`, `wants_pct`, `savings_pct` |
+| `transactions` | Income and expense records | `amount`, `category`, `description`, `date`, `type` (income/expense) |
+| `bills` | Recurring bills tracking | `name`, `amount`, `due_day`, `is_paid`, `month` |
+| `investments` | Investment portfolio entries | `name`, `type`, `amount`, `current_value`, `date_added` |
 
-**For dark mode toggle:**
-- Store `theme: 'light' | 'dark' | 'system'` in Zustand with `persist` middleware (localStorage key: `wintrack-theme`)
-- On mount, read the persisted value and toggle `document.documentElement.classList`
-- `'system'` reads `window.matchMedia('(prefers-color-scheme: dark)')` and applies class accordingly
+The `journal_entries.body` column needs migration from `text` to `jsonb` to store Tiptap JSON.
 
 ---
 
-## Version Compatibility
+## Version Compatibility Matrix
 
-| Package | Compatible With | Notes |
-|---------|-----------------|-------|
-| framer-motion ^12.x | React ^19.x | v12 added React 19 support; earlier versions had peer dep conflicts |
-| zustand ^5.0.x | React ^19.x | Confirmed compatible; uses React 18+ stable API |
-| @supabase/supabase-js ^2.98.x | React ^19.x | Supabase JS is framework-agnostic; no React peer dep |
-| react-hook-form ^7.71.x | React ^19.x | Actively maintained; React 19 testing noted in changelog |
-| tailwindcss ^4.2.x | tw-animate-css ^1.4.x | tw-animate-css was written specifically for Tailwind v4 CSS-first architecture |
-| date-fns ^4.x | TypeScript 5.x | v4 ships its own types; no @types/date-fns needed |
+| New Package | Compatible With | Verified |
+|-------------|-----------------|----------|
+| @tiptap/react ^3.20 | React ^19.x | Yes — Tiptap v3 supports React 18+ |
+| recharts ^3.8 | React ^19.x | Yes — Recharts v3 supports React 18+ |
+| typescript ^5.8 | Vite ^7.x | Yes — Vite uses esbuild for TS, no tsc integration needed |
+| typescript ^5.8 | @types/react ^19.2 | Yes — types packages already installed |
 
 ---
 
 ## Sources
 
-- Tailwind CSS official docs — dark mode `@custom-variant` pattern confirmed: https://tailwindcss.com/docs/dark-mode (MEDIUM confidence — page rendered CSS-only, content verified)
-- WebSearch consensus (multiple DEV.to, makersden.io, mikul.me articles) — Zustand recommended for medium apps 2025 (MEDIUM confidence)
-- GitHub pmndrs/zustand releases — v5.0.11 latest, Feb 2025 (MEDIUM confidence)
-- npmjs.com framer-motion — v12.35.1 latest, React 19 compatible (MEDIUM confidence via search result)
-- motion.dev GitHub — `npm install motion`, import from `motion/react` (MEDIUM confidence)
-- Framer community forums — v12 alpha specifically targeted React 19 RC compatibility (MEDIUM confidence)
-- WebSearch consensus — react-hook-form v7.71.2, 8.6 kB, actively maintained (MEDIUM confidence)
-- GitHub Wombosvideo/tw-animate-css — explicit Tailwind v4 replacement for tailwindcss-animate (HIGH confidence)
-- Supabase official docs — anon key + RLS disabled = valid single-user pattern (MEDIUM confidence via search result)
-- WebSearch consensus — timestamp-based timer accuracy over setInterval-only increment (HIGH confidence)
-- WebSearch consensus — date-fns is shadcn/ui ecosystem standard, tree-shakeable (MEDIUM confidence)
+- [Tiptap React Install Docs](https://tiptap.dev/docs/editor/getting-started/install/react)
+- [Tiptap StarterKit Extensions](https://tiptap.dev/docs/editor/extensions/functionality/starterkit)
+- [Tiptap JSON/HTML Output Guide](https://tiptap.dev/docs/guides/output-json-html)
+- [Tiptap Persistence Docs](https://tiptap.dev/docs/editor/core-concepts/persistence)
+- [@tiptap/react on npm](https://www.npmjs.com/package/@tiptap/react) — v3.20.1
+- [@tiptap/starter-kit on npm](https://www.npmjs.com/package/@tiptap/starter-kit) — v3.20.0
+- [shadcn/ui Chart Component](https://ui.shadcn.com/docs/components/radix/chart)
+- [Recharts on npm](https://www.npmjs.com/package/recharts) — v3.8.0
+- [Vite TypeScript Features](https://vite.dev/guide/features)
+- [Vite TS Migration Discussion](https://github.com/vitejs/vite/discussions/6799)
 
 ---
-*Stack research for: wintrack — personal accountability and focus tracker SPA*
-*Researched: 2026-03-09*
+*Stack additions research for: wintrack v2.0 Finance & Platform*
+*Researched: 2026-03-16*
