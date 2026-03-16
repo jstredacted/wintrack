@@ -24,7 +24,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 ### v2.0 Finance & Platform
 
-- [ ] **Phase 1: Dev Workflow & TypeScript Foundation** - Branch strategy, mobile dev server, TypeScript setup and migration
+- [x] **Phase 1: Dev Workflow & TypeScript Foundation** - Branch strategy, mobile dev server, TypeScript setup and migration (completed 2026-03-16)
 - [ ] **Phase 2: PIN Authentication** - PIN gate with setup flow, session management, idle timeout
 - [ ] **Phase 3: Finance Core** - Balance model, budget tracking, income streams, month navigation
 - [ ] **Phase 4: Finance Extended** - Bills management, dashboard views, external balances
@@ -120,7 +120,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
-| 1. Dev Workflow & TS Foundation | 2/3 | In Progress|  | - |
+| 1. Dev Workflow & TS Foundation | 3/3 | Complete   | 2026-03-16 | - |
 | 2. PIN Authentication | v2.0 | 0/TBD | Not started | - |
 | 3. Finance Core | v2.0 | 0/TBD | Not started | - |
 | 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
