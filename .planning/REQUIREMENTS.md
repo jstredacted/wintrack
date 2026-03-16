@@ -15,7 +15,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### TypeScript
 
-- [ ] **TS-01**: All existing .jsx/.js source files converted to .tsx/.ts
+- [x] **TS-01**: All existing .jsx/.js source files converted to .tsx/.ts
 - [x] **TS-02**: Supabase database types generated for all tables
 - [x] **TS-03**: All new code written in TypeScript from day one
 - [ ] **TS-04**: tsconfig.json configured with strict mode enabled after full migration
@@ -119,7 +119,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | DW-01 | Phase 1 | Complete |
 | DW-02 | Phase 1 | Complete |
 | DW-03 | Phase 1 | Complete |
-| TS-01 | Phase 1 | Pending |
+| TS-01 | Phase 1 | Complete |
 | TS-02 | Phase 1 | Complete |
 | TS-03 | Phase 1 | Complete |
 | TS-04 | Phase 1 | Pending |
