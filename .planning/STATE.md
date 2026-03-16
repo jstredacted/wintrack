@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Phase: 1 of 5 (Dev Workflow & TypeScript Foundation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-16 — v2.0 roadmap created
+Plan: 1 of 3 in current phase
+Status: Executing
+Last activity: 2026-03-16 — Completed 01-01 (Dev workflow foundation)
 
 Progress: [██████████░░░░░░░░░░] 50% (v1.0 complete, v2.0 starting)
 
@@ -29,7 +29,7 @@ Progress: [██████████░░░░░░░░░░] 50% (v1
 |-------|-------|-------|----------|
 | v1.0 (1-7) | 18 | - | - |
 | v1.1 (1-7) | 18 | - | - |
-| v2.0 (1-5) | TBD | - | - |
+| v2.0 Phase 1 | 1/3 | 3min | 3min |
 
 *Updated after each plan completion*
 
@@ -40,6 +40,9 @@ Progress: [██████████░░░░░░░░░░] 50% (v1
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [01-01]: Use __DEV_TOOLS_ENABLED__ Vite define constant for branch-based dev tools gating
+- [01-01]: TypeScript strict:false during migration, allowJs:true for coexistence
+- [01-01]: Generate Supabase types from live schema via CLI
 - [v2.0 roadmap]: Coarse granularity -- 5 phases for 50 requirements
 - [v2.0 roadmap]: Phase numbering resets to 1-5 (each milestone has its own numbering)
 - [v2.0 roadmap]: TypeScript + dev workflow first to establish conventions before feature work
@@ -63,5 +66,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-16
-Stopped at: v2.0 roadmap created, ready to plan Phase 1
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None

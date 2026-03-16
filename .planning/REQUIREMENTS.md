@@ -9,15 +9,15 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Dev Workflow
 
-- [ ] **DW-01**: Develop branch created from main as primary development branch
-- [ ] **DW-02**: Dev tools (DevToolsPanel, Ctrl+Shift+D) only render on develop branch, stripped from main
-- [ ] **DW-03**: Vite dev server runs with `--host` for mobile testing on local network
+- [x] **DW-01**: Develop branch created from main as primary development branch
+- [x] **DW-02**: Dev tools (DevToolsPanel, Ctrl+Shift+D) only render on develop branch, stripped from main
+- [x] **DW-03**: Vite dev server runs with `--host` for mobile testing on local network
 
 ### TypeScript
 
 - [ ] **TS-01**: All existing .jsx/.js source files converted to .tsx/.ts
-- [ ] **TS-02**: Supabase database types generated for all tables
-- [ ] **TS-03**: All new code written in TypeScript from day one
+- [x] **TS-02**: Supabase database types generated for all tables
+- [x] **TS-03**: All new code written in TypeScript from day one
 - [ ] **TS-04**: tsconfig.json configured with strict mode enabled after full migration
 
 ### Authentication
@@ -116,12 +116,12 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DW-01 | Phase 1 | Pending |
-| DW-02 | Phase 1 | Pending |
-| DW-03 | Phase 1 | Pending |
+| DW-01 | Phase 1 | Complete |
+| DW-02 | Phase 1 | Complete |
+| DW-03 | Phase 1 | Complete |
 | TS-01 | Phase 1 | Pending |
-| TS-02 | Phase 1 | Pending |
-| TS-03 | Phase 1 | Pending |
+| TS-02 | Phase 1 | Complete |
+| TS-03 | Phase 1 | Complete |
 | TS-04 | Phase 1 | Pending |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |

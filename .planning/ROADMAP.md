@@ -120,7 +120,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
-| 1. Dev Workflow & TS Foundation | v2.0 | 0/3 | Planning complete | - |
+| 1. Dev Workflow & TS Foundation | 1/3 | In Progress|  | - |
 | 2. PIN Authentication | v2.0 | 0/TBD | Not started | - |
 | 3. Finance Core | v2.0 | 0/TBD | Not started | - |
 | 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
