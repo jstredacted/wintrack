@@ -72,30 +72,25 @@ export default function TodayPage() {
   }, [selectedDate, isToday, fetchWinsForDate]);
 
   // Merge today's live completion state into the history completionMap
-  const todayHasCompleted = wins.some(w => w.completed);
-  const mergedCompletionMap = { ...completionMap, [today]: todayHasCompleted || undefined };
+  const todayCompleted = wins.filter(w => w.completed).length;
+  const mergedCompletionMap = {
+    ...completionMap,
+    ...(wins.length > 0 ? { [today]: { completed: todayCompleted, total: wins.length } } : {}),
+  };
 
   const showRollForward = isToday && yesterdayWins.length > 0 && rollForwardOfferedDate !== today;
 
   return (
     <div className="flex flex-col min-h-svh px-16 py-12 gap-10">
 
-      {/* Header */}
+      {/* Fixed header — greeting + date + DayStrip stay pinned */}
       <div>
-        {isToday ? (
-          <>
-            <h1 className="text-5xl font-bold leading-none tracking-tight">
-              {getGreeting()}
-            </h1>
-            <p className="font-mono text-lg text-muted-foreground mt-3 tracking-[0.1em] uppercase">
-              {today}
-            </p>
-          </>
-        ) : (
-          <h1 className="text-5xl font-bold leading-none tracking-tight">
-            {pastDateFormatter.format(new Date(selectedDate + 'T12:00:00'))}
-          </h1>
-        )}
+        <p className="text-lg text-muted-foreground mb-2">
+          {getGreeting()}
+        </p>
+        <h1 className="text-5xl font-bold leading-none tracking-tight">
+          {pastDateFormatter.format(new Date(selectedDate + 'T12:00:00'))}
+        </h1>
       </div>
 
       {/* DayStrip -- always mounted, edge-to-edge bleed */}
@@ -123,7 +118,7 @@ export default function TodayPage() {
           )}
 
           {/* Loading / error / win list */}
-          <div className="flex-1">
+          <div className="flex-1 pb-24">
             <AnimatePresence>
               {loading ? (
                 <motion.p
@@ -152,7 +147,7 @@ export default function TodayPage() {
                     wins={wins}
                     onEdit={(id, newTitle) => editWin(id, newTitle)}
                     onDelete={(id) => deleteWin(id)}
-                    onToggle={(id) => toggleWinCompleted(id)}
+                    onToggle={async (id) => { await toggleWinCompleted(id); refreshStreak(); }}
                   />
                   {wins.length > 0 && (
                     <div className="mt-4">
@@ -164,17 +159,14 @@ export default function TodayPage() {
             </AnimatePresence>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-4 pb-2 mt-auto">
-            <button
-              onClick={openInputOverlay}
-              className="flex items-center gap-2 px-5 py-3 border border-border font-mono text-sm text-muted-foreground hover:text-foreground hover:border-foreground transition-colors active:scale-[0.96] transition-transform duration-75"
-              aria-label="Set intentions"
-            >
-              <Plus size={16} />
-              Set intentions
-            </button>
-          </div>
+          {/* FAB — Set intentions */}
+          <button
+            onClick={openInputOverlay}
+            aria-label="Set intentions"
+            className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-foreground text-background shadow-sm hover:scale-105 active:scale-95 transition-transform duration-100"
+          >
+            <Plus size={24} strokeWidth={1.5} />
+          </button>
 
           {/* Win input overlay */}
           <WinInputOverlay
