@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
+import PinGate from "./components/auth/PinGate";
 import AppShell from "./components/layout/AppShell";
 import TodayPage from "./pages/TodayPage";
 import JournalPage from "./pages/JournalPage";
@@ -7,11 +8,16 @@ import SettingsPage from "./pages/SettingsPage";
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: AppShell,
+    Component: PinGate,
     children: [
-      { index: true, Component: TodayPage },
-      { path: "journal", Component: JournalPage },
-      { path: "settings", Component: SettingsPage },
+      {
+        Component: AppShell,
+        children: [
+          { index: true, Component: TodayPage },
+          { path: "journal", Component: JournalPage },
+          { path: "settings", Component: SettingsPage },
+        ],
+      },
     ],
   },
 ]);
