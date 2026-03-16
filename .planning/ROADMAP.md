@@ -57,10 +57,11 @@ Plans:
   2. Returning user must enter their PIN on app load; incorrect PIN shows error and does not unlock
   3. App stays unlocked during active use but locks after 15 minutes of inactivity
   4. Static JWT environment variables are removed; PIN hash stored in Supabase replaces the old auth mechanism
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Foundation: DB migration (pin_hash column), hashPin utility, pinStore, usePinAuth hook, useIdleTimer hook, CSS keyframes
+- [ ] 02-02-PLAN.md — UI + integration: PinDots, PinScreen, PinSetup components, PinGate layout route, router wiring, blur overlay
 
 ### Phase 3: Finance Core
 **Goal**: User can track their current balance, set a monthly budget, configure income sources, and navigate between months
@@ -121,7 +122,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|-----------|----------------|--------|-----------|
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
 | 1. Dev Workflow & TS Foundation | 3/3 | Complete   | 2026-03-16 | - |
-| 2. PIN Authentication | v2.0 | 0/TBD | Not started | - |
+| 2. PIN Authentication | v2.0 | 0/2 | Not started | - |
 | 3. Finance Core | v2.0 | 0/TBD | Not started | - |
 | 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
 | 5. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
