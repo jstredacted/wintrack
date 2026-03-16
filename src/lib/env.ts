@@ -10,7 +10,7 @@
  * In production (Vercel): set values in Project Settings → Environment Variables
  */
 
-function requireEnv(name) {
+function requireEnv(name: keyof ImportMetaEnv): string {
   const value = import.meta.env[name];
   if (!value) {
     throw new Error(

@@ -33,7 +33,7 @@ export function useStreak(refreshKey = 0) {
 
       if (cancelled) return;
 
-      let completedDates = new Set();
+      let completedDates = new Set<string>();
       if (!error && data) {
         completedDates = new Set(
           data

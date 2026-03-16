@@ -10,10 +10,10 @@
 
 import { subscribeToPush } from './push-subscription';
 
-export async function scheduleMorningReminder() {
+export async function scheduleMorningReminder(): Promise<void> {
   await subscribeToPush();
 }
 
-export async function scheduleEveningReminder() {
+export async function scheduleEveningReminder(): Promise<void> {
   await subscribeToPush();
 }

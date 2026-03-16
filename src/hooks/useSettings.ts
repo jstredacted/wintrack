@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useSettingsStore } from '@/stores/settingsStore';
+import type { Settings } from '@/stores/settingsStore';
 import { supabase } from '@/lib/supabase';
 import { USER_ID } from '@/lib/env';
 
-const DEFAULTS = {
+const DEFAULTS: Settings = {
   dayStartHour: 0,
   morningPromptHour: 9,
   eveningPromptHour: 21,
 };
 
-function toStoreShape(row) {
+function toStoreShape(row: { day_start_hour: number; morning_prompt_hour: number; evening_prompt_hour: number }): Settings {
   return {
     dayStartHour: row.day_start_hour,
     morningPromptHour: row.morning_prompt_hour,
@@ -17,7 +18,7 @@ function toStoreShape(row) {
   };
 }
 
-function toDbShape(settings) {
+function toDbShape(settings: Settings) {
   return {
     user_id: USER_ID,
     day_start_hour: settings.dayStartHour,
@@ -61,8 +62,8 @@ export function useSettings() {
     return () => { cancelled = true; };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function saveSettings(partial) {
-    const merged = { ...settings, ...partial };
+  async function saveSettings(partial: Partial<Settings>) {
+    const merged: Settings = { ...settings, ...partial };
     setSettings(merged);
     await supabase
       .from('user_settings')

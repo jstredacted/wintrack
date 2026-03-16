@@ -5,7 +5,7 @@ import { useSettingsStore } from '@/stores/settingsStore'
 
 export function useHistory() {
   const dayStartHour = useSettingsStore(s => s.settings.dayStartHour)
-  const [completionMap, setCompletionMap] = useState({})
+  const [completionMap, setCompletionMap] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function useHistory() {
 
       if (error || !data) { setLoading(false); return }
 
-      const map = {}
+      const map: Record<string, boolean> = {}
       for (const win of data) {
         if (win.completed) {
           map[win.win_date] = true
@@ -31,7 +31,7 @@ export function useHistory() {
     fetchMap()
   }, [dayStartHour])
 
-  const fetchWinsForDate = useCallback(async (date) => {
+  const fetchWinsForDate = useCallback(async (date: string) => {
     const { data } = await supabase
       .from('wins')
       .select('id, title, category, completed')

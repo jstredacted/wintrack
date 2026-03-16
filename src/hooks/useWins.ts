@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase';
 import { getLocalDateString } from '@/lib/utils/date';
 import { USER_ID } from '@/lib/env';
 import { useSettingsStore } from '@/stores/settingsStore';
+import type { Database } from '@/lib/database.types';
+
+type Win = Database['public']['Tables']['wins']['Row'];
+type YesterdayWin = Pick<Win, 'id' | 'title' | 'category'>;
 
 /**
  * useWins()
@@ -10,26 +14,14 @@ import { useSettingsStore } from '@/stores/settingsStore';
  * Primary data hook: fetches today's wins, provides CRUD actions,
  * and roll-forward from yesterday's wins.
  *
- * @returns {{
- *   wins: Array,
- *   loading: boolean,
- *   error: string|null,
- *   yesterdayWins: Array,
- *   addWin: (title: string, category?: string) => Promise<void>,
- *   editWin: (id: string, newTitle: string) => Promise<void>,
- *   deleteWin: (id: string) => Promise<void>,
- *   rollForward: () => Promise<void>,
- *   toggleWinCompleted: (id: string) => Promise<void>,
- * }}
- *
  * STOPWATCH REMOVED — startTimer, pauseTimer, stopTimer commented out
  */
 export function useWins() {
   const dayStartHour = useSettingsStore(s => s.settings.dayStartHour);
-  const [wins, setWins] = useState([]);
+  const [wins, setWins] = useState<Win[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [yesterdayWins, setYesterdayWins] = useState([]);
+  const [error, setError] = useState<string | null>(null);
+  const [yesterdayWins, setYesterdayWins] = useState<YesterdayWin[]>([]);
 
   // Fetch today's and yesterday's wins on mount
   useEffect(() => {
@@ -80,7 +72,7 @@ export function useWins() {
   /**
    * addWin(title, category) — insert a new win for today, append optimistically
    */
-  const addWin = useCallback(async (title, category = 'work') => {
+  const addWin = useCallback(async (title: string, category: string = 'work') => {
     const today = getLocalDateString(new Date(), dayStartHour);
     const optimistic = {
       id: `optimistic-${Date.now()}`,
@@ -117,7 +109,7 @@ export function useWins() {
   /**
    * editWin(id, newTitle) — update the title
    */
-  const editWin = useCallback(async (id, newTitle) => {
+  const editWin = useCallback(async (id: string, newTitle: string) => {
     setWins((prev) => prev.map((w) => (w.id === id ? { ...w, title: newTitle } : w)));
 
     const { error: updateError } = await supabase
@@ -134,7 +126,7 @@ export function useWins() {
   /**
    * deleteWin(id) — remove a win
    */
-  const deleteWin = useCallback(async (id) => {
+  const deleteWin = useCallback(async (id: string) => {
     setWins((prev) => prev.filter((w) => w.id !== id));
 
     const { error: deleteError } = await supabase
@@ -151,7 +143,7 @@ export function useWins() {
   /**
    * toggleWinCompleted(id) — flip the completed state of a win optimistically
    */
-  const toggleWinCompleted = useCallback(async (id) => {
+  const toggleWinCompleted = useCallback(async (id: string) => {
     const win = wins.find((w) => w.id === id);
     if (!win) return;
 

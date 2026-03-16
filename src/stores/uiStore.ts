@@ -1,16 +1,32 @@
 import { create } from 'zustand';
 import { getLocalDateString } from '@/lib/utils/date';
 
-function readDate(key) {
+interface UIState {
+  inputOverlayOpen: boolean;
+  editingWinId: string | null;
+  rollForwardOfferedDate: string | null;
+  openInputOverlay: () => void;
+  closeInputOverlay: () => void;
+  setEditingWin: (id: string) => void;
+  clearEditingWin: () => void;
+  markRollForwardOffered: (dayStartHour: number) => void;
+  streakRefreshKey: number;
+  refreshStreak: () => void;
+  devToolsOpen: boolean;
+  toggleDevTools: () => void;
+  closeDevTools: () => void;
+}
+
+function readDate(key: string): string | null {
   try { return localStorage.getItem(key) || null; } catch { return null; }
 }
-function writeDate(key, dayStartHour = 0) {
+function writeDate(key: string, dayStartHour: number = 0): string {
   const d = getLocalDateString(new Date(), dayStartHour);
   try { localStorage.setItem(key, d); } catch {}
   return d;
 }
 
-export const useUIStore = create((set) => ({
+export const useUIStore = create<UIState>()((set) => ({
   // --- Phase 2 state (unchanged) ---
   inputOverlayOpen: false,
   editingWinId: null,

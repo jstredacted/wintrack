@@ -11,7 +11,12 @@ import { useState, useEffect } from 'react';
  * @param {string|null} startedAt - ISO timestamp when timer was started (from timer_started_at)
  * @returns {{ isRunning: boolean, displaySeconds: number }}
  */
-export function useStopwatch({ elapsedBase = 0, startedAt = null } = {}) {
+interface StopwatchOptions {
+  elapsedBase?: number;
+  startedAt?: string | null;
+}
+
+export function useStopwatch({ elapsedBase = 0, startedAt = null }: StopwatchOptions = {}) {
   const isRunning = startedAt !== null && startedAt !== undefined;
 
   // Tick counter — only used to trigger re-renders; does NOT accumulate elapsed time
@@ -43,12 +48,12 @@ export function useStopwatch({ elapsedBase = 0, startedAt = null } = {}) {
  * formatElapsed(65)   → "01:05"
  * formatElapsed(3661) → "01:01:01"
  */
-export function formatElapsed(totalSeconds) {
+export function formatElapsed(totalSeconds: number): string {
   const s = totalSeconds % 60;
   const m = Math.floor(totalSeconds / 60) % 60;
   const h = Math.floor(totalSeconds / 3600);
 
-  const pad = (n) => String(n).padStart(2, '0');
+  const pad = (n: number) => String(n).padStart(2, '0');
 
   if (h > 0) {
     return `${pad(h)}:${pad(m)}:${pad(s)}`;

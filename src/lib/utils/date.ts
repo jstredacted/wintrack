@@ -1,4 +1,4 @@
-export function getLocalDateString(date = new Date(), dayStartHour = 0) {
+export function getLocalDateString(date: Date = new Date(), dayStartHour: number = 0): string {
   let target = date;
   if (dayStartHour > 0 && date.getHours() < dayStartHour) {
     // Night-owl mode: before day boundary, treat as previous calendar day
