@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Daily Discipline Loop** — Phases 1-7 (shipped 2026-03-16)
-- 📋 **v2.0 Finance & Platform** — Phases 8-12 (planned)
+- 📋 **v2.0 Finance & Platform** — Phases 1-5 (planned)
 
 ## Phases
 
@@ -24,15 +24,15 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 
 ### v2.0 Finance & Platform
 
-- [ ] **Phase 8: Dev Workflow & TypeScript Foundation** - Branch strategy, mobile dev server, TypeScript setup and migration
-- [ ] **Phase 9: PIN Authentication** - PIN gate with setup flow, session management, idle timeout
-- [ ] **Phase 10: Finance Core** - Balance model, budget tracking, income streams, month navigation
-- [ ] **Phase 11: Finance Extended** - Bills management, dashboard views, external balances
-- [ ] **Phase 12: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages
+- [ ] **Phase 1: Dev Workflow & TypeScript Foundation** - Branch strategy, mobile dev server, TypeScript setup and migration
+- [ ] **Phase 2: PIN Authentication** - PIN gate with setup flow, session management, idle timeout
+- [ ] **Phase 3: Finance Core** - Balance model, budget tracking, income streams, month navigation
+- [ ] **Phase 4: Finance Extended** - Bills management, dashboard views, external balances
+- [ ] **Phase 5: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages
 
 ## Phase Details
 
-### Phase 8: Dev Workflow & TypeScript Foundation
+### Phase 1: Dev Workflow & TypeScript Foundation
 **Goal**: Codebase runs in TypeScript with a proper branch strategy for dev vs production
 **Depends on**: Nothing (first phase of v2.0)
 **Requirements**: DW-01, DW-02, DW-03, TS-01, TS-02, TS-03, TS-04
@@ -44,12 +44,12 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 **Plans**: TBD
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
+- [ ] 01-01: TBD
+- [ ] 01-02: TBD
 
-### Phase 9: PIN Authentication
+### Phase 2: PIN Authentication
 **Goal**: User's data is gated behind a PIN lock screen on every app load
-**Depends on**: Phase 8
+**Depends on**: Phase 1
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05
 **Success Criteria** (what must be TRUE):
   1. First-time user sees a PIN setup flow (enter + confirm) before accessing the app
@@ -59,11 +59,11 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 09-01: TBD
+- [ ] 02-01: TBD
 
-### Phase 10: Finance Core
+### Phase 3: Finance Core
 **Goal**: User can track their current balance, set a monthly budget, configure income sources, and navigate between months
-**Depends on**: Phase 9
+**Depends on**: Phase 2
 **Requirements**: BAL-01, BAL-02, BAL-03, BAL-04, BAL-05, BUD-01, BUD-02, INC-01, INC-02, INC-03, INC-04, INC-05, INC-06, FIN-01
 **Success Criteria** (what must be TRUE):
   1. User sees their current balance on the Finance page and can manually override it at any time
@@ -74,13 +74,13 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
-- [ ] 10-03: TBD
+- [ ] 03-01: TBD
+- [ ] 03-02: TBD
+- [ ] 03-03: TBD
 
-### Phase 11: Finance Extended
+### Phase 4: Finance Extended
 **Goal**: User can manage bills with recurrence, view financial dashboards, and track external investment balances
-**Depends on**: Phase 10
+**Depends on**: Phase 3
 **Requirements**: BILL-01, BILL-02, BILL-03, BILL-04, BILL-05, BILL-06, BILL-07, FIN-02, FIN-03, FIN-04, FIN-05, EXT-01, EXT-02, EXT-03
 **Success Criteria** (what must be TRUE):
   1. User can add bills with recurrence rules (one-time, recurring N months, ongoing) and toggle them as paid (deducting from balance)
@@ -91,13 +91,13 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
-- [ ] 11-03: TBD
+- [ ] 04-01: TBD
+- [ ] 04-02: TBD
+- [ ] 04-03: TBD
 
-### Phase 12: Journal Rich Text & Mobile
+### Phase 5: Journal Rich Text & Mobile
 **Goal**: Journal entries support rich formatting and all pages work well on mobile devices
-**Depends on**: Phase 11
+**Depends on**: Phase 4
 **Requirements**: JRNL-01, JRNL-02, JRNL-03, JRNL-04, MOB-01, MOB-02, MOB-03, MOB-04, MOB-05, MOB-06
 **Success Criteria** (what must be TRUE):
   1. User can format journal entries with bold, italic, lists, and headings using keyboard shortcuts (no visible toolbar)
@@ -108,19 +108,19 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 12-01: TBD
-- [ ] 12-02: TBD
+- [ ] 05-01: TBD
+- [ ] 05-02: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 8 -> 9 -> 10 -> 11 -> 12
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
-| 8. Dev Workflow & TS Foundation | v2.0 | 0/TBD | Not started | - |
-| 9. PIN Authentication | v2.0 | 0/TBD | Not started | - |
-| 10. Finance Core | v2.0 | 0/TBD | Not started | - |
-| 11. Finance Extended | v2.0 | 0/TBD | Not started | - |
-| 12. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
+| 1. Dev Workflow & TS Foundation | v2.0 | 0/TBD | Not started | - |
+| 2. PIN Authentication | v2.0 | 0/TBD | Not started | - |
+| 3. Finance Core | v2.0 | 0/TBD | Not started | - |
+| 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
+| 5. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
