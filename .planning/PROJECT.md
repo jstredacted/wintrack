@@ -2,66 +2,80 @@
 
 ## What This Is
 
-wintrack is a personal accountability and focus tracker for solo use. It helps you declare what you're committing to each day, check in on whether you followed through, and track time spent — all wrapped in a deliberate, distraction-free interface that treats focus as a ritual. The v1.0 daily discipline loop shipped 2026-03-11 across 7 phases, 34 plans, and 2 days of execution.
+wintrack is a personal accountability tracker with a deliberate, distraction-free interface. Declare intentions each morning, complete them through the day, reflect in your journal at night. Built with Nothing Phone's monochrome design language — dot grids, monospaced type, structured negative space, strictly black and white.
 
 ## Core Value
 
-The daily discipline loop: declare wins in the morning, complete them through the day, evaluate honestly at night.
+The daily discipline loop: set intentions in the morning, complete them through the day, reflect honestly at night.
 
 ## Requirements
 
 ### Validated
 
-- ✓ User can log wins using a full-screen Typeform-style input flow (one step at a time, animated transitions) — v1.0
-- ✓ User can declare wins anytime; 9am notification prompts if none logged yet — v1.0
-- ✓ User can complete evening check-in (binary yes/no per win + optional reflection note); 9pm notification prompts if not done — v1.0
-- ✓ User can roll incomplete wins to the next day — v1.0
-- ✓ User can start/stop/pause a stopwatch per win; cumulative time displayed on win card — v1.0
-- ✓ User can write a daily journal entry (title + body only, separate from wins) — v1.0
-- ✓ Streak counter increments when at least one win is marked complete AND journal entry written for the day — v1.0
+- ✓ Multi-win entry with Typeform-style full-screen flow — v1.0
+- ✓ Inline win completion toggle with strikethrough styling — v1.0
+- ✓ Win categories (work/personal/health) with badges and completion counts — v1.0
+- ✓ Night-owl day boundary (configurable dayStartHour) — v1.0
+- ✓ GitHub-style 84-day consistency heatmap with intensity shading — v1.0
+- ✓ Category radar chart showing win distribution — v1.0
+- ✓ Push notifications via Web Push API, service worker, Supabase Edge Function — v1.0
+- ✓ Configurable morning/evening notification hours — v1.0
+- ✓ Journal with categories (Daily/Milestone/Financial) and FAB entry — v1.0
+- ✓ Unified daily view with DayStrip carousel (Today + History merged) — v1.0
+- ✓ Streak counter based on completed wins per day — v1.0
+- ✓ Roll-forward incomplete wins to next day — v1.0
 - ✓ Dark/light mode toggle — v1.0
+- ✓ Dev tools panel (Ctrl+Shift+D) for test data seeding — v1.0
+- ✓ Settings page with persistence to Supabase + localStorage cache — v1.0
+
+### Active
+
+(None — next milestone not yet planned)
 
 ### Out of Scope
 
 - Multi-user / auth — personal tool, no accounts needed
-- Win types/categories — freeform text only, user decides meaning
-- Journal tags or categories — deliberately minimal
-- Notifications infrastructure (v1 stubs the 9am/9pm times with documented path; actual push/browser notification delivery is v2)
+- AI coaching or suggestions — not this product's character
+- Social / sharing — personal accountability, not social
+- Mobile app — web-first, Vercel deployment covers mobile browser
+- Streak freeze / grace mechanics — roll-forward is the compassion mechanism
 
 ## Context
 
-- **v1.0 shipped:** 2026-03-11
-- **Scale:** 4,786 LOC (src), 164 commits, 7 phases, 34 plans, 2 days (Mar 9-11 2026)
-- **Tests:** 117 passing
-- **Stack:** Vite + React 19, Tailwind v4, shadcn/ui (Nova preset, Radix primitives), Supabase JS client, Lucide icons
+- **v1.0 shipped:** 2026-03-16
+- **Scale:** 3,274 LOC (src), 2,270 LOC (tests), 264 commits, 7 phases, 18 plans
+- **Tests:** 149 passing across 25 files
+- **Timeline:** 8 days (Mar 9-16, 2026)
+- **Stack:** Vite + React 19, Tailwind v4, shadcn/ui (Nova preset), Supabase JS, Lucide icons, vite-plugin-pwa
 - **Deploying to:** Vercel
-- **Single user** — no auth layer needed; Supabase used for persistence only
-- Design language: strictly black and white, dark/light mode toggle. Inspired by Nothing Phone Glyph Matrix — dot grid patterns, monospaced type, structured negative space, technical precision. No gradients, no color accents, no illustrations.
-- Win input UX: Typeform energy — full-screen, one question at a time, smooth transitions
-- Check-in and journal UX: Stoic app energy — whitespace-heavy, serif or mono font, meditative pacing
+- **Single user** — no auth; Supabase for persistence only (anon key + RLS)
+- **Design:** Nothing Phone Glyph Matrix — strictly black/white, monospaced type, dot grids, structured negative space
 
 ## Constraints
 
 - **Tech stack**: Vite + React 19, Tailwind v4, shadcn/ui, Supabase, Vercel — no deviations
-- **Design**: Black/white only, no color accents, no gradients — enforced aesthetic constraint
+- **Design**: Black/white only, no color accents, no gradients — enforced aesthetic
 - **Scope**: Single user, no auth — keeps architecture simple
+- **Animations**: Plain @keyframes + state machine pattern (tw-animate-css conflicts with motion v12)
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| No auth layer | Personal tool — single user, no accounts needed | Validated — simple, no friction |
-| Supabase for persistence | Already in scaffold; persistent across devices/sessions | Validated — anon key + RLS works well |
-| Typeform UX for win input | Focused input reduces friction, forces one commitment at a time | Validated — high-quality feel |
-| Stoic app UX for check-ins | Ritual feeling over task management feeling | Validated — meditative, distraction-free |
-| Incomplete wins roll forward | Supports honesty without penalty — you decide tomorrow | Validated — natural daily flow |
-| Use `motion` package (not framer-motion) | Rebranded at v12; framer-motion is the legacy alias | Validated — import from "motion/react" |
-| Timer uses wall-clock timestamps | `Date.now() - startedAt` survives background tabs and page refreshes; setInterval drifts | Validated — accurate across all scenarios |
-| Streak uses Intl.DateTimeFormat | `en-CA` format gives YYYY-MM-DD in local timezone; `.toISOString().slice(0,10)` corrupts on timezone boundaries | Validated — streak never corrupts |
-| Tailwind v4 dark mode via @custom-variant | `@custom-variant dark` in CSS; `darkMode: 'class'` config is v3 syntax | Validated — correct v4 approach |
-| Combined streak requires both check-in AND journal | Stronger accountability signal — both acts of reflection required | Validated — motivates full loop completion |
-| Animation pattern: plain @keyframes + state machine | tw-animate-css conflicts with motion v12 (CSS `translate` vs `transform: translate3d()`); direct @keyframes avoid conflict | Validated — `visible/exiting` useState + `onAnimationEnd` to unmount |
-| CHECKIN-04 push notifications deferred to v2 | Service worker / Web Push infrastructure out of scope for v1; stubs document intent | Validated — UI stubs in place, delivery is v2 |
+| No auth layer | Personal tool — single user | ✓ Simple, no friction |
+| Supabase for persistence | Cross-device sync, anon key + RLS | ✓ Works well |
+| `motion` package (not framer-motion) | Rebranded at v12 | ✓ Import from "motion/react" |
+| Timer uses wall-clock timestamps | Survives background tabs | ✓ Accurate |
+| Streak uses Intl.DateTimeFormat | Avoids timezone boundary corruption | ✓ Never corrupts |
+| Tailwind v4 dark mode via @custom-variant | v3 `darkMode: 'class'` syntax doesn't work | ✓ Correct v4 approach |
+| Plain @keyframes over tw-animate-css | CSS `translate` vs `transform: translate3d()` conflict | ✓ State machine pattern |
+| Remove check-in flow | Redundant — toggle on wins is sufficient | ✓ Simpler UX |
+| Streak from wins.completed directly | No check_ins table dependency | ✓ Clean data model |
+| Unified daily view (Today + History) | DayStrip carousel replaces separate pages | ✓ Better navigation |
+| Journal FAB (Nothing design) | Fixed circular button, monochrome | ✓ Clean, accessible |
+| SVG heatmap with inline fill | Tailwind bg-* doesn't work on SVG rect | ✓ CSS variables for fill |
+| Night-owl day offset | Configurable dayStartHour for late users | ✓ Correct attribution |
+| Web Push via Edge Function + pg_cron | Hourly check against user settings | ✓ Free tier compatible |
 
 ---
-*Last updated: 2026-03-11 after v1.0 milestone*
+*Last updated: 2026-03-16 after v1.0 milestone*
