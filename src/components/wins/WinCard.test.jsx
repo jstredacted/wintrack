@@ -132,6 +132,67 @@ describe('WinCard', () => {
     expect(screen.queryByText('personal')).not.toBeInTheDocument();
   });
 
+  // INT-01: Toggle button renders and fires onToggle on click
+  it('renders a toggle button that calls onToggle when clicked', async () => {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    render(
+      <WinCard
+        win={{ ...defaultWin, completed: false }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onToggle={onToggle}
+      />
+    );
+    const toggleBtn = screen.getByRole('button', { name: /mark complete/i });
+    expect(toggleBtn).toBeInTheDocument();
+    await user.click(toggleBtn);
+    expect(onToggle).toHaveBeenCalledTimes(1);
+  });
+
+  // INT-01: Completed win shows "Mark incomplete" aria-label
+  it('shows "Mark incomplete" label when win is completed', () => {
+    render(
+      <WinCard
+        win={{ ...defaultWin, completed: true }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onToggle={vi.fn()}
+      />
+    );
+    expect(screen.getByRole('button', { name: /mark incomplete/i })).toBeInTheDocument();
+  });
+
+  // INT-02: Completed wins display line-through text styling
+  it('applies line-through styling to completed win title', () => {
+    render(
+      <WinCard
+        win={{ ...defaultWin, completed: true }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onToggle={vi.fn()}
+      />
+    );
+    const title = screen.getByText('Write unit tests');
+    expect(title.className).toContain('line-through');
+    expect(title.className).toContain('text-muted-foreground');
+  });
+
+  // INT-02: Incomplete wins do NOT have line-through
+  it('does not apply line-through styling to incomplete win title', () => {
+    render(
+      <WinCard
+        win={{ ...defaultWin, completed: false }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onToggle={vi.fn()}
+      />
+    );
+    const title = screen.getByText('Write unit tests');
+    expect(title.className).not.toContain('line-through');
+    expect(title.className).toContain('text-foreground');
+  });
+
   it('renders without a card border class on the root element', () => {
     const { container } = render(
       <WinCard

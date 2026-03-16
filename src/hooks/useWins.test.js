@@ -53,6 +53,14 @@ describe('useWins — night-owl offset', () => {
     expect(today).toBe('2026-06-14');
   });
 
+  // INT-03: toggleWinCompleted is returned from useWins hook
+  it('useWins returns toggleWinCompleted function', async () => {
+    const { useWins } = await import('@/hooks/useWins');
+    const { result } = renderHook(() => useWins());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(typeof result.current.toggleWinCompleted).toBe('function');
+  });
+
   it('yesterday uses DST-safe date walking (setDate, not 86400000)', async () => {
     // Read the source and verify no 86400000 in fetchWins date logic
     const src = (await import('@/hooks/useWins?raw')).default;
