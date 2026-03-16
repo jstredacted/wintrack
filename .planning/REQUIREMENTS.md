@@ -1,238 +1,130 @@
 # Requirements: wintrack
 
-**Defined:** 2026-03-09
-**Core Value:** The daily discipline loop: declare wins in the morning, complete them through the day, evaluate honestly at night.
+**Defined:** 2026-03-16
+**Core Value:** The daily discipline loop: set intentions in the morning, complete them through the day, reflect honestly at night — now expanded with personal finance management.
 
-## v1 Requirements
+## v2.0 Requirements
 
-### Win Logging
+Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
-- [x] **WIN-01**: User can create a win using a full-screen Typeform-style input flow (one prompt at a time, animated transitions between steps)
-- [x] **WIN-02**: User can edit the text of an existing win
-- [x] **WIN-03**: User can delete a win from today's list
-- [x] **WIN-04**: User can roll incomplete wins from yesterday into today's list
+### Dev Workflow
 
-### Check-ins
+- [ ] **DW-01**: Develop branch created from main as primary development branch
+- [ ] **DW-02**: Dev tools (DevToolsPanel, Ctrl+Shift+D) only render on develop branch, stripped from main
+- [ ] **DW-03**: Vite dev server runs with `--host` for mobile testing on local network
 
-- [x] **CHECKIN-01**: User can complete an evening check-in — binary yes/no per win with optional short reflection note
-- [x] **CHECKIN-02**: App shows an in-app morning prompt at 9am if no wins have been logged yet for today
-- [x] **CHECKIN-03**: App shows an in-app evening prompt at 9pm if the evening check-in has not been completed
-- [x] **CHECKIN-04**: App sends browser push notifications at 9am and 9pm as reminders
+### TypeScript
 
-### Time Tracking
+- [ ] **TS-01**: All existing .jsx/.js source files converted to .tsx/.ts
+- [ ] **TS-02**: Supabase database types generated for all tables
+- [ ] **TS-03**: All new code written in TypeScript from day one
+- [ ] **TS-04**: tsconfig.json configured with strict mode enabled after full migration
 
-- [x] **TIMER-01**: User can start, stop, and pause a stopwatch for any win
-- [x] **TIMER-02**: Cumulative time logged for a win is displayed on its win card
-- [x] **TIMER-03**: Today view shows total focused time across all wins for the day
+### Authentication
 
-### Journal
+- [ ] **AUTH-01**: User can set a 4-6 digit PIN on first app load (setup flow with confirm)
+- [ ] **AUTH-02**: User must enter PIN on app load; active sessions stay unlocked until 15 minutes idle
+- [ ] **AUTH-03**: PIN stored as SHA-256 hash in Supabase (not plaintext)
+- [ ] **AUTH-04**: Session persists in sessionStorage; idle timer resets on user interaction
+- [ ] **AUTH-05**: Static JWT authentication removed in favor of PIN-gated access
 
-- [x] **JOURNAL-01**: User can write a daily journal entry with a title and body
-- [x] **JOURNAL-02**: User can edit or delete past journal entries
-- [x] **JOURNAL-03**: User can browse past journal entries in a list view
+### Finance: Balance
 
-### Streaks & History
+- [ ] **BAL-01**: User sees current balance as the single source of truth ("what I have right now")
+- [ ] **BAL-02**: User can manually override current balance at any time
+- [ ] **BAL-03**: When income is marked received, net PHP amount auto-adds to current balance
+- [ ] **BAL-04**: When a bill/expense is marked paid, amount auto-deducts from current balance
+- [ ] **BAL-05**: Current balance carries forward to next month as starting point
 
-- [x] **STREAK-01**: App displays a streak counter for consecutive days where at least one win was marked complete
-- [x] **HISTORY-01**: User can browse past days' wins and their completion status
-- [x] **HISTORY-02**: App shows a visual calendar / heatmap of days with completed wins
+### Finance: Budget
 
-### App Shell
+- [ ] **BUD-01**: User can set a monthly budget limit
+- [ ] **BUD-02**: User sees budget progress visualization showing total paid expenses vs budget limit (neutral/approaching/critical states)
 
-- [x] **SHELL-01**: User can toggle between dark and light mode
-- [x] **SHELL-02**: App uses the Nothing Phone Glyph Matrix design language — dot grid patterns, monospaced type, structured negative space, strictly black and white palette
+### Finance: Income Streams
 
-## v1.1 Requirements
+- [ ] **INC-01**: User can configure income sources in Settings with name, amount, currency (USD or PHP), and conversion method (Wise/PayPal/None)
+- [ ] **INC-02**: User can set expected payday (day of month) per income source
+- [ ] **INC-03**: Each income source appears as a toggleable card in the Finance view per month
+- [ ] **INC-04**: When toggled as received, USD sources auto-fetch live rate and deduct Wise/PayPal fees; PHP sources add directly
+- [ ] **INC-05**: Received income auto-adds net PHP amount to current balance; toggle greys out the card
+- [ ] **INC-06**: User can add, edit, and remove income sources from Settings
 
-### UX Revisions (Phase 1)
+### Finance: Bills
 
-- [x] **UX-01**: Stopwatch feature is removed from the UI (code commented out, not deleted)
-- [x] **UX-02**: DB migration drops timer columns from wins table
-- [x] **UX-03**: Win entry wording changed from "Log a win" to intention-oriented language ("Set intentions")
-- [x] **UX-04**: Win input overlay supports multi-win entry (stays open after submit, shows submitted list, Done to close)
-- [x] **UX-05**: Journal entries have categories (Daily, Milestone, Financial) with selector in editor and badge on cards
-- [x] **UX-06**: Streak display uses monochrome Lucide Flame icon instead of fire emoji
-- [x] **UX-07**: Streak celebration requires explicit click to dismiss (no auto-close), shows "You're on a roll" messaging
-- [x] **UX-08**: Dev tools panel accessible via Ctrl+Shift+D for test data seeding and clearing (dev mode only)
+- [ ] **BILL-01**: User can add a bill with name, amount, due date, and recurrence type (one-time / recurring for N months / recurring until end date / ongoing)
+- [ ] **BILL-02**: User can toggle a bill as paid per month (deducts from current balance)
+- [ ] **BILL-03**: User can edit and delete bills
+- [ ] **BILL-04**: Recurring and ongoing bills automatically appear each month until their end condition
+- [ ] **BILL-05**: User sees unpaid bills highlighted by due date urgency
+- [ ] **BILL-06**: One-time bills disappear after being paid
+- [ ] **BILL-07**: Recurring bills show remaining months/payments
 
-### Win Interactions (Phase 2)
+### Finance: Dashboard
 
-- **INT-01**: User can mark a win as complete/incomplete inline on the Today page via always-visible toggle button
-- **INT-02**: Completed wins show line-through text styling and muted foreground color
-- **INT-03**: Toggle persists to Supabase with optimistic update and error rollback
+- [ ] **FIN-01**: MonthStrip navigation to move between months (past shows history, future shows projections)
+- [ ] **FIN-02**: Current month waterfall view — balance cascading as each bill/expense is paid, showing remaining after each
+- [ ] **FIN-03**: Past months show final balance, paid bills, income received (read-only)
+- [ ] **FIN-04**: Future months show projected balance (expected income minus upcoming bills)
+- [ ] **FIN-05**: Year overview showing 12 months with balance trajectory, total income, total expenses
 
-### Timeline Display (Phase 2)
+### Finance: External Balances
 
-- **TIMELINE-01**: History DayDetail renders as a vertical dot-and-line timeline (no timestamps)
-- **TIMELINE-02**: Completed wins show filled dot and left-border accent; incomplete wins show hollow dot and muted border
+- [ ] **EXT-01**: User can manually enter current Polymarket Bot balance
+- [ ] **EXT-02**: User can manually enter current SOL DCA balance
+- [ ] **EXT-03**: External balances display alongside current cash balance for total net worth view
 
-### Win Categories (Phase 3)
+### Journal Rich Text
 
-- **CAT-01**: User can assign a category (work/personal/health) to a win when creating it via button-row selector in WinInputOverlay
-- **CAT-02**: Category persists to Supabase wins table with DB migration adding category column
-- **CAT-03**: Category badge is visible on WinCard in TodayPage (suppressed for default 'work')
-- **CAT-04**: Category badge is visible on TimelineItem in DayDetail history view
-- **CAT-05**: TodayPage shows per-category completion counts when multiple categories are in use
+- [ ] **JRNL-01**: User can format journal entries with bold, italic, bullet lists, numbered lists, and headings (H2, H3)
+- [ ] **JRNL-02**: Formatting via keyboard shortcuts only (Cmd+B, Cmd+I, etc.) — no visible toolbar
+- [ ] **JRNL-03**: Existing plain-text journal entries render correctly after migration (backward compatible)
+- [ ] **JRNL-04**: Journal content stored as HTML in Supabase with body_format column for migration safety
 
-### User Settings (Phase 4)
+### Mobile Responsiveness
 
-- **SETTINGS-01**: User settings persist to Supabase user_settings table with defaults (single row per user)
-- **SETTINGS-02**: Settings load from localStorage cache on mount for instant availability (no flash)
-- **NIGHTOWL-01**: getLocalDateString respects a configurable dayStartHour offset (e.g., 4am = wins at 2am count as previous day)
-- **NIGHTOWL-02**: Streak calculation (useStreak) correctly handles night-owl day offset
-- **NIGHTOWL-03**: useWins fetches correct "today" and "yesterday" wins with day offset applied
-- **SCHEDULE-01**: Morning and evening prompt hours are configurable via settings (not hardcoded 9am/9pm)
-- **HEATMAP-01**: App shows a GitHub-style 84-day consistency heatmap with colored cells for completed days
-- **SETTINGSUI-01**: User can access a Settings page from SideNav to configure day boundary, prompt hours, and view consistency graph
+- [ ] **MOB-01**: All pages usable on iPhone 15 Pro Max viewport (430px width)
+- [ ] **MOB-02**: SideNav collapses to bottom tab bar on mobile widths
+- [ ] **MOB-03**: Touch targets minimum 44x44px on all interactive elements
+- [ ] **MOB-04**: No horizontal scroll on any page at mobile widths
+- [ ] **MOB-05**: Finance pages responsive with stacked layout on mobile
+- [ ] **MOB-06**: DayStrip centers the current/selected day with carousel scrolling left (past) and right (future)
 
-### Push Notifications (Phase 5)
+## Future Requirements
 
-- **PUSH-01**: Service worker registers at root scope and handles push events (displays notification with title, body, tag)
-- **PUSH-02**: Client subscribes to Web Push API and stores subscription (endpoint, p256dh, auth) in Supabase push_subscriptions table
-- **PUSH-03**: Notification permission UI shows current state (enabled/disabled/blocked) with toggle on Settings page
-- **PUSH-04**: Notification stubs in notifications.js replaced with real push subscription wiring
-- **PUSH-05**: Settings page shows notification toggle section with contextual link to morning/evening hour settings
-- **PUSH-06**: Supabase Edge Function sends web push messages to stored subscriptions using VAPID authentication
-- **PUSH-07**: pg_cron triggers Edge Function hourly; function reads user_settings to determine whether to send at current hour
+### v2.1 — Bots & Investments
 
-### UI Simplification (Phase 6)
-
-- **SIMPLIFY-01**: CheckInOverlay component and all its imports are removed
-- **SIMPLIFY-02**: MorningPrompt and EveningPrompt check-in trigger components are removed
-- **SIMPLIFY-03**: useCheckin hook is removed entirely
-- **SIMPLIFY-04**: uiStore cleaned of check-in-related state (checkinOverlayOpen, morning/eveningDismissedDate)
-- **SIMPLIFY-05**: useStreak queries wins.completed directly instead of check_ins table
-- **SIMPLIFY-06**: useHistory.fetchWinsForDate drops check_ins join from select
-- **SIMPLIFY-07**: DayDetail TimelineItem removes check_ins note display
-- **SIMPLIFY-08**: DevToolsPanel seedYesterdayComplete sets wins.completed=true instead of inserting check_ins
-- **SIMPLIFY-09**: Edge Function evening message copy updated (remove "check-in" wording)
-- **SIMPLIFY-10**: TodayPage cleaned of all check-in imports, state, effects, and UI elements
-
-### Journal FAB (Phase 6)
-
-- **FAB-01**: JournalPage has a fixed-position circular FAB button in Nothing Phone dot-matrix aesthetic (lower-right, monochrome, Plus icon)
-- **FAB-02**: JournalPage inline "New Entry" button replaced with FAB
-
-### Unified Daily View (Phase 7)
-
-- **UNIFIED-01**: DayStrip carousel is visible on the main "/" page with today selected by default
-- **UNIFIED-02**: Selecting today in DayStrip shows editable WinList with full CRUD (add, edit, delete, toggle)
-- **UNIFIED-03**: Selecting a past date in DayStrip shows read-only DayDetail timeline for that date
-- **UNIFIED-04**: /history route is removed and History tab is removed from SideNav
-- **UNIFIED-05**: DayStrip checkmark for today updates live when user toggles a win complete/incomplete
-
-## v2 Requirements
-
-### Notifications
-
-- **NOTIF-01**: Configurable notification times (user sets preferred 9am/9pm window)
-- **NOTIF-02**: Notification for streak at risk (approaching midnight with no check-in)
-
-### Wins
-
-- **WIN-V2-01**: Win templates / recurring wins
-- **WIN-V2-02**: Reorder wins by drag
-
-### Journal
-
-- **JOURNAL-V2-01**: Full-text search across journal entries
-
-### Analytics
-
-- **ANALYTICS-01**: Weekly / monthly summary stats (avg wins per day, completion rate, total focus time)
+- **INV-01**: SOL DCA bot API integration (auto-fetch balance and transactions)
+- **INV-02**: Polymarket bot API integration (current PnL, pending bets)
+- **INV-03**: Investment allocation tracking with target percentages
+- **BIO-01**: Biometric authentication (WebAuthn fingerprint/face as PIN alternative)
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Multi-user / auth | Personal tool — single user, no accounts |
-| AI coaching or suggestions | Out of scope for this product's character |
-| Social / sharing | Personal accountability tool, not social |
-| Pomodoro timer | Different feature set; timer is per-win, not timed sessions |
-| Mobile app | Web-first; Vercel deployment covers mobile browser |
-| Streak freeze / grace mechanics | Roll-forward wins is the compassion mechanism |
+| Transaction logging | User doesn't track individual transactions — balance override model |
+| Bank sync | No automatic import from banks |
+| Multi-currency display | PHP only as display currency; USD→PHP conversion at salary receipt only |
+| Receipt scanning | No camera/OCR |
+| Biometric auth | PIN only for v2.0; WebAuthn deferred to v2.1 |
+| Investment allocation | Deferred to v2.1 — SOL DCA bot + Polymarket API planned |
+| Bento grid layout | Finance UI follows wintrack's existing Nothing Phone aesthetic |
+| Envelope budgeting | Balance override model, not YNAB-style envelopes |
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
+Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WIN-01 | v1.0 Phase 2 | Complete |
-| WIN-02 | v1.0 Phase 2 | Complete |
-| WIN-03 | v1.0 Phase 2 | Complete |
-| WIN-04 | v1.0 Phase 2 | Complete |
-| CHECKIN-01 | v1.0 Phase 3 | Complete |
-| CHECKIN-02 | v1.0 Phase 3 | Complete |
-| CHECKIN-03 | v1.0 Phase 3 | Complete |
-| CHECKIN-04 | v1.0 Phase 3 | Complete |
-| TIMER-01 | v1.0 Phase 2 | Complete |
-| TIMER-02 | v1.0 Phase 2 | Complete |
-| TIMER-03 | v1.0 Phase 2 | Complete |
-| JOURNAL-01 | v1.0 Phase 4 | Complete |
-| JOURNAL-02 | v1.0 Phase 4 | Complete |
-| JOURNAL-03 | v1.0 Phase 4 | Complete |
-| STREAK-01 | v1.0 Phase 3 | Complete |
-| HISTORY-01 | v1.0 Phase 4 | Complete |
-| HISTORY-02 | v1.0 Phase 4 | Complete |
-| SHELL-01 | v1.0 Phase 1 | Complete |
-| SHELL-02 | v1.0 Phase 1 | Complete |
-| UX-01 | v1.1 Phase 1 | Complete |
-| UX-02 | v1.1 Phase 1 | Complete |
-| UX-03 | v1.1 Phase 1 | Complete |
-| UX-04 | v1.1 Phase 1 | Complete |
-| UX-05 | v1.1 Phase 1 | Complete |
-| UX-06 | v1.1 Phase 1 | Complete |
-| UX-07 | v1.1 Phase 1 | Complete |
-| UX-08 | v1.1 Phase 1 | Complete |
-| INT-01 | v1.1 Phase 2 | Complete |
-| INT-02 | v1.1 Phase 2 | Complete |
-| INT-03 | v1.1 Phase 2 | Complete |
-| TIMELINE-01 | v1.1 Phase 2 | Complete |
-| TIMELINE-02 | v1.1 Phase 2 | Complete |
-| CAT-01 | v1.1 Phase 3 | Complete |
-| CAT-02 | v1.1 Phase 3 | Complete |
-| CAT-03 | v1.1 Phase 3 | Complete |
-| CAT-04 | v1.1 Phase 3 | Complete |
-| CAT-05 | v1.1 Phase 3 | Complete |
-| SETTINGS-01 | v1.1 Phase 4 | Complete |
-| SETTINGS-02 | v1.1 Phase 4 | Complete |
-| NIGHTOWL-01 | v1.1 Phase 4 | Complete |
-| NIGHTOWL-02 | v1.1 Phase 4 | Complete |
-| NIGHTOWL-03 | v1.1 Phase 4 | Complete |
-| SCHEDULE-01 | v1.1 Phase 4 | Complete |
-| HEATMAP-01 | v1.1 Phase 4 | Complete |
-| SETTINGSUI-01 | v1.1 Phase 4 | Complete |
-| PUSH-01 | v1.1 Phase 5 | Complete |
-| PUSH-02 | v1.1 Phase 5 | Complete |
-| PUSH-03 | v1.1 Phase 5 | Complete |
-| PUSH-04 | v1.1 Phase 5 | Complete |
-| PUSH-05 | v1.1 Phase 5 | Complete |
-| PUSH-06 | v1.1 Phase 5 | Complete |
-| PUSH-07 | v1.1 Phase 5 | Complete |
-| SIMPLIFY-01 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-02 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-03 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-04 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-05 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-06 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-07 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-08 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-09 | v1.1 Phase 6 | Complete |
-| SIMPLIFY-10 | v1.1 Phase 6 | Complete |
-| FAB-01 | v1.1 Phase 6 | Complete |
-| FAB-02 | v1.1 Phase 6 | Complete |
-| UNIFIED-01 | v1.1 Phase 7 | Complete |
-| UNIFIED-02 | v1.1 Phase 7 | Complete |
-| UNIFIED-03 | v1.1 Phase 7 | Complete |
-| UNIFIED-04 | v1.1 Phase 7 | Complete |
-| UNIFIED-05 | v1.1 Phase 7 | Complete |
+| (populated by roadmapper) | | |
 
 **Coverage:**
-- v1 requirements: 19 total — 19 complete
-- v1.1 requirements: 50 total — 50 complete
-- v2 requirements: 5 total — unmapped (future)
+- v2.0 requirements: 50 total
+- Mapped to phases: 0
+- Unmapped: 50 ⚠️
 
 ---
-*Requirements defined: 2026-03-09*
-*Last updated: 2026-03-15 — v1.1 Phase 7 requirements added (UNIFIED-01..05)*
+*Requirements defined: 2026-03-16*
+*Last updated: 2026-03-16 after initial definition*
