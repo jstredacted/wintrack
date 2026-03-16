@@ -4,14 +4,24 @@ import { useState, useEffect } from 'react';
 import { X, Plus, Square, Pause, Play } from 'lucide-react';
 import { formatElapsed, useStopwatch } from '@/hooks/useStopwatch';
 
-function timerFontSize(count) {
+interface TimerWin {
+  id: string;
+  title: string;
+  timer_elapsed_seconds?: number;
+  timer_started_at?: string | null;
+  _onPause?: (id: string, seconds: number) => void;
+  _onStart?: (id: string) => void;
+  _onStop?: (id: string, seconds: number) => void;
+}
+
+function timerFontSize(count: number): string {
   if (count === 1) return 'clamp(5rem, 12vw, 10rem)';
   if (count === 2) return 'clamp(4rem, 8vw, 7rem)';
   if (count === 3) return 'clamp(2.75rem, 5.5vw, 5rem)';
   return 'clamp(2rem, 4vw, 3.5rem)';
 }
 
-function TimerStation({ win, fontSize }) {
+function TimerStation({ win, fontSize }: { win: TimerWin; fontSize: string }) {
   const { displaySeconds } = useStopwatch({
     elapsedBase: win.timer_elapsed_seconds ?? 0,
     startedAt: win.timer_started_at ?? null,
@@ -64,7 +74,7 @@ function TimerStation({ win, fontSize }) {
   );
 }
 
-function AddSlot({ onClick }) {
+function AddSlot({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -81,6 +91,17 @@ function AddSlot({ onClick }) {
   );
 }
 
+interface TimerFocusOverlayProps {
+  open: boolean;
+  wins?: TimerWin[];
+  onClose: () => void;
+  onStopAll: () => void;
+  onAddWin: () => void;
+  onPauseWin: (id: string, seconds: number) => void;
+  onStartWin: (id: string) => void;
+  onStopWin: (id: string, seconds: number) => void;
+}
+
 export default function TimerFocusOverlay({
   open,
   wins = [],
@@ -90,7 +111,7 @@ export default function TimerFocusOverlay({
   onPauseWin,
   onStartWin,
   onStopWin,
-}) {
+}: TimerFocusOverlayProps) {
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
 

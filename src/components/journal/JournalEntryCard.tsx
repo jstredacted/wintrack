@@ -1,6 +1,16 @@
 import { Pencil, Trash2 } from 'lucide-react'
+import type { Database } from '@/lib/database.types'
 
-function formatEntryDate(isoString) {
+type JournalEntry = Database['public']['Tables']['journal_entries']['Row']
+
+interface JournalEntryCardProps {
+  entry: JournalEntry;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  editingId: string | null;
+}
+
+function formatEntryDate(isoString: string): string {
   const d = new Date(isoString)
   return d.toLocaleString('en-US', {
     weekday: 'long',
@@ -10,7 +20,7 @@ function formatEntryDate(isoString) {
   })
 }
 
-export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }) {
+export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }: JournalEntryCardProps) {
   const isCurrentlyEditing = editingId === entry.id
   return (
     <article className="py-10 border-b border-border/30 last:border-0 group">

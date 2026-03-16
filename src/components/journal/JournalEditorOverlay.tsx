@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-function wordCount(text) {
+function wordCount(text: string): number {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
@@ -13,6 +13,15 @@ const CATEGORIES = [
   { value: 'financial', label: 'Financial' },
 ];
 
+interface JournalEditorOverlayProps {
+  open: boolean;
+  initialTitle?: string;
+  initialBody?: string;
+  initialCategory?: string;
+  onSave: (entry: { title: string; body: string; category: string }) => Promise<void>;
+  onClose: () => void;
+}
+
 export default function JournalEditorOverlay({
   open,
   initialTitle = '',
@@ -20,10 +29,10 @@ export default function JournalEditorOverlay({
   initialCategory = 'daily',
   onSave,
   onClose,
-}) {
+}: JournalEditorOverlayProps) {
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const [screen, setScreen] = useState('editing'); // 'editing' | 'summary'
+  const [screen, setScreen] = useState<'editing' | 'summary'>('editing');
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState(initialBody);
   const [category, setCategory] = useState(initialCategory ?? 'daily');
@@ -31,8 +40,8 @@ export default function JournalEditorOverlay({
   const [summaryWordCount, setSummaryWordCount] = useState(0);
   const [summaryMinutes, setSummaryMinutes] = useState(0);
   const [saving, setSaving] = useState(false);
-  const startedAtRef = useRef(null);
-  const titleRef = useRef(null);
+  const startedAtRef = useRef<number | null>(null);
+  const titleRef = useRef<HTMLInputElement>(null);
   const liveWordCountRef = useRef(0);
   const savingRef = useRef(false);
 
@@ -60,7 +69,7 @@ export default function JournalEditorOverlay({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
-  function handleBodyChange(e) {
+  function handleBodyChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const val = e.target.value;
     const wc = wordCount(val);
     setBody(val);
@@ -68,7 +77,7 @@ export default function JournalEditorOverlay({
     liveWordCountRef.current = wc;
   }
 
-  async function handleSave(e) {
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     const currentTitle = title.trim();
     if (!currentTitle || savingRef.current) return;

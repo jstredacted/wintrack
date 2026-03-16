@@ -1,4 +1,10 @@
-export default function RollForwardPrompt({ count, onConfirm, onDismiss }) {
+interface RollForwardPromptProps {
+  count: number;
+  onConfirm: () => void;
+  onDismiss: () => void;
+}
+
+export default function RollForwardPrompt({ count, onConfirm, onDismiss }: RollForwardPromptProps) {
   return (
     <div className="border border-border rounded p-4 flex items-center justify-between gap-4 text-sm font-mono">
       <span className="text-muted-foreground">

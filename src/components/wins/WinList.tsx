@@ -1,24 +1,23 @@
 import { AnimatePresence, motion } from 'motion/react';
 import WinCard from './WinCard';
+import type { Database } from '@/lib/database.types';
 
-/**
- * WinList
- *
- * Props:
- *   wins: array of win objects
- *   onEdit(winId, newTitle)     — called when a win title is edited
- *   onDelete(winId)             — called when a win is deleted
- *   onToggle(winId)             — called when a win toggle button is clicked
- *
- * STOPWATCH REMOVED — onStartTimer, onPauseTimer, onStopTimer props removed
- */
+type Win = Database['public']['Tables']['wins']['Row'];
+
+interface WinListProps {
+  wins?: Win[];
+  onEdit?: (winId: string, newTitle: string) => void;
+  onDelete?: (winId: string) => void;
+  onToggle?: (winId: string) => void;
+}
+
 export default function WinList({
   wins = [],
   onEdit,
   onDelete,
   onToggle,
   // STOPWATCH REMOVED — onStartTimer, onPauseTimer, onStopTimer,
-}) {
+}: WinListProps) {
   if (wins.length === 0) {
     return (
       <div className="flex items-center justify-center py-16">

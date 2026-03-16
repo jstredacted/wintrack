@@ -8,7 +8,11 @@ const SIZE = 240;
 const CENTER = SIZE / 2;
 const RADIUS = 80;
 
-function polarToXY(angleDeg, r) {
+interface CategoryRadarProps {
+  categoryCounts?: Record<string, number>;
+}
+
+function polarToXY(angleDeg: number, r: number) {
   const rad = (angleDeg * Math.PI) / 180;
   return {
     x: CENTER + r * Math.cos(rad),
@@ -16,7 +20,7 @@ function polarToXY(angleDeg, r) {
   };
 }
 
-export default function CategoryRadar({ categoryCounts = {} }) {
+export default function CategoryRadar({ categoryCounts = {} }: CategoryRadarProps) {
   const total = Object.values(categoryCounts).reduce((s, v) => s + v, 0);
   if (total === 0) {
     return (

@@ -3,9 +3,16 @@ import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { getLocalDateString } from '@/lib/utils/date';
 import { useSettingsStore } from '@/stores/settingsStore';
 
-export default function DayStrip({ completionMap = {}, selectedDate, onSelectDate, days = 28 }) {
+interface DayStripProps {
+  completionMap?: Record<string, unknown>;
+  selectedDate: string;
+  onSelectDate?: (date: string) => void;
+  days?: number;
+}
+
+export default function DayStrip({ completionMap = {}, selectedDate, onSelectDate, days = 28 }: DayStripProps) {
   const dayStartHour = useSettingsStore(s => s.settings.dayStartHour);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
@@ -36,7 +43,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
     requestAnimationFrame(updateScrollState);
   }, []);
 
-  const scroll = (dir) => {
+  const scroll = (dir: number) => {
     const el = scrollRef.current;
     if (!el) return;
     // Scroll ~3 cell widths (each cell is min-w-[4.5rem] = 81px at 18px base)

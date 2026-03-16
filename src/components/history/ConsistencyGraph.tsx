@@ -4,7 +4,24 @@ import { getLocalDateString } from '@/lib/utils/date';
 const MONTH_FORMATTER = new Intl.DateTimeFormat('en-US', { month: 'short' });
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-function getIntensity(entry) {
+interface CompletionEntry {
+  completed: number;
+  total: number;
+}
+
+interface TooltipState {
+  x: number;
+  y: number;
+  text: string;
+}
+
+interface ConsistencyGraphProps {
+  completionMap?: Record<string, CompletionEntry | boolean>;
+  days?: number;
+  dayStartHour?: number;
+}
+
+function getIntensity(entry: CompletionEntry | null): number {
   if (!entry || entry.total === 0) return 0;
   const ratio = entry.completed / entry.total;
   if (ratio === 0) return 0;
@@ -37,8 +54,8 @@ const GAP = 3;
 const COL = CELL + GAP;
 const LABEL_W = 32;
 
-export default function ConsistencyGraph({ completionMap = {}, days = 84, dayStartHour = 0 }) {
-  const [tooltip, setTooltip] = useState(null);
+export default function ConsistencyGraph({ completionMap = {}, days = 84, dayStartHour = 0 }: ConsistencyGraphProps) {
+  const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
   const today = new Date();
   const cells = [];

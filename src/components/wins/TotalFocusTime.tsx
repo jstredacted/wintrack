@@ -13,7 +13,7 @@ import { formatElapsed } from '@/hooks/useStopwatch';
  * @param {number} duration - Animation duration in ms (default 600)
  * @returns {number} - Current display value
  */
-function useCountUp(target, duration = 600) {
+function useCountUp(target: number, duration: number = 600) {
   const [display, setDisplay] = useState(target);
   const prev = useRef(target);
 
@@ -23,7 +23,7 @@ function useCountUp(target, duration = 600) {
     const delta = target - start;
     const startTime = performance.now();
 
-    function tick(now) {
+    function tick(now: number) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       setDisplay(Math.round(start + delta * progress));
@@ -48,7 +48,16 @@ function useCountUp(target, duration = 600) {
  * Props:
  *   wins: Win[] — today's wins
  */
-export default function TotalFocusTime({ wins = [] }) {
+interface FocusWin {
+  timer_started_at?: string | null;
+  timer_elapsed_seconds?: number;
+}
+
+interface TotalFocusTimeProps {
+  wins?: FocusWin[];
+}
+
+export default function TotalFocusTime({ wins = [] }: TotalFocusTimeProps) {
   // Tick state — only used to trigger re-renders; does NOT accumulate time
   const [, setTick] = useState(0);
 

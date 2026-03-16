@@ -2,11 +2,17 @@ import { createPortal } from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { Flame } from 'lucide-react';
 
-export default function StreakCelebration({ open, streak, onClose }) {
+interface StreakCelebrationProps {
+  open: boolean;
+  streak: number;
+  onClose: () => void;
+}
+
+export default function StreakCelebration({ open, streak, onClose }: StreakCelebrationProps) {
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [displayCount, setDisplayCount] = useState(0);
-  const rafRef = useRef(null);
+  const rafRef = useRef<number | null>(null);
 
   // Mount/unmount state machine
   useEffect(() => {

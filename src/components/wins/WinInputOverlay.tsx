@@ -7,11 +7,18 @@ const WIN_CATEGORIES = [
   { value: 'health', label: 'Health' },
 ];
 
-export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
-  const inputRef = useRef(null);
+interface WinInputOverlayProps {
+  open: boolean;
+  onSubmit: (title: string, category: string) => void;
+  onClose: () => void;
+  onDone?: () => void;
+}
+
+export default function WinInputOverlay({ open, onSubmit, onClose, onDone }: WinInputOverlayProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const [submittedTitles, setSubmittedTitles] = useState([]);
+  const [submittedTitles, setSubmittedTitles] = useState<Array<{ title: string; category: string }>>([]);
   const [category, setCategory] = useState('work');
 
   const handleDone = onDone ?? onClose;
@@ -55,13 +62,13 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }) {
       }}
     >
       <form
-        onSubmit={(e) => {
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
-          const title = new FormData(e.target).get('title');
+          const title = new FormData(e.currentTarget).get('title') as string | null;
           if (title?.trim()) {
             onSubmit(title.trim(), category);
             setSubmittedTitles((prev) => [...prev, { title: title.trim(), category }]);
-            e.target.reset();
+            e.currentTarget.reset();
             inputRef.current?.focus();
           }
         }}

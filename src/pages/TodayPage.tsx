@@ -57,7 +57,7 @@ export default function TodayPage() {
   } = useUIStore();
 
   // Past-date wins state
-  const [historyWins, setHistoryWins] = useState([]);
+  const [historyWins, setHistoryWins] = useState<Array<{ id: string; title: string; category: string; completed: boolean }>>([]);
   const [detailLoading, setDetailLoading] = useState(false);
 
   // Fetch wins when viewing a past date

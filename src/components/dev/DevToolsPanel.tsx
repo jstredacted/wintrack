@@ -3,7 +3,12 @@ import { supabase } from '@/lib/supabase';
 import { USER_ID } from '@/lib/env';
 import { getLocalDateString } from '@/lib/utils/date';
 
-export default function DevToolsPanel({ open, onClose }) {
+interface DevToolsPanelProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function DevToolsPanel({ open, onClose }: DevToolsPanelProps) {
   if (!open) return null;
 
   async function seedTodayWins(count = 3) {

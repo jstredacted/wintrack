@@ -7,11 +7,19 @@
  *
  * Otherwise renders "CATEGORY: completed/total" for each group.
  */
-export default function CategorySummary({ wins }) {
+import type { Database } from '@/lib/database.types';
+
+type Win = Database['public']['Tables']['wins']['Row'];
+
+interface CategorySummaryProps {
+  wins?: Win[];
+}
+
+export default function CategorySummary({ wins }: CategorySummaryProps) {
   if (!wins || wins.length === 0) return null;
 
   // Group wins by category (fallback to 'work' for wins without a category)
-  const groups = {};
+  const groups: Record<string, { total: number; completed: number }> = {};
   for (const win of wins) {
     const cat = win.category ?? 'work';
     if (!groups[cat]) {

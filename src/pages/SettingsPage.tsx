@@ -33,7 +33,7 @@ const EVENING_HOURS = Array.from({ length: 7 }, (_, i) => {
 export default function SettingsPage() {
   const { settings, loading, saveSettings } = useSettings();
   const { completionMap } = useHistory();
-  const [categoryCounts, setCategoryCounts] = useState({});
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
   const [form, setForm] = useState({
     dayStartHour: 0,
     morningPromptHour: 9,
@@ -59,7 +59,7 @@ export default function SettingsPage() {
         .eq('user_id', USER_ID)
         .eq('completed', true);
       if (!data) return;
-      const counts = {};
+      const counts: Record<string, number> = {};
       for (const { category } of data) {
         if (category) counts[category] = (counts[category] || 0) + 1;
       }
@@ -68,7 +68,7 @@ export default function SettingsPage() {
     fetchCategories();
   }, []);
 
-  function handleChange(field, value) {
+  function handleChange(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: parseInt(value, 10) }));
   }
 

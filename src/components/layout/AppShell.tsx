@@ -11,7 +11,7 @@ export default function AppShell() {
 
   useEffect(() => {
     if (!__DEV_TOOLS_ENABLED__) return;
-    function handleKeyDown(e) {
+    function handleKeyDown(e: KeyboardEvent) {
       if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
         toggleDevTools();

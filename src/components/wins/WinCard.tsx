@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import { Pencil, Trash2, Circle, CheckCircle } from 'lucide-react';
+import type { Database } from '@/lib/database.types';
 // STOPWATCH REMOVED — Play, Pause, Square imports kept for potential re-enable
 // import { Play, Pause, Square } from 'lucide-react';
 // STOPWATCH REMOVED — useStopwatch import kept for potential re-enable
 // import { useStopwatch, formatElapsed } from '@/hooks/useStopwatch';
+
+type Win = Database['public']['Tables']['wins']['Row'];
+
+interface WinCardProps {
+  win: Win;
+  onEdit?: (newTitle: string) => void;
+  onDelete?: () => void;
+  onToggle?: () => void;
+}
 
 export default function WinCard({
   win,
@@ -14,7 +24,7 @@ export default function WinCard({
   // onStartTimer,
   // onPauseTimer,
   // onStopTimer,
-}) {
+}: WinCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
 
@@ -35,7 +45,7 @@ export default function WinCard({
     setIsEditing(false);
   }
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') handleEditSubmit();
     else if (e.key === 'Escape') setIsEditing(false);
   }

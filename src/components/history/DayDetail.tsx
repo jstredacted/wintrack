@@ -1,4 +1,16 @@
-function TimelineItem({ win, isLast }) {
+interface HistoryWin {
+  id: string;
+  title: string;
+  category: string;
+  completed: boolean;
+}
+
+interface TimelineItemProps {
+  win: HistoryWin;
+  isLast: boolean;
+}
+
+function TimelineItem({ win, isLast }: TimelineItemProps) {
   const completed = win.completed
 
   return (
@@ -51,7 +63,13 @@ function TimelineItem({ win, isLast }) {
   )
 }
 
-export default function DayDetail({ date, wins = [], loading = false }) {
+interface DayDetailProps {
+  date: string;
+  wins?: HistoryWin[];
+  loading?: boolean;
+}
+
+export default function DayDetail({ date, wins = [], loading = false }: DayDetailProps) {
   if (loading) {
     return (
       <div data-testid="loading" aria-busy="true" className="font-mono text-sm text-muted-foreground">

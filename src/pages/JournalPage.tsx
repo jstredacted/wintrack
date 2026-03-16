@@ -10,12 +10,12 @@ export default function JournalPage() {
   const { entries, loading, addEntry, editEntry, deleteEntry } = useJournal()
   const refreshStreak = useUIStore((s) => s.refreshStreak)
   const [showNewForm, setShowNewForm] = useState(false)
-  const [editingId, setEditingId] = useState(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   const overlayOpen = showNewForm || editingId !== null
   const editingEntry = editingId ? entries.find(e => e.id === editingId) : null
 
-  async function handleOverlaySave({ title, body, category }) {
+  async function handleOverlaySave({ title, body, category }: { title: string; body: string; category: string }) {
     if (editingId) {
       await editEntry(editingId, { title, body, category })
     } else {
