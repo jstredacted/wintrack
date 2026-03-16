@@ -115,6 +115,7 @@ export type Database = {
           day_start_hour: number
           evening_prompt_hour: number
           morning_prompt_hour: number
+          pin_hash: string | null
           updated_at: string
           user_id: string
         }
@@ -123,6 +124,7 @@ export type Database = {
           day_start_hour?: number
           evening_prompt_hour?: number
           morning_prompt_hour?: number
+          pin_hash?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -131,6 +133,7 @@ export type Database = {
           day_start_hour?: number
           evening_prompt_hour?: number
           morning_prompt_hour?: number
+          pin_hash?: string | null
           updated_at?: string
           user_id?: string
         }

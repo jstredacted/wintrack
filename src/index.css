@@ -181,6 +181,19 @@
   animation: journal-slide-out 0.22s cubic-bezier(0.4, 0, 1, 1) both;
 }
 
+/* PIN authentication — shake on wrong PIN */
+@keyframes pin-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* PIN authentication — dot fill on digit entry */
+@keyframes pin-dot-fill {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
 .dot-grid {
   background-image: radial-gradient(circle, oklch(0.5 0 0 / 0.06) 1px, transparent 1px);
