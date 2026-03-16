@@ -89,6 +89,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [ ] **MOB-04**: No horizontal scroll on any page at mobile widths
 - [ ] **MOB-05**: Finance pages responsive with stacked layout on mobile
 - [ ] **MOB-06**: DayStrip centers the current/selected day with carousel scrolling left (past) and right (future)
+- [ ] **MOB-07**: Fix DayStrip/header date mismatch when dayStartHour offset is active (off-by-one between strip dates and displayed date)
 
 ## Future Requirements
 
@@ -166,10 +167,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | MOB-04 | Phase 5 | Pending |
 | MOB-05 | Phase 5 | Pending |
 | MOB-06 | Phase 5 | Pending |
+| MOB-07 | Phase 5 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 50 total
-- Mapped to phases: 50
+- v2.0 requirements: 51 total
+- Mapped to phases: 51
 - Unmapped: 0
 
 ---
