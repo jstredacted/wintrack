@@ -41,11 +41,12 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
   2. Dev tools panel only appears on the develop branch and is absent from main
   3. All .jsx/.js source files have been converted to .tsx/.ts and `tsc --noEmit` passes
   4. Supabase database types are generated and imported in hooks/services
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Dev workflow setup: develop branch, --host flag, TypeScript install, tsconfig, Supabase types, dev tools env gating, ESLint
+- [ ] 01-02-PLAN.md — TypeScript migration: rename all 39 source files (.js/.jsx to .ts/.tsx) with type annotations
+- [ ] 01-03-PLAN.md — Migration completion: rename test/config files, enable strict mode, fix type errors
 
 ### Phase 2: PIN Authentication
 **Goal**: User's data is gated behind a PIN lock screen on every app load
@@ -119,7 +120,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
-| 1. Dev Workflow & TS Foundation | v2.0 | 0/TBD | Not started | - |
+| 1. Dev Workflow & TS Foundation | v2.0 | 0/3 | Planning complete | - |
 | 2. PIN Authentication | v2.0 | 0/TBD | Not started | - |
 | 3. Finance Core | v2.0 | 0/TBD | Not started | - |
 | 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
