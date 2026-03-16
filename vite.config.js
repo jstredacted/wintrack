@@ -5,6 +5,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig({
+  define: {
+    __DEV_TOOLS_ENABLED__: JSON.stringify(
+      process.env.VITE_ENABLE_DEV_TOOLS === 'true' || process.env.NODE_ENV !== 'production'
+    ),
+  },
   plugins: [
     react(),
     tailwindcss(),

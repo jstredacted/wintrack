@@ -10,7 +10,7 @@ export default function AppShell() {
   const closeDevTools = useUIStore((s) => s.closeDevTools);
 
   useEffect(() => {
-    if (!import.meta.env.DEV) return;
+    if (!__DEV_TOOLS_ENABLED__) return;
     function handleKeyDown(e) {
       if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
@@ -27,7 +27,7 @@ export default function AppShell() {
       <main className="ml-14 flex-1 overflow-y-auto">
         <Outlet />
       </main>
-      {import.meta.env.DEV && (
+      {__DEV_TOOLS_ENABLED__ && (
         <DevToolsPanel open={devToolsOpen} onClose={closeDevTools} />
       )}
     </div>
