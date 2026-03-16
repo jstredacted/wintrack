@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 if (typeof window.matchMedia === "undefined") {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: (query) => ({
+    value: (query: string) => ({
       matches: false,
       media: query,
       addEventListener: () => {},
