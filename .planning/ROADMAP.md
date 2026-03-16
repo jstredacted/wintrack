@@ -3,6 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Daily Discipline Loop** — Phases 1-7 (shipped 2026-03-16)
+- 📋 **v2.0 Finance & Platform** — Phases 8-12 (planned)
 
 ## Phases
 
@@ -20,3 +21,106 @@
 Full details: .planning/milestones/v1.0-ROADMAP.md
 
 </details>
+
+### v2.0 Finance & Platform
+
+- [ ] **Phase 8: Dev Workflow & TypeScript Foundation** - Branch strategy, mobile dev server, TypeScript setup and migration
+- [ ] **Phase 9: PIN Authentication** - PIN gate with setup flow, session management, idle timeout
+- [ ] **Phase 10: Finance Core** - Balance model, budget tracking, income streams, month navigation
+- [ ] **Phase 11: Finance Extended** - Bills management, dashboard views, external balances
+- [ ] **Phase 12: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages
+
+## Phase Details
+
+### Phase 8: Dev Workflow & TypeScript Foundation
+**Goal**: Codebase runs in TypeScript with a proper branch strategy for dev vs production
+**Depends on**: Nothing (first phase of v2.0)
+**Requirements**: DW-01, DW-02, DW-03, TS-01, TS-02, TS-03, TS-04
+**Success Criteria** (what must be TRUE):
+  1. Running `bun run dev` serves the app with `--host` flag, accessible from phone on local network
+  2. Dev tools panel only appears on the develop branch and is absent from main
+  3. All .jsx/.js source files have been converted to .tsx/.ts and `tsc --noEmit` passes
+  4. Supabase database types are generated and imported in hooks/services
+**Plans**: TBD
+
+Plans:
+- [ ] 08-01: TBD
+- [ ] 08-02: TBD
+
+### Phase 9: PIN Authentication
+**Goal**: User's data is gated behind a PIN lock screen on every app load
+**Depends on**: Phase 8
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05
+**Success Criteria** (what must be TRUE):
+  1. First-time user sees a PIN setup flow (enter + confirm) before accessing the app
+  2. Returning user must enter their PIN on app load; incorrect PIN shows error and does not unlock
+  3. App stays unlocked during active use but locks after 15 minutes of inactivity
+  4. Static JWT environment variables are removed; PIN hash stored in Supabase replaces the old auth mechanism
+**Plans**: TBD
+
+Plans:
+- [ ] 09-01: TBD
+
+### Phase 10: Finance Core
+**Goal**: User can track their current balance, set a monthly budget, configure income sources, and navigate between months
+**Depends on**: Phase 9
+**Requirements**: BAL-01, BAL-02, BAL-03, BAL-04, BAL-05, BUD-01, BUD-02, INC-01, INC-02, INC-03, INC-04, INC-05, INC-06, FIN-01
+**Success Criteria** (what must be TRUE):
+  1. User sees their current balance on the Finance page and can manually override it at any time
+  2. User can configure income sources (name, amount, currency, conversion method, payday) in Settings and toggle them as received per month
+  3. Receiving income auto-adds net PHP amount to balance (USD sources show converted amount after Wise/PayPal fees)
+  4. User can set a monthly budget limit and sees a progress visualization showing paid expenses vs budget
+  5. MonthStrip navigation lets user move between months; current balance carries forward as next month's starting point
+**Plans**: TBD
+
+Plans:
+- [ ] 10-01: TBD
+- [ ] 10-02: TBD
+- [ ] 10-03: TBD
+
+### Phase 11: Finance Extended
+**Goal**: User can manage bills with recurrence, view financial dashboards, and track external investment balances
+**Depends on**: Phase 10
+**Requirements**: BILL-01, BILL-02, BILL-03, BILL-04, BILL-05, BILL-06, BILL-07, FIN-02, FIN-03, FIN-04, FIN-05, EXT-01, EXT-02, EXT-03
+**Success Criteria** (what must be TRUE):
+  1. User can add bills with recurrence rules (one-time, recurring N months, ongoing) and toggle them as paid (deducting from balance)
+  2. Recurring/ongoing bills auto-appear each month; one-time bills disappear after payment; unpaid bills highlight by due date urgency
+  3. Current month shows a waterfall view of balance cascading as each bill is paid; past months are read-only; future months show projections
+  4. Year overview displays 12 months with balance trajectory, total income, and total expenses
+  5. User can enter Polymarket Bot and SOL DCA balances which display alongside cash balance for a total net worth view
+**Plans**: TBD
+
+Plans:
+- [ ] 11-01: TBD
+- [ ] 11-02: TBD
+- [ ] 11-03: TBD
+
+### Phase 12: Journal Rich Text & Mobile
+**Goal**: Journal entries support rich formatting and all pages work well on mobile devices
+**Depends on**: Phase 11
+**Requirements**: JRNL-01, JRNL-02, JRNL-03, JRNL-04, MOB-01, MOB-02, MOB-03, MOB-04, MOB-05, MOB-06
+**Success Criteria** (what must be TRUE):
+  1. User can format journal entries with bold, italic, lists, and headings using keyboard shortcuts (no visible toolbar)
+  2. Existing plain-text journal entries render correctly without data loss after Tiptap migration
+  3. SideNav collapses to a bottom tab bar on mobile widths; all pages are usable on 430px width with no horizontal scroll
+  4. All interactive elements meet 44x44px touch targets; finance pages use stacked layout on mobile
+  5. DayStrip centers the selected day with proper carousel scrolling on touch devices
+**Plans**: TBD
+
+Plans:
+- [ ] 12-01: TBD
+- [ ] 12-02: TBD
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 8 -> 9 -> 10 -> 11 -> 12
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
+| 8. Dev Workflow & TS Foundation | v2.0 | 0/TBD | Not started | - |
+| 9. PIN Authentication | v2.0 | 0/TBD | Not started | - |
+| 10. Finance Core | v2.0 | 0/TBD | Not started | - |
+| 11. Finance Extended | v2.0 | 0/TBD | Not started | - |
+| 12. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |

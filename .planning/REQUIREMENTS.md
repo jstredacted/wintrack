@@ -114,17 +114,64 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ## Traceability
 
-Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| DW-01 | Phase 8 | Pending |
+| DW-02 | Phase 8 | Pending |
+| DW-03 | Phase 8 | Pending |
+| TS-01 | Phase 8 | Pending |
+| TS-02 | Phase 8 | Pending |
+| TS-03 | Phase 8 | Pending |
+| TS-04 | Phase 8 | Pending |
+| AUTH-01 | Phase 9 | Pending |
+| AUTH-02 | Phase 9 | Pending |
+| AUTH-03 | Phase 9 | Pending |
+| AUTH-04 | Phase 9 | Pending |
+| AUTH-05 | Phase 9 | Pending |
+| BAL-01 | Phase 10 | Pending |
+| BAL-02 | Phase 10 | Pending |
+| BAL-03 | Phase 10 | Pending |
+| BAL-04 | Phase 10 | Pending |
+| BAL-05 | Phase 10 | Pending |
+| BUD-01 | Phase 10 | Pending |
+| BUD-02 | Phase 10 | Pending |
+| INC-01 | Phase 10 | Pending |
+| INC-02 | Phase 10 | Pending |
+| INC-03 | Phase 10 | Pending |
+| INC-04 | Phase 10 | Pending |
+| INC-05 | Phase 10 | Pending |
+| INC-06 | Phase 10 | Pending |
+| FIN-01 | Phase 10 | Pending |
+| BILL-01 | Phase 11 | Pending |
+| BILL-02 | Phase 11 | Pending |
+| BILL-03 | Phase 11 | Pending |
+| BILL-04 | Phase 11 | Pending |
+| BILL-05 | Phase 11 | Pending |
+| BILL-06 | Phase 11 | Pending |
+| BILL-07 | Phase 11 | Pending |
+| FIN-02 | Phase 11 | Pending |
+| FIN-03 | Phase 11 | Pending |
+| FIN-04 | Phase 11 | Pending |
+| FIN-05 | Phase 11 | Pending |
+| EXT-01 | Phase 11 | Pending |
+| EXT-02 | Phase 11 | Pending |
+| EXT-03 | Phase 11 | Pending |
+| JRNL-01 | Phase 12 | Pending |
+| JRNL-02 | Phase 12 | Pending |
+| JRNL-03 | Phase 12 | Pending |
+| JRNL-04 | Phase 12 | Pending |
+| MOB-01 | Phase 12 | Pending |
+| MOB-02 | Phase 12 | Pending |
+| MOB-03 | Phase 12 | Pending |
+| MOB-04 | Phase 12 | Pending |
+| MOB-05 | Phase 12 | Pending |
+| MOB-06 | Phase 12 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 50 total
-- Mapped to phases: 0
-- Unmapped: 50 ⚠️
+- Mapped to phases: 50
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-16*
-*Last updated: 2026-03-16 after initial definition*
+*Last updated: 2026-03-16 after roadmap creation*
