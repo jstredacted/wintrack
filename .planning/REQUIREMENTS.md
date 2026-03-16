@@ -24,8 +24,8 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 - [ ] **AUTH-01**: User can set a 4-6 digit PIN on first app load (setup flow with confirm)
 - [ ] **AUTH-02**: User must enter PIN on app load; active sessions stay unlocked until 15 minutes idle
-- [ ] **AUTH-03**: PIN stored as SHA-256 hash in Supabase (not plaintext)
-- [ ] **AUTH-04**: Session persists in sessionStorage; idle timer resets on user interaction
+- [x] **AUTH-03**: PIN stored as SHA-256 hash in Supabase (not plaintext)
+- [x] **AUTH-04**: Session persists in sessionStorage; idle timer resets on user interaction
 - [ ] **AUTH-05**: Static JWT authentication removed in favor of PIN-gated access
 
 ### Finance: Balance
@@ -125,8 +125,8 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | TS-04 | Phase 1 | Complete |
 | AUTH-01 | Phase 2 | Pending |
 | AUTH-02 | Phase 2 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Complete |
+| AUTH-04 | Phase 2 | Complete |
 | AUTH-05 | Phase 2 | Pending |
 | BAL-01 | Phase 3 | Pending |
 | BAL-02 | Phase 3 | Pending |

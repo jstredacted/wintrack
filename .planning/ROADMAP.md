@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|-----------|----------------|--------|-----------|
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
 | 1. Dev Workflow & TS Foundation | 3/3 | Complete   | 2026-03-16 | - |
-| 2. PIN Authentication | v2.0 | 0/2 | Not started | - |
+| 2. PIN Authentication | v2.0 | 1/2 | In Progress | - |
 | 3. Finance Core | v2.0 | 0/TBD | Not started | - |
 | 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
 | 5. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
