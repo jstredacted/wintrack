@@ -127,9 +127,13 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
         // Rollback
         setMonthData((m) => (m ? { ...m, current_balance: prev } : m));
         setError(rpcError.message);
+        return;
       }
+
+      // Refetch month data to sync local state with DB
+      refetch();
     },
-    [monthData]
+    [monthData, refetch]
   );
 
   const updateBudgetLimit = useCallback(
