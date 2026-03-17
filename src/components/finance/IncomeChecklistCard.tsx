@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Check, Circle, Plus } from 'lucide-react';
+import { Circle, Plus } from 'lucide-react';
 import {
   formatPHP,
   formatUSD,
@@ -81,18 +81,16 @@ export default function IncomeChecklistCard({
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 flex-1 flex flex-col transition-all duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
-          Income
-        </h3>
-      </div>
+    <div>
+      {/* Section header */}
+      <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground mb-4">
+        Income
+      </h3>
 
       {/* Income rows */}
-      <div className="flex-1 space-y-1 overflow-y-auto">
+      <div className="space-y-3">
         {incomes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="flex items-center justify-center py-8">
             <span className="text-[0.778rem] font-mono text-muted-foreground">
               No income sources
             </span>
@@ -109,19 +107,19 @@ export default function IncomeChecklistCard({
                 type="button"
                 onClick={() => handleToggle(income)}
                 disabled={readOnly || isToggling || (isUSD && rateLoading && !income.received)}
-                className={`flex items-center gap-2 py-1.5 w-full text-left transition-opacity ${
-                  income.received ? 'opacity-50' : ''
-                } ${isToggling ? 'opacity-40' : ''} disabled:cursor-default`}
+                className={`flex items-center gap-3 w-full text-left transition-opacity ${
+                  income.received ? 'opacity-40' : ''
+                } ${isToggling ? 'opacity-30' : ''} disabled:cursor-default`}
               >
                 {income.received ? (
-                  <Check size={14} className="text-foreground shrink-0" />
+                  <div className="w-4 h-4 rounded-full bg-foreground shrink-0" />
                 ) : (
-                  <Circle size={14} className="text-muted-foreground shrink-0" />
+                  <Circle size={16} className="text-muted-foreground shrink-0" />
                 )}
-                <span className="font-mono text-[0.778rem] flex-1 min-w-0 truncate">
+                <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate">
                   {source?.name ?? 'Income'}
                 </span>
-                <span className="font-mono text-[0.778rem] tabular-nums shrink-0">
+                <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
                   {getDisplayAmount(income)}
                 </span>
               </button>
@@ -130,15 +128,15 @@ export default function IncomeChecklistCard({
         )}
       </div>
 
-      {/* Add link to settings */}
+      {/* Settings link */}
       {!readOnly && (
         <button
           type="button"
           onClick={() => navigate('/settings')}
-          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-2 pt-2 border-t border-border"
+          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4"
         >
           <Plus size={12} />
-          <span>Configure in Settings</span>
+          <span>Manage in Settings</span>
         </button>
       )}
     </div>

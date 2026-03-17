@@ -61,7 +61,6 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
         start_month: getCurrentMonth(),
       });
       resetForm();
-      // Keep form open for "Add Another"
     } finally {
       setSaving(false);
     }
@@ -81,13 +80,13 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
     'bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground w-full';
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 flex-1 flex flex-col transition-all duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+    <div>
+      {/* Section header */}
+      <div className="flex items-center justify-between mb-4">
         <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
           Bills
         </h3>
-        {!readOnly && (
+        {!readOnly && bills.length > 0 && (
           <button
             type="button"
             onClick={() => {
@@ -102,19 +101,19 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
         )}
       </div>
 
-      {/* Inline add form at top */}
+      {/* Inline add form */}
       {showForm && (
-        <div className="space-y-2 mb-3 pb-3 border-b border-border" onKeyDown={handleKeyDown}>
-          <input
-            ref={nameRef}
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Bill name"
-            disabled={saving}
-            className={inputBase}
-          />
-          <div className="flex gap-2">
+        <div className="space-y-2 mb-4 pb-4 border-b border-foreground/10" onKeyDown={handleKeyDown}>
+          <div className="flex gap-3">
+            <input
+              ref={nameRef}
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Name"
+              disabled={saving}
+              className={`${inputBase} flex-1`}
+            />
             <input
               type="text"
               inputMode="decimal"
@@ -125,8 +124,10 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
               }}
               placeholder="Amount"
               disabled={saving}
-              className={`${inputBase} flex-1`}
+              className={`${inputBase} w-24 text-right`}
             />
+          </div>
+          <div className="flex gap-3 items-center">
             <input
               type="text"
               inputMode="numeric"
@@ -135,29 +136,29 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
                 const v = e.target.value;
                 if (v === '' || /^\d{1,2}$/.test(v)) setDueDay(v);
               }}
-              placeholder="Day"
+              placeholder="Due day"
               disabled={saving}
-              className={`${inputBase} w-14 text-center`}
+              className={`${inputBase} w-20`}
             />
+            <select
+              value={recurrenceType}
+              onChange={(e) => setRecurrenceType(e.target.value as RecurrenceType)}
+              disabled={saving}
+              className={`${inputBase} flex-1 text-[0.667rem]`}
+            >
+              <option value="one_time">One-time</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="recurring_n">Recurring</option>
+            </select>
           </div>
-          <select
-            value={recurrenceType}
-            onChange={(e) => setRecurrenceType(e.target.value as RecurrenceType)}
-            disabled={saving}
-            className={`${inputBase} text-[0.667rem]`}
-          >
-            <option value="one_time">One-time</option>
-            <option value="ongoing">Ongoing</option>
-            <option value="recurring_n">Recurring</option>
-          </select>
-          <div className="flex gap-2 pt-1">
+          <div className="flex gap-3 pt-1">
             <button
               type="button"
               onClick={handleSubmit}
               disabled={saving}
               className="text-[0.667rem] font-mono text-foreground hover:underline disabled:opacity-50"
             >
-              Add Another
+              Add
             </button>
             <button
               type="button"
@@ -171,9 +172,9 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
       )}
 
       {/* Bill rows */}
-      <div className="flex-1 space-y-1 overflow-y-auto">
+      <div className="space-y-3">
         {sortedBills.length === 0 && !showForm ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="flex items-center justify-center py-8">
             {!readOnly ? (
               <button
                 type="button"
@@ -181,10 +182,9 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
                   setShowForm(true);
                   setTimeout(() => nameRef.current?.focus(), 0);
                 }}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
               >
-                <Plus size={24} className="mx-auto mb-1" />
-                <span className="text-[0.778rem] font-mono">Add Bill</span>
+                <Plus size={32} strokeWidth={1} />
               </button>
             ) : (
               <span className="text-[0.778rem] font-mono text-muted-foreground">No bills</span>
@@ -194,7 +194,7 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
           sortedBills.map((bill) => (
             <div
               key={bill.id}
-              className={`flex items-center gap-2 py-1.5 ${bill.paid ? 'opacity-50' : ''}`}
+              className={`flex items-center gap-3 ${bill.paid ? 'opacity-40' : ''}`}
             >
               <button
                 type="button"
@@ -204,25 +204,40 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
                 aria-label={bill.paid ? 'Mark unpaid' : 'Mark paid'}
               >
                 {bill.paid ? (
-                  <CheckCircle2 size={14} className="text-foreground" />
+                  <CheckCircle2 size={16} className="text-foreground" />
                 ) : (
-                  <Circle size={14} className="text-muted-foreground" />
+                  <Circle size={16} className="text-muted-foreground" />
                 )}
               </button>
               <span
-                className={`font-mono text-[0.778rem] flex-1 min-w-0 truncate ${
+                className={`font-mono text-[0.833rem] flex-1 min-w-0 truncate ${
                   bill.paid ? 'line-through' : ''
                 }`}
               >
                 {bill.name}
               </span>
-              <span className="font-mono text-[0.778rem] tabular-nums shrink-0">
+              <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
                 {formatPHP(bill.amount)}
               </span>
             </div>
           ))
         )}
       </div>
+
+      {/* Add bill link at bottom */}
+      {!readOnly && bills.length > 0 && !showForm && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(true);
+            setTimeout(() => nameRef.current?.focus(), 0);
+          }}
+          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4"
+        >
+          <Plus size={12} />
+          <span>Add Bill</span>
+        </button>
+      )}
     </div>
   );
 }

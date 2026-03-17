@@ -86,38 +86,35 @@ export default function FinancePage() {
     return monthData.starting_balance + expectedIncome - billsTotal;
   }, [isFutureMonth, monthData, incomes, bills, rate]);
 
-  // Swipe detection for horizontal views
+  // Horizontal swipe detection for views
   const touchStartX = useRef<number | null>(null);
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+  const touchStartY = useRef<number | null>(null);
+  const handleViewTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   }, []);
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = touchStartX.current - e.changedTouches[0].clientX;
+  const handleViewTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const deltaX = touchStartX.current - e.changedTouches[0].clientX;
+    const deltaY = touchStartY.current - e.changedTouches[0].clientY;
     touchStartX.current = null;
-    if (Math.abs(delta) < 50) return;
-    if (delta > 0 && viewIndex === 0) setViewIndex(1);
-    else if (delta < 0 && viewIndex === 1) setViewIndex(0);
+    touchStartY.current = null;
+    // Only horizontal swipe if X delta dominates Y delta
+    if (Math.abs(deltaX) < 50 || Math.abs(deltaY) > Math.abs(deltaX)) return;
+    if (deltaX > 0 && viewIndex === 0) setViewIndex(1);
+    else if (deltaX < 0 && viewIndex === 1) setViewIndex(0);
   }, [viewIndex]);
 
   return (
     <div className="flex flex-col h-full">
-      {/* MonthBarrel at top */}
-      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth} />
+      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth}>
+        {/* Past month indicator */}
+        {isPastMonth && (
+          <div className="text-center text-[0.667rem] text-muted-foreground pb-2">
+            Past month — read only
+          </div>
+        )}
 
-      {/* Past month indicator */}
-      {isPastMonth && (
-        <div className="text-center text-[0.667rem] text-muted-foreground pb-2">
-          Past month — read only
-        </div>
-      )}
-
-      {/* Content */}
-      <div
-        className="flex-1 overflow-hidden"
-        onTouchStart={!isFutureMonth ? handleTouchStart : undefined}
-        onTouchEnd={!isFutureMonth ? handleTouchEnd : undefined}
-      >
         {loading ? (
           <p className="text-sm font-mono text-muted-foreground text-center py-12">Loading...</p>
         ) : error ? (
@@ -133,76 +130,91 @@ export default function FinancePage() {
             </span>
           </div>
         ) : (
-          /* Current or past: two horizontal views */
-          <div
-            className="flex transition-transform duration-300 h-full"
-            style={{ transform: `translateX(${viewIndex * -100}%)` }}
-          >
-            {/* View 0: Overview */}
-            <div className="w-full shrink-0 px-6 overflow-y-auto">
-              <div className="max-w-[600px] mx-auto space-y-6 pb-8">
-                <BudgetProgressBar
-                  paidTotal={paidTotal}
-                  unpaidTotal={unpaidTotal}
-                  budgetLimit={monthData?.budget_limit ?? 0}
-                  totalIncome={totalIncome}
-                />
-                <BalanceDisplay
-                  currentBalance={monthData?.current_balance ?? 0}
-                  startingBalance={monthData?.starting_balance ?? 0}
-                  lastChange={lastChange}
-                  onUpdateBalance={async (newBalance) => {
-                    await updateBalance(newBalance);
-                    refetchHistory();
-                  }}
-                  onOpenHistory={() => setHistoryModalOpen(true)}
-                  readOnly={isPastMonth}
-                />
+          /* Current or past: horizontal views inside month barrel */
+          <div className="flex flex-col h-full">
+            {/* Horizontal slide container */}
+            <div
+              className="flex-1 overflow-hidden"
+              onTouchStart={handleViewTouchStart}
+              onTouchEnd={handleViewTouchEnd}
+            >
+              <div
+                className="flex transition-transform duration-300 h-full"
+                style={{ transform: `translateX(${viewIndex * -100}%)` }}
+              >
+                {/* View 0: Overview */}
+                <div className="w-full shrink-0 px-6 overflow-y-auto">
+                  <div className="max-w-[600px] mx-auto space-y-6 pb-8">
+                    <BudgetProgressBar
+                      paidTotal={paidTotal}
+                      unpaidTotal={unpaidTotal}
+                      budgetLimit={monthData?.budget_limit ?? 0}
+                      totalIncome={totalIncome}
+                      onUpdateBudgetLimit={updateBudgetLimit}
+                      readOnly={isPastMonth}
+                    />
+                    <BalanceDisplay
+                      currentBalance={monthData?.current_balance ?? 0}
+                      startingBalance={monthData?.starting_balance ?? 0}
+                      lastChange={lastChange}
+                      onUpdateBalance={async (newBalance) => {
+                        await updateBalance(newBalance);
+                        refetchHistory();
+                      }}
+                      onOpenHistory={() => setHistoryModalOpen(true)}
+                      readOnly={isPastMonth}
+                    />
+                  </div>
+                </div>
+
+                {/* View 1: Cards (borderless sections) */}
+                <div className="w-full shrink-0 px-6 overflow-y-auto">
+                  <div className="max-w-[600px] mx-auto space-y-8 pb-8">
+                    <BillsCard
+                      bills={bills}
+                      onTogglePaid={togglePaid}
+                      onAddBill={addBill}
+                      readOnly={isPastMonth}
+                    />
+
+                    <div className="border-t border-foreground/10" />
+
+                    <IncomeChecklistCard
+                      incomes={incomes}
+                      rate={rate}
+                      rateLoading={rateLoading}
+                      onToggleReceived={toggleIncomeReceived}
+                      readOnly={isPastMonth}
+                    />
+
+                    <div className="border-t border-foreground/10" />
+
+                    <OneOffCard
+                      entries={oneOffEntries}
+                      onAdd={async (amount, date, note) => {
+                        await addOneOff(amount, date, note);
+                        refetchMonth();
+                      }}
+                      onDelete={async (id) => {
+                        await deleteOneOff(id);
+                        refetchMonth();
+                      }}
+                      onUpdate={async (id, fields) => {
+                        await updateOneOff(id, fields);
+                        refetchMonth();
+                      }}
+                      readOnly={isPastMonth}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* View 1: Cards */}
-            <div className="w-full shrink-0 px-6 overflow-y-auto">
-              <div className="flex gap-4 h-full pb-8">
-                <BillsCard
-                  bills={bills}
-                  onTogglePaid={togglePaid}
-                  onAddBill={addBill}
-                  readOnly={isPastMonth}
-                />
-                <IncomeChecklistCard
-                  incomes={incomes}
-                  rate={rate}
-                  rateLoading={rateLoading}
-                  onToggleReceived={toggleIncomeReceived}
-                  readOnly={isPastMonth}
-                />
-                <OneOffCard
-                  entries={oneOffEntries}
-                  onAdd={async (amount, date, note) => {
-                    await addOneOff(amount, date, note);
-                    refetchMonth();
-                  }}
-                  onDelete={async (id) => {
-                    await deleteOneOff(id);
-                    refetchMonth();
-                  }}
-                  onUpdate={async (id, fields) => {
-                    await updateOneOff(id, fields);
-                    refetchMonth();
-                  }}
-                  readOnly={isPastMonth}
-                />
-              </div>
-            </div>
+            {/* View dots */}
+            <ViewNavigator viewIndex={viewIndex} onChangeView={setViewIndex} />
           </div>
         )}
-      </div>
-
-      {/* View navigator (only for current/past months) */}
-      {!isFutureMonth && !loading && !error && (
-        <ViewNavigator viewIndex={viewIndex} onChangeView={setViewIndex} />
-      )}
+      </MonthBarrel>
 
       <BalanceHistoryModal
         changes={balanceChanges}

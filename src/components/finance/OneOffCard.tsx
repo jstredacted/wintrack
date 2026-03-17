@@ -90,13 +90,13 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
     'bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground w-full';
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 flex-1 flex flex-col transition-all duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+    <div>
+      {/* Section header */}
+      <div className="flex items-center justify-between mb-4">
         <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
           One-Off
         </h3>
-        {!readOnly && (
+        {!readOnly && entries.length > 0 && (
           <button
             type="button"
             onClick={() => {
@@ -111,45 +111,47 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
         )}
       </div>
 
-      {/* Inline add form at top */}
+      {/* Inline add form */}
       {showForm && (
-        <div className="space-y-2 mb-3 pb-3 border-b border-border" onKeyDown={handleKeyDown}>
-          <input
-            ref={amountRef}
-            type="text"
-            inputMode="decimal"
-            value={amount}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (v === '' || /^\d*\.?\d*$/.test(v)) setAmount(v);
-            }}
-            placeholder="Amount"
-            disabled={saving}
-            className={inputBase}
-          />
+        <div className="space-y-2 mb-4 pb-4 border-b border-foreground/10" onKeyDown={handleKeyDown}>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Note"
+              disabled={saving}
+              className={`${inputBase} flex-1`}
+            />
+            <input
+              ref={amountRef}
+              type="text"
+              inputMode="decimal"
+              value={amount}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === '' || /^\d*\.?\d*$/.test(v)) setAmount(v);
+              }}
+              placeholder="Amount"
+              disabled={saving}
+              className={`${inputBase} w-24 text-right`}
+            />
+          </div>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             disabled={saving}
-            className={inputBase}
+            className={`${inputBase} text-[0.667rem]`}
           />
-          <input
-            type="text"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Note (optional)"
-            disabled={saving}
-            className={inputBase}
-          />
-          <div className="flex gap-2 pt-1">
+          <div className="flex gap-3 pt-1">
             <button
               type="button"
               onClick={handleSubmit}
               disabled={saving}
               className="text-[0.667rem] font-mono text-foreground hover:underline disabled:opacity-50"
             >
-              Add Another
+              Add
             </button>
             <button
               type="button"
@@ -163,9 +165,9 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
       )}
 
       {/* Entry rows */}
-      <div className="flex-1 space-y-1 overflow-y-auto">
+      <div className="space-y-3">
         {entries.length === 0 && !showForm ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="flex items-center justify-center py-8">
             {!readOnly ? (
               <button
                 type="button"
@@ -173,10 +175,9 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
                   setShowForm(true);
                   setTimeout(() => amountRef.current?.focus(), 0);
                 }}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
               >
-                <Plus size={24} className="mx-auto mb-1" />
-                <span className="text-[0.778rem] font-mono">Add Income</span>
+                <Plus size={32} strokeWidth={1} />
               </button>
             ) : (
               <span className="text-[0.778rem] font-mono text-muted-foreground">No entries</span>
@@ -186,11 +187,11 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
           entries.map((entry) => {
             if (confirmDeleteId === entry.id) {
               return (
-                <div key={entry.id} className="py-1.5 space-y-1">
+                <div key={entry.id} className="space-y-1">
                   <p className="text-[0.667rem] font-mono text-muted-foreground">
                     Remove {formatPHP(entry.amount)}?
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <button
                       type="button"
                       onClick={() => handleDelete(entry.id)}
@@ -213,7 +214,7 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
 
             if (editingId === entry.id) {
               return (
-                <div key={entry.id} className="py-1.5 space-y-1" onKeyDown={handleEditKeyDown}>
+                <div key={entry.id} className="space-y-1" onKeyDown={handleEditKeyDown}>
                   <input
                     type="text"
                     value={editNote}
@@ -233,18 +234,20 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
             }
 
             return (
-              <div key={entry.id} className="flex items-center gap-2 py-1.5 group">
-                <span className="font-mono text-[0.778rem] flex-1 min-w-0 truncate">
-                  {entry.note}
-                </span>
-                <span className="text-[0.667rem] text-muted-foreground font-mono shrink-0">
-                  {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                </span>
-                <span className="font-mono text-[0.778rem] tabular-nums shrink-0">
+              <div key={entry.id} className="flex items-start gap-3 group">
+                <div className="flex-1 min-w-0">
+                  <span className="font-mono text-[0.833rem] block truncate">
+                    {entry.note}
+                  </span>
+                  <span className="text-[0.667rem] text-muted-foreground font-mono">
+                    {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
+                <span className="font-mono text-[0.833rem] tabular-nums shrink-0 pt-0.5">
                   {formatPHP(entry.amount)}
                 </span>
                 {!readOnly && (
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0 pt-0.5">
                     <button
                       type="button"
                       onClick={() => startEdit(entry)}
@@ -268,6 +271,21 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
           })
         )}
       </div>
+
+      {/* Add link at bottom */}
+      {!readOnly && entries.length > 0 && !showForm && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(true);
+            setTimeout(() => amountRef.current?.focus(), 0);
+          }}
+          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4"
+        >
+          <Plus size={12} />
+          <span>Add Payment</span>
+        </button>
+      )}
     </div>
   );
 }

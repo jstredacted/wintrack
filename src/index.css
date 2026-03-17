@@ -225,6 +225,21 @@
 .barrel-slide-down {
   animation: barrel-slide-down 0.3s ease-out both;
 }
+/* MonthBarrel full-content slide (wraps entire month view) */
+@keyframes barrel-content-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes barrel-content-down {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.barrel-content-up {
+  animation: barrel-content-up 0.3s ease-out both;
+}
+.barrel-content-down {
+  animation: barrel-content-down 0.3s ease-out both;
+}
 
 /* Modal fade-in */
 @keyframes modal-fade-in {
