@@ -90,7 +90,7 @@ export default function MonthBarrel({ selected, onSelect, children }: MonthBarre
           onAnimationEnd={() => setAnimating(false)}
         >
           {/* Month heading */}
-          <h1 className="text-center font-mono text-[1.667rem] font-light text-foreground pt-2 pb-1 shrink-0">
+          <h1 className="text-center font-mono text-4xl font-semibold tracking-tight text-foreground pt-2 pb-1 shrink-0">
             {MONTH_NAMES[currMonth - 1]}
           </h1>
           <p className="text-center font-mono text-[0.778rem] text-muted-foreground pb-4 shrink-0">

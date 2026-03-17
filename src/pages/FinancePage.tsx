@@ -75,6 +75,25 @@ export default function FinancePage() {
   }, [incomes, rate]);
 
   // Projected balance for future months
+  // One-off income total
+  const oneOffTotal = useMemo(
+    () => oneOffEntries.reduce((sum, e) => sum + e.amount, 0),
+    [oneOffEntries]
+  );
+
+  // Total income for stats (received income + one-off)
+  const receivedIncome = useMemo(() => {
+    return incomes.filter(i => i.received).reduce((sum, i) => {
+      if (i.net_php != null) return sum + i.net_php;
+      if (i.currency === 'USD' && rate) return sum + i.expected_amount * rate;
+      return sum + i.expected_amount;
+    }, 0);
+  }, [incomes, rate]);
+
+  const totalExpenses = paidTotal;
+  const totalIncomeForStats = receivedIncome + oneOffTotal;
+  const savingsRate = totalIncomeForStats > 0 ? Math.round((1 - totalExpenses / totalIncomeForStats) * 100) : 0;
+
   const projectedBalance = useMemo(() => {
     if (!isFutureMonth || !monthData) return 0;
     const expectedIncome = incomes.reduce((sum, i) => {
@@ -143,8 +162,8 @@ export default function FinancePage() {
                 style={{ transform: `translateX(${viewIndex * -100}%)` }}
               >
                 {/* View 0: Overview */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full">
-                  <div className="max-w-[600px] w-full space-y-6">
+                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full py-8">
+                  <div className="max-w-[600px] w-full flex flex-col items-center gap-10">
                     <BudgetProgressBar
                       paidTotal={paidTotal}
                       unpaidTotal={unpaidTotal}
@@ -153,6 +172,23 @@ export default function FinancePage() {
                       onUpdateBudgetLimit={updateBudgetLimit}
                       readOnly={isPastMonth}
                     />
+
+                    {/* Summary stats row */}
+                    <div className="flex justify-between w-full max-w-lg">
+                      <div className="text-center">
+                        <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Total Income</div>
+                        <div className="text-sm font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Total Expenses</div>
+                        <div className="text-sm font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Savings Rate</div>
+                        <div className="text-sm font-mono tabular-nums">{savingsRate}%</div>
+                      </div>
+                    </div>
+
                     <BalanceDisplay
                       currentBalance={monthData?.current_balance ?? 0}
                       startingBalance={monthData?.starting_balance ?? 0}

@@ -65,7 +65,7 @@ export default function BudgetProgressBar({
 
   return (
     <div className="space-y-3">
-      <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
+      <h3 className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
         Budget
       </h3>
 
@@ -108,7 +108,7 @@ export default function BudgetProgressBar({
       </div>
 
       {/* Labels below */}
-      <div className="flex justify-between text-[0.667rem] font-mono text-muted-foreground">
+      <div className="flex justify-between text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
         <span>Paid {formatPHP(paidTotal)}</span>
         <span>Unpaid {formatPHP(unpaidTotal)}</span>
       </div>
@@ -139,7 +139,7 @@ export default function BudgetProgressBar({
             type="button"
             onClick={startBudgetEdit}
             disabled={readOnly || !onUpdateBudgetLimit}
-            className="text-[0.778rem] font-mono text-muted-foreground hover:text-foreground transition-colors disabled:hover:text-muted-foreground"
+            className="text-[0.667rem] uppercase tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground transition-colors disabled:hover:text-muted-foreground"
           >
             {budgetLimit > 0
               ? `Budget: ${formatPHP(budgetLimit)}`
