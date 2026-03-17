@@ -90,7 +90,7 @@ export default function FinancePage() {
     }, 0);
   }, [incomes, rate]);
 
-  const totalExpenses = paidTotal;
+  const totalExpenses = bills.reduce((sum, b) => sum + Number(b.amount), 0);
   const totalIncomeForStats = receivedIncome + oneOffTotal;
   const savingsRate = totalIncomeForStats > 0 ? Math.round((1 - totalExpenses / totalIncomeForStats) * 100) : 0;
 
@@ -202,105 +202,106 @@ export default function FinancePage() {
           </div>
         ) : (
           /* Current or past: horizontal views inside month barrel */
-          <div className="flex flex-col h-full">
-            {/* Horizontal slide container */}
+          <div
+            className="flex-1 overflow-hidden"
+            onTouchStart={handleViewTouchStart}
+            onTouchEnd={handleViewTouchEnd}
+          >
             <div
-              className="flex-1 overflow-hidden"
-              onTouchStart={handleViewTouchStart}
-              onTouchEnd={handleViewTouchEnd}
+              className="flex transition-transform duration-300 h-full"
+              style={{ transform: `translateX(${viewIndex * -100}%)` }}
             >
-              <div
-                className="flex transition-transform duration-300 h-full"
-                style={{ transform: `translateX(${viewIndex * -100}%)` }}
-              >
-                {/* View 0: Overview */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full py-12">
-                  <div className="max-w-[600px] w-full flex flex-col items-center gap-0">
-                    <BudgetProgressBar
-                      paidTotal={paidTotal}
-                      unpaidTotal={unpaidTotal}
-                      budgetLimit={monthData?.budget_limit ?? 0}
-                      totalIncome={totalIncome}
-                      onUpdateBudgetLimit={updateBudgetLimit}
-                      readOnly={isPastMonth}
-                    />
+              {/* View 0: Overview */}
+              <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center h-full py-12">
+                {/* Budget bar — first, full width */}
+                <div className="w-full max-w-[600px]">
+                  <BudgetProgressBar
+                    paidTotal={paidTotal}
+                    unpaidTotal={unpaidTotal}
+                    budgetLimit={monthData?.budget_limit ?? 0}
+                    totalIncome={totalIncome}
+                    onUpdateBudgetLimit={updateBudgetLimit}
+                    readOnly={isPastMonth}
+                  />
+                </div>
 
-                    {/* Summary stats row */}
-                    <div className="flex justify-between w-full max-w-lg mt-8">
-                      <div className="text-center">
-                        <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
-                        <div className="text-sm font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
-                        <div className="text-sm font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
-                        <div className="text-sm font-mono tabular-nums">{savingsRate}%</div>
-                      </div>
-                    </div>
-
-                    <div className="mt-10">
-                      <BalanceDisplay
-                        currentBalance={monthData?.current_balance ?? 0}
-                        startingBalance={monthData?.starting_balance ?? 0}
-                        lastChange={lastChange}
-                        onUpdateBalance={async (newBalance) => {
-                          await updateBalance(newBalance);
-                          refetchHistory();
-                        }}
-                        onOpenHistory={() => setHistoryModalOpen(true)}
-                        readOnly={isPastMonth}
-                      />
-                    </div>
+                {/* Stats row — big gap from budget */}
+                <div className="mt-12 flex justify-between w-full max-w-lg">
+                  <div className="text-center">
+                    <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
+                    <div className="text-sm font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
+                    <div className="text-sm font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
+                    <div className="text-sm font-mono tabular-nums">{savingsRate}%</div>
                   </div>
                 </div>
 
-                {/* View 1: Cards side by side */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center py-8 h-full">
-                  <div className="flex gap-4 w-full max-w-4xl items-start">
-                    <BillsCard
-                      bills={bills}
-                      onTogglePaid={togglePaid}
-                      onAddBill={addBill}
-                      readOnly={isPastMonth}
-                    />
+                {/* Hero balance — big gap from stats */}
+                <div className="mt-14">
+                  <BalanceDisplay
+                    currentBalance={monthData?.current_balance ?? 0}
+                    startingBalance={monthData?.starting_balance ?? 0}
+                    lastChange={lastChange}
+                    onUpdateBalance={async (newBalance) => {
+                      await updateBalance(newBalance);
+                      refetchHistory();
+                    }}
+                    onOpenHistory={() => setHistoryModalOpen(true)}
+                    readOnly={isPastMonth}
+                  />
+                </div>
+              </div>
 
-                    <IncomeChecklistCard
-                      incomes={incomes}
-                      rate={rate}
-                      rateLoading={rateLoading}
-                      onToggleReceived={toggleIncomeReceived}
-                      readOnly={isPastMonth}
-                    />
+              {/* View 1: Cards side by side */}
+              <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center py-8 h-full">
+                <div className="flex gap-4 w-full max-w-4xl items-start">
+                  <BillsCard
+                    bills={bills}
+                    onTogglePaid={togglePaid}
+                    onAddBill={addBill}
+                    readOnly={isPastMonth}
+                  />
 
-                    <OneOffCard
-                      entries={oneOffEntries}
-                      onAdd={async (amount, date, note) => {
-                        await addOneOff(amount, date, note);
-                        refetchMonth();
-                      }}
-                      onDelete={async (id) => {
-                        await deleteOneOff(id);
-                        refetchMonth();
-                      }}
-                      onUpdate={async (id, fields) => {
-                        await updateOneOff(id, fields);
-                        refetchMonth();
-                      }}
-                      readOnly={isPastMonth}
-                    />
-                  </div>
+                  <IncomeChecklistCard
+                    incomes={incomes}
+                    rate={rate}
+                    rateLoading={rateLoading}
+                    onToggleReceived={toggleIncomeReceived}
+                    readOnly={isPastMonth}
+                  />
+
+                  <OneOffCard
+                    entries={oneOffEntries}
+                    onAdd={async (amount, date, note) => {
+                      await addOneOff(amount, date, note);
+                      refetchMonth();
+                    }}
+                    onDelete={async (id) => {
+                      await deleteOneOff(id);
+                      refetchMonth();
+                    }}
+                    onUpdate={async (id, fields) => {
+                      await updateOneOff(id, fields);
+                      refetchMonth();
+                    }}
+                    readOnly={isPastMonth}
+                  />
                 </div>
               </div>
             </div>
-
-            {/* View dots */}
-            <ViewNavigator viewIndex={viewIndex} onChangeView={setViewIndex} />
           </div>
         )}
       </MonthBarrel>
+
+      {/* View dots — OUTSIDE MonthBarrel to avoid overflow clipping */}
+      {!loading && !error && !isFutureMonth && (
+        <ViewNavigator viewIndex={viewIndex} onChangeView={setViewIndex} />
+      )}
 
       <BalanceHistoryModal
         changes={balanceChanges}

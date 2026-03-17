@@ -64,15 +64,12 @@ export default function BudgetProgressBar({
   };
 
   // readOnly with no budget: show only a static message, no bar at all
-  if (readOnly && budgetLimit === 0) {
+  if (readOnly && budgetLimit <= 0) {
     return (
-      <div className="space-y-3">
-        <h3 className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono text-center">
-          Budget
-        </h3>
-        <p className="text-[0.667rem] uppercase tracking-[0.15em] font-mono text-muted-foreground text-center">
+      <div className="w-full text-center py-4">
+        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
           No budget set
-        </p>
+        </span>
       </div>
     );
   }
@@ -84,7 +81,7 @@ export default function BudgetProgressBar({
       </h3>
 
       {/* Bar container */}
-      <div className="relative h-8 rounded-md bg-muted overflow-hidden">
+      <div className="relative h-10 rounded-md bg-muted overflow-hidden">
         {/* Zone 1: Paid bills */}
         <div
           className="absolute inset-y-0 left-0 bg-foreground/40 transition-all duration-300 rounded-l-md"
@@ -121,11 +118,19 @@ export default function BudgetProgressBar({
         )}
       </div>
 
-      {/* Labels below — Bug 4 & 5 fix: flex justify-between with proper tracking */}
-      <div className="flex justify-between text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
-        <span>Paid {formatPHP(paidTotal)}</span>
-        {budgetLimit > 0 && <span>Budget {formatPHP(budgetLimit)}</span>}
-        <span>Unpaid {formatPHP(unpaidTotal)}</span>
+      {/* Labels below bar */}
+      <div className="flex justify-between mt-3 px-1">
+        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+          Paid {formatPHP(paidTotal)}
+        </span>
+        {budgetLimit > 0 && (
+          <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+            Budget {formatPHP(budgetLimit)}
+          </span>
+        )}
+        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+          Unpaid {formatPHP(unpaidTotal)}
+        </span>
       </div>
 
       {/* Editable budget limit — only show when not readOnly */}
