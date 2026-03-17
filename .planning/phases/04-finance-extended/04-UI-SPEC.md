@@ -32,14 +32,14 @@ Declared values (must be multiples of 4):
 | Token | Value | Usage |
 |-------|-------|-------|
 | xs | 4px | Icon gaps, inline padding between bill row elements |
-| sm | 8px | Compact bill row internal padding, gap between urgency border and content |
+| sm | 8px | Compact bill row internal padding, gap between urgency border and content, MonthColumn horizontal padding (px-2 for tight 12-column fit) |
 | md | 16px | Default element spacing, card padding, bill row vertical padding |
 | lg | 24px | Section gaps (between Bills, Income, Budget sections on Finance page) |
 | xl | 32px | Layout gaps, year overview column gutters |
 | 2xl | 48px | Page top/bottom padding (`py-12` = 48px at 16px base, effectively ~43px at 18px base) |
 | 3xl | 64px | Not used in this phase |
 
-Exceptions: Bill rows use 16px vertical padding (md) and 16px horizontal padding (md) for compact density. Year overview MonthColumn uses 12px horizontal padding for tight 12-column fit.
+Exceptions: Bill rows use 16px vertical padding (md) and 16px horizontal padding (md) for compact density. Year overview MonthColumn uses 8px horizontal padding (sm) for tight 12-column fit.
 
 ---
 
@@ -99,9 +99,9 @@ Urgency border colors (bill due date — all use `--foreground` at varying opaci
 | BalanceHistoryModal | `src/components/finance/BalanceHistoryModal.tsx` | Modal overlay (reuse overlay-enter/overlay-exit keyframe pattern). Lists all balance_changes for current month. Each row: date, delta (+/-), resulting balance, optional note. Delete button per row with revert confirmation. |
 | OneOffIncomeSection | `src/components/finance/OneOffIncomeSection.tsx` | Section on Finance page below income cards. Section header "ONE-OFF INCOME" (0.778rem uppercase tracking-widest). Lists OneOffIncomeRow entries + inline add form. |
 | OneOffIncomeRow | `src/components/finance/OneOffIncomeRow.tsx` | Compact row: note text, amount (1.333rem mono), date label. Edit/delete on hover reveal (established pattern from JournalEntryCard). |
-| YearGrid | `src/components/finance/YearGrid.tsx` | 12-column CSS grid layout. `grid-cols-12` on desktop. Each column is a MonthColumn. Header area contains BalanceSparkline. |
-| MonthColumn | `src/components/finance/MonthColumn.tsx` | Single column: month label (0.778rem), ending balance (1.333rem mono tabular-nums), vertical progress bar (income = full height, expenses fill from bottom showing consumption, one-off extends beyond at lower opacity). Clickable — navigates to that month in Finance page. |
-| BalanceSparkline | `src/components/finance/BalanceSparkline.tsx` | Raw SVG sparkline in year overview header. Single `<path>` element. Width: 100% of container. Height: 48px. Stroke: foreground. Fill: none. Stroke-width: 1.5px. |
+| YearGrid | `src/components/finance/YearGrid.tsx` | 12-column CSS grid layout. `grid-cols-12` on desktop. Each column is a MonthColumn. Header area contains BalanceSparkline. Primary visual anchor of Year Overview page -- the grid dominates viewport, each column's progress bar provides the at-a-glance story of the year. |
+| MonthColumn | `src/components/finance/MonthColumn.tsx` | Single column: month label (0.778rem), ending balance (1.333rem mono tabular-nums), vertical progress bar (income = full height, expenses fill from bottom showing consumption, one-off extends beyond at lower opacity). 8px horizontal padding (px-2). Clickable — navigates to that month in Finance page. |
+| BalanceSparkline | `src/components/finance/BalanceSparkline.tsx` | Raw SVG sparkline in year overview header. Single `<path>` element. Width: 100% of container. Height: 48px. Stroke: foreground. Fill: none. Stroke-width: 1.5px. Secondary visual — provides trend context above the primary YearGrid. |
 | YearOverviewPage | `src/pages/YearOverviewPage.tsx` | Page at `/finance/year`. Contains BalanceSparkline + YearGrid. Back navigation to Finance page. |
 
 ### Extended Components
@@ -140,7 +140,7 @@ MonthStrip, BudgetGauge, IncomeCard, IncomeSourceEditor
 ### Balance History Revert
 - Each history entry has a delete/revert button
 - Confirmation inline: "Revert will adjust balance by -P50,000. Confirm?"
-- Two-button: "Revert" (destructive) / "Cancel"
+- Two-button: "Revert" (destructive) / "Keep Change"
 
 ### Year Overview Column Tap
 - Tap any MonthColumn navigates to `/finance?month=YYYY-MM`
@@ -169,7 +169,7 @@ MonthStrip, BudgetGauge, IncomeCard, IncomeSourceEditor
 | Error state (load) | "Could not load finance data. Check your connection and try again." |
 | Error state (save) | "Could not save. Please try again." |
 | Destructive: delete bill | Delete Bill: "This will remove the bill template and all future unpaid instances. Paid instances are preserved." |
-| Destructive: revert balance | Revert Change: "This will adjust your current balance by {delta}. This cannot be undone." |
+| Destructive: revert balance | Revert Change: "This will adjust your current balance by {delta}. This cannot be undone." Buttons: "Revert" (destructive) / "Keep Change" (safe dismiss) |
 | Destructive: delete one-off | Delete Income: "This will remove {amount} from your current balance." |
 | Past month indicator | "Past month -- read only" |
 | Future month projection | "Projected balance based on expected income and recurring bills" |
@@ -203,9 +203,11 @@ MonthStrip, BudgetGauge, IncomeCard, IncomeSourceEditor
    - No waterfall, no bill list, no income cards
 
 ### Year Overview Page
+Focal point: YearGrid is the primary visual anchor. The 12-column progress bar grid dominates the viewport and delivers the at-a-glance financial story. BalanceSparkline is secondary context, providing trend above the grid.
+
 1. Page heading "Year Overview" + back link to /finance
-2. BalanceSparkline (48px height, full width)
-3. YearGrid (12 columns, full width within `max-w-[1100px]`)
+2. BalanceSparkline (48px height, full width — secondary visual, trend context)
+3. YearGrid (12 columns, full width within `max-w-[1100px]` — primary focal point)
 
 ---
 
