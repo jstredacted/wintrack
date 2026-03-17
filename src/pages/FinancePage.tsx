@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useFinance } from '@/hooks/useFinance';
 import { useBills } from '@/hooks/useBills';
 import { useBalanceHistory } from '@/hooks/useBalanceHistory';
@@ -14,7 +14,6 @@ import BalanceDisplay from '@/components/finance/BalanceDisplay';
 import BillsCard from '@/components/finance/BillsCard';
 import IncomeChecklistCard from '@/components/finance/IncomeChecklistCard';
 import OneOffCard from '@/components/finance/OneOffCard';
-import ViewNavigator from '@/components/finance/ViewNavigator';
 import BalanceHistoryModal from '@/components/finance/BalanceHistoryModal';
 
 export default function FinancePage() {
@@ -74,7 +73,6 @@ export default function FinancePage() {
     }, 0);
   }, [incomes, rate]);
 
-  // Projected balance for future months
   // One-off income total
   const oneOffTotal = useMemo(
     () => oneOffEntries.reduce((sum, e) => sum + e.amount, 0),
@@ -126,94 +124,124 @@ export default function FinancePage() {
 
   return (
     <div className="flex flex-col h-full">
-      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth}>
-        {/* Past month indicator */}
-        {isPastMonth && (
-          <div className="text-center text-[0.667rem] text-muted-foreground pb-2">
-            Past month — read only
-          </div>
-        )}
+      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth} />
 
-        {loading ? (
-          <p className="text-sm font-mono text-muted-foreground text-center py-12">Loading...</p>
-        ) : error ? (
-          <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
-        ) : isFutureMonth ? (
-          /* Future month: projected view with expected bills & income */
-          <div className="flex flex-col items-center py-8 px-6 gap-8 overflow-y-auto">
-            {/* Projected balance — hero */}
-            <div className="text-center">
-              <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground mb-2">Projected Balance</div>
-              <span className="text-[3rem] font-light font-mono tabular-nums text-center">
-                {formatPHP(projectedBalance)}
-              </span>
-            </div>
+      {/* Past month indicator */}
+      {isPastMonth && (
+        <div className="text-center text-xs text-muted-foreground pb-2">
+          Past month — read only
+        </div>
+      )}
 
-            {/* Expected sections */}
-            <div className="flex gap-6 w-full max-w-3xl items-start">
-              {/* Expected Bills */}
-              <div className="flex-1 bg-card border border-border rounded-lg p-5">
-                <h3 className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Bills</h3>
-                {bills.length === 0 ? (
-                  <p className="text-[0.778rem] font-mono text-muted-foreground">No recurring bills</p>
-                ) : (
-                  <div className="space-y-0">
-                    {bills.map((bill) => (
-                      <div key={bill.id} className="flex items-center gap-3 py-2">
-                        <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{bill.name}</span>
-                        <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{formatPHP(bill.amount)}</span>
-                      </div>
-                    ))}
-                    <div className="border-t border-border mt-2 pt-2 flex justify-between">
-                      <span className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">Total</span>
-                      <span className="font-mono text-[0.833rem] tabular-nums">{formatPHP(bills.reduce((s, b) => s + b.amount, 0))}</span>
-                    </div>
-                  </div>
-                )}
+      {loading ? (
+        <p className="text-sm font-mono text-muted-foreground text-center py-12">Loading...</p>
+      ) : error ? (
+        <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
+      ) : isFutureMonth ? (
+        /* Future month: projected view */
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-[720px] relative overflow-hidden p-8">
+            <div className="flex flex-col items-center gap-8">
+              {/* Projected balance — hero */}
+              <div className="text-center">
+                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Projected Balance</div>
+                <span className="text-[3rem] font-light font-mono tabular-nums text-center">
+                  {formatPHP(projectedBalance)}
+                </span>
               </div>
 
-              {/* Expected Income */}
-              <div className="flex-1 bg-card border border-border rounded-lg p-5">
-                <h3 className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Income</h3>
-                {incomes.length === 0 ? (
-                  <p className="text-[0.778rem] font-mono text-muted-foreground">No income sources</p>
-                ) : (
-                  <div className="space-y-0">
-                    {incomes.map((income) => {
-                      const source = income.income_sources;
-                      const displayAmount = income.currency === 'USD' && rate
-                        ? formatPHP(income.expected_amount * rate)
-                        : formatPHP(income.expected_amount);
-                      return (
-                        <div key={income.id} className="flex items-center gap-3 py-2">
-                          <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{source?.name ?? 'Income'}</span>
-                          <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{displayAmount}</span>
+              {/* Expected sections */}
+              <div className="flex gap-6 w-full items-start">
+                {/* Expected Bills */}
+                <div className="flex-1 bg-card border border-border rounded-lg p-5">
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Bills</h3>
+                  {bills.length === 0 ? (
+                    <p className="text-[0.778rem] font-mono text-muted-foreground">No recurring bills</p>
+                  ) : (
+                    <div className="space-y-0">
+                      {bills.map((bill) => (
+                        <div key={bill.id} className="flex items-center gap-3 py-2">
+                          <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{bill.name}</span>
+                          <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{formatPHP(bill.amount)}</span>
                         </div>
-                      );
-                    })}
-                    <div className="border-t border-border mt-2 pt-2 flex justify-between">
-                      <span className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">Total</span>
-                      <span className="font-mono text-[0.833rem] tabular-nums">{formatPHP(totalIncome)}</span>
+                      ))}
+                      <div className="border-t border-border mt-2 pt-2 flex justify-between">
+                        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">Total</span>
+                        <span className="font-mono text-[0.833rem] tabular-nums">{formatPHP(bills.reduce((s, b) => s + b.amount, 0))}</span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
+                {/* Expected Income */}
+                <div className="flex-1 bg-card border border-border rounded-lg p-5">
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Income</h3>
+                  {incomes.length === 0 ? (
+                    <p className="text-[0.778rem] font-mono text-muted-foreground">No income sources</p>
+                  ) : (
+                    <div className="space-y-0">
+                      {incomes.map((income) => {
+                        const source = income.income_sources;
+                        const displayAmount = income.currency === 'USD' && rate
+                          ? formatPHP(income.expected_amount * rate)
+                          : formatPHP(income.expected_amount);
+                        return (
+                          <div key={income.id} className="flex items-center gap-3 py-2">
+                            <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{source?.name ?? 'Income'}</span>
+                            <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{displayAmount}</span>
+                          </div>
+                        );
+                      })}
+                      <div className="border-t border-border mt-2 pt-2 flex justify-between">
+                        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">Total</span>
+                        <span className="font-mono text-[0.833rem] tabular-nums">{formatPHP(totalIncome)}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        ) : (
-          /* Current or past: horizontal views inside month barrel */
-          <div
-            className="flex-1 overflow-hidden"
-            onTouchStart={handleViewTouchStart}
-            onTouchEnd={handleViewTouchEnd}
-          >
+        </div>
+      ) : (
+        /* Current or past: horizontal views in centered container */
+        <div
+          className="flex-1 flex items-center justify-center"
+          onTouchStart={handleViewTouchStart}
+          onTouchEnd={handleViewTouchEnd}
+        >
+          <div className="w-[720px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
+            {/* Left arrow (only on View 1) */}
+            {viewIndex === 1 && (
+              <button
+                type="button"
+                onClick={() => setViewIndex(0)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Overview"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            )}
+            {/* Right arrow (only on View 0) */}
+            {viewIndex === 0 && (
+              <button
+                type="button"
+                onClick={() => setViewIndex(1)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Cards"
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
+
+            {/* Horizontal slide */}
             <div
-              className="flex transition-transform duration-300 h-full"
+              className="flex transition-transform duration-300"
               style={{ transform: `translateX(${viewIndex * -100}%)` }}
             >
               {/* View 0: Overview */}
-              <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center h-full py-12">
-                {/* Budget bar — first, full width, no side constraints */}
+              <div className="w-[720px] shrink-0 p-8 flex flex-col items-center gap-8">
+                {/* Budget bar — full width inside container */}
                 <div className="w-full">
                   <BudgetProgressBar
                     paidTotal={paidTotal}
@@ -225,24 +253,24 @@ export default function FinancePage() {
                   />
                 </div>
 
-                {/* Stats row — big gap from budget */}
-                <div className="mt-12 flex justify-between w-full max-w-lg">
+                {/* Stats row */}
+                <div className="flex justify-between w-full max-w-lg">
                   <div className="text-center">
-                    <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
-                    <div className="text-sm font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
+                    <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
+                    <div className="text-base font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
-                    <div className="text-sm font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
+                    <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
+                    <div className="text-base font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
-                    <div className="text-sm font-mono tabular-nums">{savingsRate}%</div>
+                    <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
+                    <div className="text-base font-mono tabular-nums">{savingsRate}%</div>
                   </div>
                 </div>
 
-                {/* Hero balance — big gap from stats */}
-                <div className="mt-14">
+                {/* Hero balance */}
+                <div>
                   <BalanceDisplay
                     currentBalance={monthData?.current_balance ?? 0}
                     startingBalance={monthData?.starting_balance ?? 0}
@@ -258,49 +286,62 @@ export default function FinancePage() {
               </div>
 
               {/* View 1: Cards side by side */}
-              <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center py-8 h-full">
-                <div className="flex gap-4 w-full max-w-4xl items-start">
-                  <BillsCard
-                    bills={bills}
-                    onTogglePaid={togglePaid}
-                    onAddBill={addBill}
-                    readOnly={isPastMonth}
-                  />
+              <div className="w-[720px] shrink-0 p-8 flex justify-center gap-4">
+                <BillsCard
+                  bills={bills}
+                  onTogglePaid={togglePaid}
+                  onAddBill={addBill}
+                  readOnly={isPastMonth}
+                  className="w-[210px]"
+                />
 
-                  <IncomeChecklistCard
-                    incomes={incomes}
-                    rate={rate}
-                    rateLoading={rateLoading}
-                    onToggleReceived={toggleIncomeReceived}
-                    readOnly={isPastMonth}
-                  />
+                <IncomeChecklistCard
+                  incomes={incomes}
+                  rate={rate}
+                  rateLoading={rateLoading}
+                  onToggleReceived={toggleIncomeReceived}
+                  readOnly={isPastMonth}
+                  className="w-[210px]"
+                />
 
-                  <OneOffCard
-                    entries={oneOffEntries}
-                    onAdd={async (amount, date, note) => {
-                      await addOneOff(amount, date, note);
-                      refetchMonth();
-                    }}
-                    onDelete={async (id) => {
-                      await deleteOneOff(id);
-                      refetchMonth();
-                    }}
-                    onUpdate={async (id, fields) => {
-                      await updateOneOff(id, fields);
-                      refetchMonth();
-                    }}
-                    readOnly={isPastMonth}
-                  />
-                </div>
+                <OneOffCard
+                  entries={oneOffEntries}
+                  onAdd={async (amount, date, note) => {
+                    await addOneOff(amount, date, note);
+                    refetchMonth();
+                  }}
+                  onDelete={async (id) => {
+                    await deleteOneOff(id);
+                    refetchMonth();
+                  }}
+                  onUpdate={async (id, fields) => {
+                    await updateOneOff(id, fields);
+                    refetchMonth();
+                  }}
+                  readOnly={isPastMonth}
+                  className="w-[210px]"
+                />
               </div>
             </div>
-          </div>
-        )}
-      </MonthBarrel>
 
-      {/* View dots — OUTSIDE MonthBarrel to avoid overflow clipping */}
-      {!loading && !error && !isFutureMonth && (
-        <ViewNavigator viewIndex={viewIndex} onChangeView={setViewIndex} />
+            {/* Dot indicators at bottom of container */}
+            <div className="flex items-center justify-center gap-2 pb-4">
+              {[0, 1].map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setViewIndex(i)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    viewIndex === i
+                      ? 'bg-foreground'
+                      : 'bg-foreground/20 hover:bg-foreground/40'
+                  }`}
+                  aria-label={i === 0 ? 'Overview' : 'Cards'}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       )}
 
       <BalanceHistoryModal

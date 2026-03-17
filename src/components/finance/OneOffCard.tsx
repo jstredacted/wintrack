@@ -9,9 +9,10 @@ interface OneOffCardProps {
   onDelete: (id: string) => Promise<void>;
   onUpdate: (id: string, fields: Partial<{ amount: number; date: string; note: string }>) => Promise<void>;
   readOnly: boolean;
+  className?: string;
 }
 
-export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnly }: OneOffCardProps) {
+export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnly, className }: OneOffCardProps) {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [amount, setAmount] = useState('');
@@ -91,7 +92,7 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
     'bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1.5 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground w-full';
 
   return (
-    <div className="flex-1 bg-card border border-border rounded-lg p-5 flex flex-col min-w-0">
+    <div className={`bg-card border border-border rounded-lg p-5 flex flex-col min-w-0 ${className ?? ''}`}>
       {/* Card header */}
       <div className="flex items-center justify-between mb-4 shrink-0">
         <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">

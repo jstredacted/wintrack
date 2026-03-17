@@ -23,6 +23,7 @@ interface IncomeChecklistCardProps {
     feeAmount?: number
   ) => Promise<void>;
   readOnly: boolean;
+  className?: string;
 }
 
 export default function IncomeChecklistCard({
@@ -31,6 +32,7 @@ export default function IncomeChecklistCard({
   rateLoading,
   onToggleReceived,
   readOnly,
+  className,
 }: IncomeChecklistCardProps) {
   const navigate = useNavigate();
   const [togglingId, setTogglingId] = useState<string | null>(null);
@@ -81,7 +83,7 @@ export default function IncomeChecklistCard({
   };
 
   return (
-    <div className="flex-1 bg-card border border-border rounded-lg p-5 flex flex-col min-w-0">
+    <div className={`bg-card border border-border rounded-lg p-5 flex flex-col min-w-0 ${className ?? ''}`}>
       {/* Card header */}
       <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground mb-4 shrink-0">
         Income
