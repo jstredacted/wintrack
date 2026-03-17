@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Circle, Plus } from 'lucide-react';
+import { CheckCircle2, Circle, Plus } from 'lucide-react';
 import {
   formatPHP,
   formatUSD,
@@ -113,9 +113,9 @@ export default function IncomeChecklistCard({
                   } ${isToggling ? 'opacity-30' : ''} disabled:cursor-default`}
                 >
                   {income.received ? (
-                    <div className="w-4 h-4 rounded-full bg-foreground shrink-0" />
+                    <CheckCircle2 size={16} className="text-foreground shrink-0" />
                   ) : (
-                    <Circle size={16} className="text-muted-foreground shrink-0" />
+                    <Circle size={16} className="text-muted-foreground shrink-0 opacity-30" />
                   )}
                   <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate">
                     {source?.name ?? 'Income'}

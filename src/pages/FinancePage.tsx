@@ -204,8 +204,8 @@ export default function FinancePage() {
                 </div>
 
                 {/* View 1: Cards side by side */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full">
-                  <div className="flex gap-4 w-full max-w-4xl h-[70%]">
+                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center py-8 h-full">
+                  <div className="flex gap-4 w-full max-w-4xl items-start">
                     <BillsCard
                       bills={bills}
                       onTogglePaid={togglePaid}

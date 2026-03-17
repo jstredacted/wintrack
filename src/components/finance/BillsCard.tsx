@@ -104,9 +104,62 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto min-h-0">
-        {/* Inline add form — stacked vertically */}
+        {/* Bill rows */}
+        <div className="space-y-0">
+          {sortedBills.length === 0 && !showForm ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              {!readOnly ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForm(true);
+                    setTimeout(() => nameRef.current?.focus(), 0);
+                  }}
+                  className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+                >
+                  <Plus size={32} strokeWidth={1} />
+                </button>
+              ) : (
+                <span className="text-[0.778rem] font-mono text-muted-foreground">No bills</span>
+              )}
+            </div>
+          ) : (
+            sortedBills.map((bill) => (
+              <div
+                key={bill.id}
+                className={`flex items-center gap-3 py-3 ${bill.paid ? 'opacity-40' : ''}`}
+              >
+                <button
+                  type="button"
+                  onClick={() => { if (!readOnly) onTogglePaid(bill.id, !bill.paid); }}
+                  disabled={readOnly}
+                  className="shrink-0 transition-colors hover:text-foreground disabled:opacity-40"
+                  aria-label={bill.paid ? 'Mark unpaid' : 'Mark paid'}
+                >
+                  {bill.paid ? (
+                    <CheckCircle2 size={16} className="text-foreground" />
+                  ) : (
+                    <Circle size={16} className="text-muted-foreground" />
+                  )}
+                </button>
+                <span
+                  className={`font-mono text-[0.833rem] flex-1 min-w-0 truncate ${
+                    bill.paid ? 'line-through' : ''
+                  }`}
+                >
+                  {bill.name}
+                </span>
+                <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
+                  {formatPHP(bill.amount)}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Inline add form — below existing items */}
         {showForm && (
-          <div className="space-y-3 mb-4 pb-4 border-b border-foreground/10" onKeyDown={handleKeyDown}>
+          <div className="space-y-3 mt-4 pt-4 border-t border-foreground/10" onKeyDown={handleKeyDown}>
             <div>
               <label className="text-[0.611rem] font-mono text-muted-foreground uppercase tracking-wider">Name</label>
               <input
@@ -181,59 +234,6 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly }: 
             </div>
           </div>
         )}
-
-        {/* Bill rows */}
-        <div className="space-y-0">
-          {sortedBills.length === 0 && !showForm ? (
-            <div className="flex flex-col items-center justify-center py-8">
-              {!readOnly ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForm(true);
-                    setTimeout(() => nameRef.current?.focus(), 0);
-                  }}
-                  className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
-                >
-                  <Plus size={32} strokeWidth={1} />
-                </button>
-              ) : (
-                <span className="text-[0.778rem] font-mono text-muted-foreground">No bills</span>
-              )}
-            </div>
-          ) : (
-            sortedBills.map((bill) => (
-              <div
-                key={bill.id}
-                className={`flex items-center gap-3 py-3 ${bill.paid ? 'opacity-40' : ''}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => { if (!readOnly) onTogglePaid(bill.id, !bill.paid); }}
-                  disabled={readOnly}
-                  className="shrink-0 transition-colors hover:text-foreground disabled:opacity-40"
-                  aria-label={bill.paid ? 'Mark unpaid' : 'Mark paid'}
-                >
-                  {bill.paid ? (
-                    <CheckCircle2 size={16} className="text-foreground" />
-                  ) : (
-                    <Circle size={16} className="text-muted-foreground" />
-                  )}
-                </button>
-                <span
-                  className={`font-mono text-[0.833rem] flex-1 min-w-0 truncate ${
-                    bill.paid ? 'line-through' : ''
-                  }`}
-                >
-                  {bill.name}
-                </span>
-                <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
-                  {formatPHP(bill.amount)}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
       </div>
 
       {/* Add bill link at bottom */}
