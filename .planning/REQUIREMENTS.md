@@ -54,11 +54,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 - [x] **BILL-01**: User can add a bill with name, amount, due date, and recurrence type (one-time / recurring for N months / recurring until end date / ongoing)
 - [x] **BILL-02**: User can toggle a bill as paid per month (deducts from current balance)
-- [ ] **BILL-03**: User can edit and delete bills
+- [x] **BILL-03**: User can edit and delete bills
 - [x] **BILL-04**: Recurring and ongoing bills automatically appear each month until their end condition
-- [ ] **BILL-05**: User sees unpaid bills highlighted by due date urgency
-- [ ] **BILL-06**: One-time bills disappear after being paid
-- [ ] **BILL-07**: Recurring bills show remaining months/payments
+- [x] **BILL-05**: User sees unpaid bills highlighted by due date urgency
+- [x] **BILL-06**: One-time bills disappear after being paid
+- [x] **BILL-07**: Recurring bills show remaining months/payments
 
 ### Finance: Dashboard
 
@@ -162,11 +162,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | FIN-01 | Phase 3 | Complete |
 | BILL-01 | Phase 4 | Complete |
 | BILL-02 | Phase 4 | Complete |
-| BILL-03 | Phase 4 | Pending |
+| BILL-03 | Phase 4 | Complete |
 | BILL-04 | Phase 4 | Complete |
-| BILL-05 | Phase 4 | Pending |
-| BILL-06 | Phase 4 | Pending |
-| BILL-07 | Phase 4 | Pending |
+| BILL-05 | Phase 4 | Complete |
+| BILL-06 | Phase 4 | Complete |
+| BILL-07 | Phase 4 | Complete |
 | FIN-02 | Phase 4 | Pending |
 | FIN-03 | Phase 4 | Pending |
 | FIN-04 | Phase 4 | Pending |
