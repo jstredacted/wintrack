@@ -52,10 +52,10 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Finance: Bills
 
-- [ ] **BILL-01**: User can add a bill with name, amount, due date, and recurrence type (one-time / recurring for N months / recurring until end date / ongoing)
-- [ ] **BILL-02**: User can toggle a bill as paid per month (deducts from current balance)
+- [x] **BILL-01**: User can add a bill with name, amount, due date, and recurrence type (one-time / recurring for N months / recurring until end date / ongoing)
+- [x] **BILL-02**: User can toggle a bill as paid per month (deducts from current balance)
 - [ ] **BILL-03**: User can edit and delete bills
-- [ ] **BILL-04**: Recurring and ongoing bills automatically appear each month until their end condition
+- [x] **BILL-04**: Recurring and ongoing bills automatically appear each month until their end condition
 - [ ] **BILL-05**: User sees unpaid bills highlighted by due date urgency
 - [ ] **BILL-06**: One-time bills disappear after being paid
 - [ ] **BILL-07**: Recurring bills show remaining months/payments
@@ -70,15 +70,15 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Finance: Balance History
 
-- [ ] **HIST-01**: Every manual balance override is recorded with timestamp and amount change
+- [x] **HIST-01**: Every manual balance override is recorded with timestamp and amount change
 - [ ] **HIST-02**: Finance page shows last change indicator (e.g., "+₱30,000 from last change") next to balance
 - [ ] **HIST-03**: User can open a history modal showing all balance changes with dates and amounts
 - [ ] **HIST-04**: User can delete a balance change entry, reverting balance to the previous value
 
 ### Finance: One-Off Income
 
-- [ ] **ONEOFF-01**: User can add a one-off income entry with amount, date, and note (e.g., "Debt paid by John", "Year-end bonus")
-- [ ] **ONEOFF-02**: One-off income adds to current balance when recorded
+- [x] **ONEOFF-01**: User can add a one-off income entry with amount, date, and note (e.g., "Debt paid by John", "Year-end bonus")
+- [x] **ONEOFF-02**: One-off income adds to current balance when recorded
 - [ ] **ONEOFF-03**: One-off income appears as an extended segment on the year overview progress bar (beyond regular income)
 - [ ] **ONEOFF-04**: User can edit and delete one-off income entries
 
@@ -160,10 +160,10 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | INC-05 | Phase 3 | Complete |
 | INC-06 | Phase 3 | Pending |
 | FIN-01 | Phase 3 | Complete |
-| BILL-01 | Phase 4 | Pending |
-| BILL-02 | Phase 4 | Pending |
+| BILL-01 | Phase 4 | Complete |
+| BILL-02 | Phase 4 | Complete |
 | BILL-03 | Phase 4 | Pending |
-| BILL-04 | Phase 4 | Pending |
+| BILL-04 | Phase 4 | Complete |
 | BILL-05 | Phase 4 | Pending |
 | BILL-06 | Phase 4 | Pending |
 | BILL-07 | Phase 4 | Pending |
@@ -171,12 +171,12 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | FIN-03 | Phase 4 | Pending |
 | FIN-04 | Phase 4 | Pending |
 | FIN-05 | Phase 4 | Pending |
-| HIST-01 | Phase 4 | Pending |
+| HIST-01 | Phase 4 | Complete |
 | HIST-02 | Phase 4 | Pending |
 | HIST-03 | Phase 4 | Pending |
 | HIST-04 | Phase 4 | Pending |
-| ONEOFF-01 | Phase 4 | Pending |
-| ONEOFF-02 | Phase 4 | Pending |
+| ONEOFF-01 | Phase 4 | Complete |
+| ONEOFF-02 | Phase 4 | Complete |
 | ONEOFF-03 | Phase 4 | Pending |
 | ONEOFF-04 | Phase 4 | Pending |
 | JRNL-01 | Phase 5 | Pending |
