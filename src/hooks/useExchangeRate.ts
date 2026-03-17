@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { ExchangeRateResult } from '@/types/finance';
 
 const CACHE_KEY = 'wintrack_exchange_rate';
@@ -10,6 +10,8 @@ interface CachedRate {
 
 export interface ExchangeRateResultWithCache extends ExchangeRateResult {
   cached?: boolean;
+  /** Fetch a fresh rate from the API, bypassing cache. Returns the rate or null on failure. */
+  fetchFreshRate: () => Promise<number | null>;
 }
 
 export function useExchangeRate(
@@ -83,5 +85,33 @@ export function useExchangeRate(
     };
   }, [base, target]);
 
-  return { rate, loading, error, fetchedAt, cached };
+  const fetchFreshRate = useCallback(async (): Promise<number | null> => {
+    try {
+      const res = await fetch(
+        `https://api.frankfurter.dev/v1/latest?base=${base}&symbols=${target}`
+      );
+      if (!res.ok) throw new Error(`Rate API error: ${res.status}`);
+      const data = await res.json();
+      const freshRate = data.rates?.[target];
+      if (freshRate) {
+        // Update cache + local state
+        try {
+          localStorage.setItem(
+            CACHE_KEY,
+            JSON.stringify({ rate: freshRate, timestamp: Date.now() })
+          );
+        } catch {
+          // localStorage may be unavailable
+        }
+        setRate(freshRate);
+        setFetchedAt(new Date());
+        setCached(false);
+      }
+      return freshRate ?? null;
+    } catch {
+      return rate; // fallback to cached/current rate
+    }
+  }, [base, target, rate]);
+
+  return { rate, loading, error, fetchedAt, cached, fetchFreshRate };
 }

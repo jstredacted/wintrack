@@ -32,7 +32,7 @@ export default function FinancePage() {
     toggleIncomeReceived,
     refetch: refetchMonth,
   } = useFinance(selectedMonth);
-  const { rate, loading: rateLoading } = useExchangeRate();
+  const { rate, loading: rateLoading, fetchFreshRate } = useExchangeRate();
   const {
     bills,
     togglePaid,
@@ -296,6 +296,7 @@ export default function FinancePage() {
                     incomes={incomes}
                     rate={rate}
                     rateLoading={rateLoading}
+                    fetchFreshRate={fetchFreshRate}
                     onToggleReceived={toggleIncomeReceived}
                     readOnly={isPastMonth}
                     className="w-[300px]"

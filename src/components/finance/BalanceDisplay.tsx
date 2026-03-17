@@ -56,6 +56,11 @@ export default function BalanceDisplay({
       setEditing(false);
       return;
     }
+    // Don't save if value hasn't changed — avoids a ₱0 delta in balance history
+    if (parsed === currentBalance) {
+      setEditing(false);
+      return;
+    }
     setSaving(true);
     try {
       await onUpdateBalance(parsed);

@@ -15,6 +15,7 @@ interface IncomeChecklistCardProps {
   incomes: IncomeWithSource[];
   rate: number | null;
   rateLoading: boolean;
+  fetchFreshRate: () => Promise<number | null>;
   onToggleReceived: (
     id: string,
     received: boolean,
@@ -30,6 +31,7 @@ export default function IncomeChecklistCard({
   incomes,
   rate,
   rateLoading,
+  fetchFreshRate,
   onToggleReceived,
   readOnly,
   className,
@@ -49,15 +51,19 @@ export default function IncomeChecklistCard({
         const isWise = income.conversion_method === 'wise';
         const isPayPal = income.conversion_method === 'paypal';
 
-        if (isUSD && rate) {
+        if (isUSD) {
+          // Always fetch a fresh rate before marking USD income as received
+          const freshRate = await fetchFreshRate();
+          if (!freshRate) return; // can't receive without a valid rate
+
           if (isWise) {
-            const r = calculateWiseNetPHP(income.expected_amount, rate);
-            await onToggleReceived(income.id, true, r.netPHP, rate, r.fee);
+            const r = calculateWiseNetPHP(income.expected_amount, freshRate);
+            await onToggleReceived(income.id, true, r.netPHP, freshRate, r.fee);
           } else if (isPayPal) {
-            const r = calculatePayPalNetPHP(income.expected_amount, rate);
-            await onToggleReceived(income.id, true, r.netPHP, rate, r.fee);
+            const r = calculatePayPalNetPHP(income.expected_amount, freshRate);
+            await onToggleReceived(income.id, true, r.netPHP, freshRate, r.fee);
           } else {
-            await onToggleReceived(income.id, true, income.expected_amount * rate, rate);
+            await onToggleReceived(income.id, true, income.expected_amount * freshRate, freshRate);
           }
         } else {
           await onToggleReceived(income.id, true, income.expected_amount);

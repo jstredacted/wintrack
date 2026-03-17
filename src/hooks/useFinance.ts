@@ -100,7 +100,11 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
         if (incomeError) throw new Error(incomeError.message);
         if (cancelled) return;
 
-        setIncomes((incomeData ?? []) as MonthlyIncomeWithSource[]);
+        // Filter out incomes whose source has been deactivated
+        const activeIncomes = (incomeData ?? []).filter(
+          (i: MonthlyIncomeWithSource) => i.income_sources?.active !== false
+        );
+        setIncomes(activeIncomes as MonthlyIncomeWithSource[]);
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Failed to load month data');
