@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useSettings } from '@/hooks/useSettings';
 import { useHistory } from '@/hooks/useHistory';
+import { useIncomeConfig } from '@/hooks/useIncomeConfig';
 import { supabase } from '@/lib/supabase';
 import { USER_ID } from '@/lib/env';
+import { formatUSD, formatPHP } from '@/lib/utils/currency';
 import ConsistencyGraph from '@/components/history/ConsistencyGraph';
 import CategoryRadar from '@/components/history/CategoryRadar';
 import NotificationPermission from '@/components/NotificationPermission';
+import IncomeSourceEditor from '@/components/finance/IncomeSourceEditor';
 import { usePinStore } from '@/stores/pinStore';
 
 const DAY_START_OPTIONS = [
@@ -43,6 +46,16 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [pinPassword, setPinPassword] = useState('');
   const [pinPasswordError, setPinPasswordError] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [addingNew, setAddingNew] = useState(false);
+
+  const {
+    sources,
+    loading: incomeLoading,
+    addSource,
+    updateSource,
+    removeSource,
+  } = useIncomeConfig();
 
   useEffect(() => {
     if (!loading) {
@@ -199,6 +212,80 @@ export default function SettingsPage() {
         </div>
         {pinPasswordError && (
           <p className="text-sm font-mono text-destructive">Wrong password</p>
+        )}
+      </div>
+
+      {/* Income Sources */}
+      <div className="space-y-4">
+        <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          Income Sources
+        </h2>
+        {incomeLoading ? null : (
+          <>
+            {sources.map((source) => (
+              <div
+                key={source.id}
+                className="bg-card border border-border rounded-[var(--radius)] p-4 space-y-3"
+              >
+                {editingId === source.id ? (
+                  <IncomeSourceEditor
+                    source={source}
+                    onSave={async (data) => {
+                      await updateSource(source.id, data);
+                      setEditingId(null);
+                    }}
+                    onCancel={() => setEditingId(null)}
+                    onRemove={async (id) => {
+                      await removeSource(id);
+                      setEditingId(null);
+                    }}
+                  />
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-mono text-foreground">
+                        {source.name}
+                      </span>
+                      <span className="text-muted-foreground text-sm ml-2">
+                        {source.currency === 'USD'
+                          ? formatUSD(source.amount)
+                          : formatPHP(source.amount)}
+                        {source.conversion_method !== 'none' &&
+                          ` via ${source.conversion_method}`}
+                      </span>
+                      {source.payday_day && (
+                        <span className="text-muted-foreground text-xs ml-2">
+                          Day {source.payday_day}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setEditingId(source.id)}
+                      className="text-muted-foreground hover:text-foreground text-sm font-mono underline"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+            {addingNew ? (
+              <IncomeSourceEditor
+                onSave={async (data) => {
+                  await addSource(data);
+                  setAddingNew(false);
+                }}
+                onCancel={() => setAddingNew(false)}
+              />
+            ) : (
+              <button
+                onClick={() => setAddingNew(true)}
+                className="text-muted-foreground hover:text-foreground text-[0.778rem] font-mono"
+              >
+                + Add Income Source
+              </button>
+            )}
+          </>
         )}
       </div>
 
