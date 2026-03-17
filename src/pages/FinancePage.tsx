@@ -213,8 +213,8 @@ export default function FinancePage() {
             >
               {/* View 0: Overview */}
               <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center h-full py-12">
-                {/* Budget bar — first, full width */}
-                <div className="w-full max-w-[600px]">
+                {/* Budget bar — first, full width, no side constraints */}
+                <div className="w-full">
                   <BudgetProgressBar
                     paidTotal={paidTotal}
                     unpaidTotal={unpaidTotal}

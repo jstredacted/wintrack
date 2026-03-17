@@ -31,11 +31,11 @@ export default function BudgetProgressBar({
     }
   }, [editingBudget]);
 
-  // Avoid division by zero
-  const base = totalIncome > 0 ? totalIncome : 1;
-  const paidPct = Math.min((paidTotal / base) * 100, 100);
-  const unpaidPct = Math.min((unpaidTotal / base) * 100, 100 - paidPct);
-  const budgetPct = Math.min((budgetLimit / base) * 100, 100);
+  // Calculate widths relative to budget limit (not income)
+  const base = budgetLimit > 0 ? budgetLimit : 1;
+  const paidPct = budgetLimit > 0 ? Math.min((paidTotal / base) * 100, 100) : 0;
+  const unpaidPct = budgetLimit > 0 ? Math.min((unpaidTotal / base) * 100, 100 - paidPct) : 0;
+  const overBudget = paidTotal + unpaidTotal > budgetLimit && budgetLimit > 0;
 
   const startBudgetEdit = () => {
     if (readOnly || !onUpdateBudgetLimit) return;
@@ -75,13 +75,13 @@ export default function BudgetProgressBar({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="w-full space-y-3">
       <h3 className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
         Budget
       </h3>
 
-      {/* Bar container */}
-      <div className="relative h-10 rounded-md bg-muted overflow-hidden">
+      {/* Bar container — h-12 = 48px, full width */}
+      <div className="relative w-full h-12 rounded-md bg-muted overflow-hidden">
         {/* Zone 1: Paid bills */}
         <div
           className="absolute inset-y-0 left-0 bg-foreground/40 transition-all duration-300 rounded-l-md"
@@ -90,7 +90,7 @@ export default function BudgetProgressBar({
           onMouseLeave={() => setHoveredZone(null)}
         />
 
-        {/* Zone 3: Unpaid projected */}
+        {/* Zone 2: Unpaid projected */}
         <div
           className="absolute inset-y-0 bg-foreground/15 transition-all duration-300"
           style={{ left: `${paidPct}%`, width: `${unpaidPct}%` }}
@@ -98,14 +98,9 @@ export default function BudgetProgressBar({
           onMouseLeave={() => setHoveredZone(null)}
         />
 
-        {/* Budget limit marker */}
-        {budgetLimit > 0 && (
-          <div
-            className="absolute inset-y-0 w-px border-l-2 border-dashed border-foreground/60 transition-all duration-300"
-            style={{ left: `${budgetPct}%` }}
-            onMouseEnter={() => !readOnly && setHoveredZone('limit')}
-            onMouseLeave={() => setHoveredZone(null)}
-          />
+        {/* Over-budget indicator */}
+        {overBudget && (
+          <div className="absolute inset-0 border-2 border-destructive/60 rounded-md pointer-events-none" />
         )}
 
         {/* Tooltip */}
@@ -113,21 +108,18 @@ export default function BudgetProgressBar({
           <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-foreground text-background text-[0.667rem] font-mono px-2 py-1 rounded whitespace-nowrap z-10">
             {hoveredZone === 'paid' && `Paid: ${formatPHP(paidTotal)}`}
             {hoveredZone === 'unpaid' && `Unpaid: ${formatPHP(unpaidTotal)}`}
-            {hoveredZone === 'limit' && `Budget: ${formatPHP(budgetLimit)}`}
           </div>
         )}
       </div>
 
-      {/* Labels below bar */}
-      <div className="flex justify-between mt-3 px-1">
+      {/* Labels below bar — left / center / right */}
+      <div className="flex justify-between">
         <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
           Paid {formatPHP(paidTotal)}
         </span>
-        {budgetLimit > 0 && (
-          <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
-            Budget {formatPHP(budgetLimit)}
-          </span>
-        )}
+        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+          Budget {formatPHP(budgetLimit)}
+        </span>
         <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
           Unpaid {formatPHP(unpaidTotal)}
         </span>
@@ -163,7 +155,7 @@ export default function BudgetProgressBar({
               className="text-[0.667rem] uppercase tracking-[0.15em] font-mono text-muted-foreground hover:text-foreground transition-colors disabled:hover:text-muted-foreground"
             >
               {budgetLimit > 0
-                ? `Budget: ${formatPHP(budgetLimit)}`
+                ? 'Edit budget'
                 : 'Set budget'
               }
             </button>
