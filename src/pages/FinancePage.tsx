@@ -138,7 +138,7 @@ export default function FinancePage() {
           <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
         ) : isFutureMonth ? (
           /* Future month: projected view */
-          <div className="w-[900px] relative p-8 mt-6">
+          <div className="w-[1000px] relative p-8 mt-6">
             <div className="flex flex-col items-center gap-8">
               {/* Projected balance — hero */}
               <div className="text-center">
@@ -207,7 +207,7 @@ export default function FinancePage() {
             onTouchStart={handleViewTouchStart}
             onTouchEnd={handleViewTouchEnd}
           >
-            <div className="w-[900px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
+            <div className="w-[1000px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
               {/* Left arrow (only on View 1) */}
               {viewIndex === 1 && (
                 <button
@@ -237,7 +237,7 @@ export default function FinancePage() {
                 style={{ transform: `translateX(${viewIndex * -100}%)` }}
               >
                 {/* View 0: Overview */}
-                <div className="w-[900px] shrink-0 p-8 flex flex-col items-center gap-8">
+                <div className="w-[1000px] shrink-0 p-8 flex flex-col items-center gap-8">
                   {/* Budget bar — full width inside container */}
                   <div className="w-full">
                     <BudgetProgressBar
@@ -283,13 +283,13 @@ export default function FinancePage() {
                 </div>
 
                 {/* View 1: Cards side by side */}
-                <div className="w-[900px] shrink-0 p-8 flex justify-center gap-4 items-start">
+                <div className="w-[1000px] shrink-0 p-8 flex justify-center gap-4 items-start">
                   <BillsCard
                     bills={bills}
                     onTogglePaid={togglePaid}
                     onAddBill={addBill}
                     readOnly={isPastMonth}
-                    className="w-[260px]"
+                    className="w-[300px]"
                   />
 
                   <IncomeChecklistCard
@@ -298,7 +298,7 @@ export default function FinancePage() {
                     rateLoading={rateLoading}
                     onToggleReceived={toggleIncomeReceived}
                     readOnly={isPastMonth}
-                    className="w-[260px]"
+                    className="w-[300px]"
                   />
 
                   <OneOffCard
@@ -316,7 +316,7 @@ export default function FinancePage() {
                       refetchMonth();
                     }}
                     readOnly={isPastMonth}
-                    className="w-[260px]"
+                    className="w-[300px]"
                   />
                 </div>
               </div>

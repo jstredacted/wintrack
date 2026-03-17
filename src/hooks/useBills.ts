@@ -26,10 +26,16 @@ export function useBills(monthId: string | null): UseBillsResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refetchKey, setRefetchKey] = useState(0);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const refetch = useCallback(() => {
     setRefetchKey((k) => k + 1);
   }, []);
+
+  // Reset hasLoaded when monthId changes
+  useEffect(() => {
+    setHasLoaded(false);
+  }, [monthId]);
 
   useEffect(() => {
     if (!monthId) {
@@ -41,7 +47,7 @@ export function useBills(monthId: string | null): UseBillsResult {
     let cancelled = false;
 
     async function fetchBills() {
-      setLoading(true);
+      if (!hasLoaded) setLoading(true);
       setError(null);
 
       try {
@@ -59,13 +65,16 @@ export function useBills(monthId: string | null): UseBillsResult {
           setError(err instanceof Error ? err.message : 'Failed to load bills');
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setHasLoaded(true);
+        }
       }
     }
 
     fetchBills();
     return () => { cancelled = true; };
-  }, [monthId, refetchKey]);
+  }, [monthId, refetchKey, hasLoaded]);
 
   const togglePaid = useCallback(
     async (monthlyBillId: string, paid: boolean) => {

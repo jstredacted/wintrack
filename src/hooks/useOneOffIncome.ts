@@ -18,10 +18,16 @@ export function useOneOffIncome(monthId: string | null): UseOneOffIncomeResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refetchKey, setRefetchKey] = useState(0);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const refetch = useCallback(() => {
     setRefetchKey((k) => k + 1);
   }, []);
+
+  // Reset hasLoaded when monthId changes
+  useEffect(() => {
+    setHasLoaded(false);
+  }, [monthId]);
 
   useEffect(() => {
     if (!monthId) {
@@ -33,7 +39,7 @@ export function useOneOffIncome(monthId: string | null): UseOneOffIncomeResult {
     let cancelled = false;
 
     async function fetchEntries() {
-      setLoading(true);
+      if (!hasLoaded) setLoading(true);
       setError(null);
 
       try {
@@ -52,13 +58,16 @@ export function useOneOffIncome(monthId: string | null): UseOneOffIncomeResult {
           setError(err instanceof Error ? err.message : 'Failed to load one-off income');
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setHasLoaded(true);
+        }
       }
     }
 
     fetchEntries();
     return () => { cancelled = true; };
-  }, [monthId, refetchKey]);
+  }, [monthId, refetchKey, hasLoaded]);
 
   const addEntry = useCallback(
     async (amount: number, date: string, note: string) => {

@@ -39,17 +39,24 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refetchKey, setRefetchKey] = useState(0);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const refetch = useCallback(() => {
     setRefetchKey((k) => k + 1);
   }, []);
+
+  // Reset hasLoaded when month changes
+  useEffect(() => {
+    setHasLoaded(false);
+  }, [selectedMonth]);
 
   // Load month data + incomes on mount / month change
   useEffect(() => {
     let cancelled = false;
 
     async function loadMonth() {
-      setLoading(true);
+      // Only show loading spinner on initial load, not on refetch
+      if (!hasLoaded) setLoading(true);
       setError(null);
 
       try {
@@ -99,7 +106,10 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
           setError(err instanceof Error ? err.message : 'Failed to load month data');
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setHasLoaded(true);
+        }
       }
     }
 
@@ -107,7 +117,7 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
     return () => {
       cancelled = true;
     };
-  }, [selectedMonth, refetchKey]);
+  }, [selectedMonth, refetchKey, hasLoaded]);
 
   const updateBalance = useCallback(
     async (newBalance: number) => {
