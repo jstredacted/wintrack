@@ -67,7 +67,7 @@ export default function BudgetProgressBar({
   if (readOnly && budgetLimit <= 0) {
     return (
       <div className="w-full text-center py-4">
-        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
           No budget set
         </span>
       </div>
@@ -76,7 +76,7 @@ export default function BudgetProgressBar({
 
   return (
     <div className="w-full space-y-3">
-      <h3 className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+      <h3 className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
         Budget
       </h3>
 
@@ -105,7 +105,7 @@ export default function BudgetProgressBar({
 
         {/* Tooltip */}
         {hoveredZone && !readOnly && (
-          <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-foreground text-background text-[0.667rem] font-mono px-2 py-1 rounded whitespace-nowrap z-10">
+          <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs font-mono px-2 py-1 rounded whitespace-nowrap z-10">
             {hoveredZone === 'paid' && `Paid: ${formatPHP(paidTotal)}`}
             {hoveredZone === 'unpaid' && `Unpaid: ${formatPHP(unpaidTotal)}`}
           </div>
@@ -114,13 +114,13 @@ export default function BudgetProgressBar({
 
       {/* Labels below bar — left / center / right */}
       <div className="flex justify-between">
-        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
           Paid {formatPHP(paidTotal)}
         </span>
-        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
           Budget {formatPHP(budgetLimit)}
         </span>
-        <span className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
           Unpaid {formatPHP(unpaidTotal)}
         </span>
       </div>
@@ -152,7 +152,7 @@ export default function BudgetProgressBar({
               type="button"
               onClick={startBudgetEdit}
               disabled={!onUpdateBudgetLimit}
-              className="text-[0.667rem] uppercase tracking-[0.15em] font-mono text-muted-foreground hover:text-foreground transition-colors disabled:hover:text-muted-foreground"
+              className="text-xs uppercase tracking-[0.15em] font-mono text-muted-foreground hover:text-foreground transition-colors disabled:hover:text-muted-foreground"
             >
               {budgetLimit > 0
                 ? 'Edit budget'

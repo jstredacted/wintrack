@@ -1,5 +1,4 @@
-import { useState, useRef, useCallback, type ReactNode } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
 import { getPrevMonth, getNextMonth, getMonthYear } from '@/lib/utils/month';
 
 const MONTH_NAMES = [
@@ -10,12 +9,11 @@ const MONTH_NAMES = [
 interface MonthBarrelProps {
   selected: string;
   onSelect: (month: string) => void;
-  children: ReactNode;
 }
 
-export default function MonthBarrel({ selected, onSelect, children }: MonthBarrelProps) {
-  const [direction, setDirection] = useState<'up' | 'down' | null>(null);
+export default function MonthBarrel({ selected, onSelect }: MonthBarrelProps) {
   const [animating, setAnimating] = useState(false);
+  const [offset, setOffset] = useState(0);
   const touchStartY = useRef<number | null>(null);
   const touchStartX = useRef<number | null>(null);
 
@@ -26,18 +24,33 @@ export default function MonthBarrel({ selected, onSelect, children }: MonthBarre
   const { year: currYear, month: currMonth } = getMonthYear(selected);
   const { year: nextYear, month: nextMonth } = getMonthYear(next);
 
-  const goUp = useCallback(() => {
+  const prevLabel = prevYear !== currYear
+    ? `${MONTH_NAMES[prevMonth - 1]} ${prevYear}`
+    : MONTH_NAMES[prevMonth - 1];
+  const nextLabel = nextYear !== currYear
+    ? `${MONTH_NAMES[nextMonth - 1]} ${nextYear}`
+    : MONTH_NAMES[nextMonth - 1];
+
+  const goPrev = useCallback(() => {
     if (animating) return;
-    setDirection('up');
     setAnimating(true);
-    onSelect(prev);
+    setOffset(52); // slide down to reveal prev
+    setTimeout(() => {
+      onSelect(prev);
+      setOffset(0);
+      setAnimating(false);
+    }, 300);
   }, [animating, prev, onSelect]);
 
-  const goDown = useCallback(() => {
+  const goNext = useCallback(() => {
     if (animating) return;
-    setDirection('down');
     setAnimating(true);
-    onSelect(next);
+    setOffset(-52); // slide up to reveal next
+    setTimeout(() => {
+      onSelect(next);
+      setOffset(0);
+      setAnimating(false);
+    }, 300);
   }, [animating, next, onSelect]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -51,71 +64,54 @@ export default function MonthBarrel({ selected, onSelect, children }: MonthBarre
     const deltaX = touchStartX.current - e.changedTouches[0].clientX;
     touchStartY.current = null;
     touchStartX.current = null;
-    // Only vertical swipe if Y delta dominates X delta
     if (Math.abs(deltaY) < 40 || Math.abs(deltaX) > Math.abs(deltaY)) return;
-    if (deltaY > 0) goDown();
-    else goUp();
+    if (deltaY > 0) goNext();
+    else goPrev();
   };
 
   return (
     <div
-      className="flex flex-col h-full select-none"
+      className="relative overflow-hidden h-[160px] shrink-0 select-none"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Top: Previous month button */}
-      <button
-        type="button"
-        onClick={goUp}
-        className="flex items-center justify-center gap-2 py-3 text-muted-foreground hover:text-foreground transition-colors shrink-0"
-        aria-label="Previous month"
+      {/* Gradient fade top */}
+      <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
+
+      {/* Barrel content */}
+      <div
+        className="flex flex-col items-center justify-center h-full transition-transform duration-300"
+        style={{ transform: `translateY(${offset}px)` }}
       >
-        <ChevronUp size={20} />
-        <span className="text-[0.667rem] font-mono">
-          {MONTH_NAMES[prevMonth - 1]} {prevYear}
-        </span>
-      </button>
-
-      {/* Middle: Current month content */}
-      <div className="flex-1 overflow-hidden" style={{ perspective: '600px' }}>
-        <div
-          key={selected}
-          className={`h-full flex flex-col ${
-            animating
-              ? direction === 'up'
-                ? 'barrel-content-down'
-                : 'barrel-content-up'
-              : ''
-          }`}
-          onAnimationEnd={() => setAnimating(false)}
+        {/* Previous month */}
+        <button
+          type="button"
+          onClick={goPrev}
+          className="text-xl font-mono opacity-30 scale-90 py-2 hover:opacity-50 transition-opacity"
+          aria-label="Previous month"
         >
-          {/* Month heading */}
-          <h1 className="text-center font-mono text-4xl font-semibold tracking-tight text-foreground pt-2 pb-1 shrink-0">
-            {MONTH_NAMES[currMonth - 1]}
-          </h1>
-          <p className="text-center font-mono text-[0.778rem] text-muted-foreground pb-4 shrink-0">
-            {currYear}
-          </p>
+          {prevLabel}
+        </button>
 
-          {/* Content (children) */}
-          <div className="flex-1 overflow-hidden">
-            {children}
-          </div>
+        {/* Current month */}
+        <div className="text-center py-2">
+          <div className="text-4xl font-bold font-mono tracking-tight">{MONTH_NAMES[currMonth - 1]}</div>
+          <div className="text-sm text-muted-foreground font-mono mt-1">{currYear}</div>
         </div>
+
+        {/* Next month */}
+        <button
+          type="button"
+          onClick={goNext}
+          className="text-xl font-mono opacity-30 scale-90 py-2 hover:opacity-50 transition-opacity"
+          aria-label="Next month"
+        >
+          {nextLabel}
+        </button>
       </div>
 
-      {/* Bottom: Next month button */}
-      <button
-        type="button"
-        onClick={goDown}
-        className="flex items-center justify-center gap-2 py-3 text-muted-foreground hover:text-foreground transition-colors shrink-0"
-        aria-label="Next month"
-      >
-        <span className="text-[0.667rem] font-mono">
-          {MONTH_NAMES[nextMonth - 1]} {nextYear}
-        </span>
-        <ChevronDown size={20} />
-      </button>
+      {/* Gradient fade bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
     </div>
   );
 }

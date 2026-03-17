@@ -13,7 +13,7 @@ export default function BalanceHistoryIndicator({ lastChange, onClick }: Balance
 
   return (
     <div className="text-center cursor-pointer" onClick={onClick}>
-      <p className="text-[0.778rem] text-muted-foreground font-mono">
+      <p className="text-sm text-muted-foreground font-mono">
         {sign}{formatPHP(lastChange.delta)} from last change
       </p>
     </div>

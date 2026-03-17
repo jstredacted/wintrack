@@ -109,11 +109,11 @@ export default function BalanceDisplay({
       {/* Starting / Current label pairs */}
       <div className="flex gap-8 justify-center mt-2">
         <div>
-          <span className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Starting </span>
+          <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Starting </span>
           <span className="text-xs font-mono tabular-nums text-muted-foreground">{formatPHP(startingBalance)}</span>
         </div>
         <div>
-          <span className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Current </span>
+          <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Current </span>
           <span className="text-xs font-mono tabular-nums">{formatPHP(currentBalance)}</span>
         </div>
       </div>
