@@ -29,6 +29,7 @@ interface TooltipData {
 
 export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumnProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
+  const [hoveredSegment, setHoveredSegment] = useState<'expense' | 'oneoff' | null>(null);
   const monthIndex = parseInt(summary.month.split('-')[1], 10) - 1;
   const abbr = MONTH_ABBR[monthIndex];
 
@@ -40,17 +41,19 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
   const expensePercent = totalIncome > 0 ? Math.min((totalExpenses / totalIncome) * 100, 100) : 0;
   const oneoffPercent = totalIncome > 0 ? Math.min((totalOneoff / totalIncome) * 100, 100 - expensePercent) : 0;
 
-  const handleSegmentEnter = (e: React.MouseEvent, label: string) => {
+  const handleSegmentEnter = (e: React.MouseEvent, label: string, segment: 'expense' | 'oneoff') => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setTooltip({
       x: rect.left + rect.width / 2,
       y: rect.top - 8,
       label,
     });
+    setHoveredSegment(segment);
   };
 
   const handleSegmentLeave = () => {
     setTooltip(null);
+    setHoveredSegment(null);
   };
 
   return (
@@ -72,24 +75,41 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
         {/* Expense fill from bottom */}
         {expensePercent > 0 && (
           <div
-            className="absolute bottom-0 left-0 right-0 bg-foreground/30 transition-all duration-300 hover:bg-foreground/50"
+            className={[
+              'absolute bottom-0 left-0 right-0 bg-foreground/30 transition-all duration-300',
+              hoveredSegment === 'expense' ? 'ring-1 ring-white/90 z-10' : '',
+            ].join(' ')}
             style={{ height: `${expensePercent}%` }}
-            onMouseEnter={(e) => handleSegmentEnter(e, `Expenses: ${abbreviateAmount(totalExpenses)}`)}
+            onMouseEnter={(e) => handleSegmentEnter(e, `Expenses: ${abbreviateAmount(totalExpenses)}`, 'expense')}
             onMouseLeave={handleSegmentLeave}
-          />
+          >
+            {hoveredSegment === 'expense' && (
+              <div className="absolute inset-0 bg-white/15" />
+            )}
+          </div>
         )}
 
-        {/* One-off extension above expense fill */}
+        {/* One-off extension above expense fill — striped pattern to distinguish from regular */}
         {oneoffPercent > 0 && (
           <div
-            className="absolute left-0 right-0 bg-foreground/15 transition-all duration-300 hover:bg-foreground/30"
+            className={[
+              'absolute left-0 right-0 transition-all duration-300',
+              hoveredSegment === 'oneoff' ? 'ring-1 ring-white/90 z-10' : '',
+            ].join(' ')}
             style={{
               bottom: `${expensePercent}%`,
               height: `${oneoffPercent}%`,
+              backgroundImage:
+                'repeating-linear-gradient(135deg, transparent, transparent 3px, hsl(var(--foreground) / 0.15) 3px, hsl(var(--foreground) / 0.15) 6px)',
+              backgroundColor: 'hsl(var(--foreground) / 0.08)',
             }}
-            onMouseEnter={(e) => handleSegmentEnter(e, `One-off: ${abbreviateAmount(totalOneoff)}`)}
+            onMouseEnter={(e) => handleSegmentEnter(e, `One-off: ${abbreviateAmount(totalOneoff)}`, 'oneoff')}
             onMouseLeave={handleSegmentLeave}
-          />
+          >
+            {hoveredSegment === 'oneoff' && (
+              <div className="absolute inset-0 bg-white/15" />
+            )}
+          </div>
         )}
       </div>
 
