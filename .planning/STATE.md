@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-17T23:55:59.958Z"
-last_activity: 2026-03-17 — Completed 04-04 (waterfall chart + month view modes)
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-17T23:56:50.832Z"
+last_activity: 2026-03-18 — Completed 05-01 (dayStartHour bug fixes)
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
-  completed_plans: 15
+  completed_plans: 16
   percent: 93
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 
 ## Current Position
 
-Phase: 4 of 5 (Finance Extended)
-Plan: 4 of 5 in current phase
+Phase: 5 of 5 (Journal Rich Text and Mobile)
+Plan: 1 of 5 in current phase
 Status: In Progress
-Last activity: 2026-03-17 — Completed 04-04 (waterfall chart + month view modes)
+Last activity: 2026-03-18 — Completed 05-01 (dayStartHour bug fixes)
 
 Progress: [█████████░] 93%
 
@@ -59,6 +59,7 @@ Progress: [█████████░] 93%
 | Phase 04 P02 | 3min | 2 tasks | 4 files |
 | Phase 04 P04 | 2min | 2 tasks | 2 files |
 | Phase 05 P03 | 2 | 2 tasks | 4 files |
+| Phase 05 P01 | 8min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,8 @@ Recent decisions affecting current work:
 - [Phase 04]: MonthStrip extended to 10 months (6 back + current + 3 forward)
 - [Phase 05-03]: Mobile nav uses sm:hidden/hidden sm:flex responsive classes — no JS breakpoint detection needed
 - [Phase 05-03]: safe-area-inset-bottom applied via inline style to support env() CSS function for iPhone safe area
+- [Phase 05]: DayStrip derives all cell labels from logicalToday (offset-aware) rather than raw calendar Date
+- [Phase 05]: yesterdayWins query adds .eq('completed', false) for server-side filter rather than client-side exclusion
 
 ### Research Flags
 
@@ -125,6 +128,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T23:55:59.956Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-03-17T23:56:50.830Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
