@@ -95,7 +95,10 @@ export default function MonthBarrel({ selected, onSelect, children }: MonthBarre
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
         <div className="text-center">
           <div className="text-4xl font-bold font-mono tracking-tight">{currentMonthName}</div>
-          <div className="text-sm text-muted-foreground font-mono mt-1">{currYear}</div>
+          {/* Only show year when adjacent months span different years */}
+          {(prevYear !== currYear || nextYear !== currYear) && (
+            <div className="text-sm text-muted-foreground font-mono mt-1">{currYear}</div>
+          )}
         </div>
 
         {/* Children content goes here */}

@@ -5,7 +5,11 @@ interface BalanceSparklineProps {
 }
 
 export default function BalanceSparkline({ months }: BalanceSparklineProps) {
-  const balances = months.map((m) => m.ending_balance);
+  // Only show real balances for months with actual activity; phantom carry-forward months get 0
+  const balances = months.map((m) => {
+    const hasActivity = Number(m.total_income ?? 0) + Number(m.total_expenses ?? 0) + Number(m.total_oneoff ?? 0) > 0;
+    return hasActivity ? Number(m.ending_balance) : 0;
+  });
 
   // Need at least 2 data points to draw a line
   if (balances.length < 2) return null;

@@ -10,6 +10,12 @@ interface MonthColumnProps {
 
 const MONTH_ABBR = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
+function abbreviateBalance(amount: number): string {
+  if (Math.abs(amount) >= 1_000_000) return `\u20B1${(amount / 1_000_000).toFixed(1)}M`;
+  if (Math.abs(amount) >= 1_000) return `\u20B1${(amount / 1_000).toFixed(0)}K`;
+  return `\u20B1${amount.toFixed(0)}`;
+}
+
 export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumnProps) {
   const [hovered, setHovered] = useState(false);
   const monthIndex = parseInt(summary.month.split('-')[1], 10) - 1;
@@ -19,12 +25,15 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
   const totalExpenses = Number(summary.total_expenses);
   const endingBalance = Number(summary.ending_balance);
 
+  // Only show balance for months with actual activity
+  const hasActivity = totalIncome > 0 || totalExpenses > 0;
+  const displayBalance = hasActivity ? endingBalance : 0;
+
   // Calculate fill percentages relative to income
   const expenseRatio = totalIncome > 0 ? Math.min(totalExpenses / totalIncome, 1) : 0;
   const oneoffRatio = totalIncome > 0 ? Math.min(Number(summary.total_oneoff) / totalIncome, 1 - expenseRatio) : 0;
 
-  // Dim months with no activity (carry-forward-only months have balance but no income/expenses)
-  const hasActivity = totalIncome > 0 || totalExpenses > 0;
+  // Dim months with no activity
   const isEmpty = !hasActivity && endingBalance === 0;
 
   return (
@@ -68,17 +77,17 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
         </div>
       </div>
 
-      {/* Balance at bottom */}
+      {/* Balance at bottom — abbreviated to prevent overlap */}
       <div className="text-xs font-mono tabular-nums text-muted-foreground pb-1.5 shrink-0 w-full text-center px-0.5">
-        {formatPHP(endingBalance)}
+        {hasActivity ? abbreviateBalance(displayBalance) : '\u2014'}
       </div>
 
       {/* Hover tooltip */}
-      {hovered && !isEmpty && (
+      {hovered && hasActivity && (
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-foreground text-background text-[0.6rem] font-mono px-2 py-1.5 rounded whitespace-nowrap z-20 shadow-lg">
           <div>{formatPHP(totalIncome)} in</div>
           <div>{formatPHP(totalExpenses)} out</div>
-          <div className="border-t border-background/20 mt-0.5 pt-0.5">{formatPHP(endingBalance)}</div>
+          <div className="border-t border-background/20 mt-0.5 pt-0.5">{formatPHP(displayBalance)}</div>
         </div>
       )}
     </button>
