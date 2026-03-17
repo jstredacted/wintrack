@@ -82,15 +82,16 @@ Plans:
 - [ ] 03-04-PLAN.md — Income Sources Settings section + visual verification checkpoint
 
 ### Phase 4: Finance Extended
-**Goal**: User can manage bills with recurrence, view financial dashboards, and track external investment balances
+**Goal**: User can manage bills with recurrence, view financial dashboards, track balance change history, and add one-off income
 **Depends on**: Phase 3
-**Requirements**: BILL-01, BILL-02, BILL-03, BILL-04, BILL-05, BILL-06, BILL-07, FIN-02, FIN-03, FIN-04, FIN-05, EXT-01, EXT-02, EXT-03
+**Requirements**: BILL-01, BILL-02, BILL-03, BILL-04, BILL-05, BILL-06, BILL-07, FIN-02, FIN-03, FIN-04, FIN-05, HIST-01, HIST-02, HIST-03, HIST-04, ONEOFF-01, ONEOFF-02, ONEOFF-03, ONEOFF-04
 **Success Criteria** (what must be TRUE):
   1. User can add bills with recurrence rules (one-time, recurring N months, ongoing) and toggle them as paid (deducting from balance)
   2. Recurring/ongoing bills auto-appear each month; one-time bills disappear after payment; unpaid bills highlight by due date urgency
-  3. Current month shows a waterfall view of balance cascading as each bill is paid; past months are read-only; future months show projections
-  4. Year overview displays 12 months with balance trajectory, total income, and total expenses
-  5. User can enter Polymarket Bot and SOL DCA balances which display alongside cash balance for a total net worth view
+  3. Current month shows a waterfall view (step chart) of balance cascading as each bill is paid; past months show full snapshot read-only; future months show projected balance
+  4. Year overview at /finance/year shows 12-month columns with balance, income-vs-expense progress bar, and sparkline trajectory
+  5. Every balance override is logged with history modal, last-change indicator, and revert capability
+  6. User can add one-off income (bonus, receivable) that extends the year overview progress bar beyond regular income
 **Plans**: TBD
 
 Plans:

@@ -68,11 +68,25 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [ ] **FIN-04**: Future months show projected balance (expected income minus upcoming bills)
 - [ ] **FIN-05**: Year overview showing 12 months with balance trajectory, total income, total expenses
 
-### Finance: External Balances
+### Finance: Balance History
 
-- [ ] **EXT-01**: User can manually enter current Polymarket Bot balance
-- [ ] **EXT-02**: User can manually enter current SOL DCA balance
-- [ ] **EXT-03**: External balances display alongside current cash balance for total net worth view
+- [ ] **HIST-01**: Every manual balance override is recorded with timestamp and amount change
+- [ ] **HIST-02**: Finance page shows last change indicator (e.g., "+₱30,000 from last change") next to balance
+- [ ] **HIST-03**: User can open a history modal showing all balance changes with dates and amounts
+- [ ] **HIST-04**: User can delete a balance change entry, reverting balance to the previous value
+
+### Finance: One-Off Income
+
+- [ ] **ONEOFF-01**: User can add a one-off income entry with amount, date, and note (e.g., "Debt paid by John", "Year-end bonus")
+- [ ] **ONEOFF-02**: One-off income adds to current balance when recorded
+- [ ] **ONEOFF-03**: One-off income appears as an extended segment on the year overview progress bar (beyond regular income)
+- [ ] **ONEOFF-04**: User can edit and delete one-off income entries
+
+### Finance: External Balances (Deferred to v2.1)
+
+~~- [ ] **EXT-01**: User can manually enter current Polymarket Bot balance~~
+~~- [ ] **EXT-02**: User can manually enter current SOL DCA balance~~
+~~- [ ] **EXT-03**: External balances display alongside current cash balance for total net worth view~~
 
 ### Journal Rich Text
 
@@ -157,9 +171,14 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | FIN-03 | Phase 4 | Pending |
 | FIN-04 | Phase 4 | Pending |
 | FIN-05 | Phase 4 | Pending |
-| EXT-01 | Phase 4 | Pending |
-| EXT-02 | Phase 4 | Pending |
-| EXT-03 | Phase 4 | Pending |
+| HIST-01 | Phase 4 | Pending |
+| HIST-02 | Phase 4 | Pending |
+| HIST-03 | Phase 4 | Pending |
+| HIST-04 | Phase 4 | Pending |
+| ONEOFF-01 | Phase 4 | Pending |
+| ONEOFF-02 | Phase 4 | Pending |
+| ONEOFF-03 | Phase 4 | Pending |
+| ONEOFF-04 | Phase 4 | Pending |
 | JRNL-01 | Phase 5 | Pending |
 | JRNL-02 | Phase 5 | Pending |
 | JRNL-03 | Phase 5 | Pending |
@@ -176,8 +195,8 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | MOB-10 | Phase 5 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 54 total
-- Mapped to phases: 54
+- v2.0 requirements: 59 total
+- Mapped to phases: 59
 - Unmapped: 0
 
 ---
