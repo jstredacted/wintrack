@@ -4,7 +4,6 @@ import { ArrowLeft } from 'lucide-react';
 import { useYearOverview } from '@/hooks/useYearOverview';
 import { formatPHP } from '@/lib/utils/currency';
 import YearGrid from '@/components/finance/YearGrid';
-import BalanceSparkline from '@/components/finance/BalanceSparkline';
 
 export default function YearOverviewPage() {
   const navigate = useNavigate();
@@ -15,7 +14,8 @@ export default function YearOverviewPage() {
     const totalIncome = months.reduce((s, m) => s + m.total_income, 0);
     const totalExpenses = months.reduce((s, m) => s + m.total_expenses, 0);
     const net = totalIncome - totalExpenses;
-    return { totalIncome, totalExpenses, net };
+    const savingsRate = totalIncome > 0 ? Math.round((1 - totalExpenses / totalIncome) * 100) : 0;
+    return { totalIncome, totalExpenses, net, savingsRate };
   }, [months]);
 
   const handleMonthClick = (month: string) => {
@@ -45,7 +45,7 @@ export default function YearOverviewPage() {
           {/* Year summary row */}
           <div className="flex items-center justify-center gap-8 py-4 border-b border-border">
             <div className="text-center">
-              <p className="text-[0.667rem] font-mono uppercase tracking-widest text-muted-foreground">
+              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Total Income
               </p>
               <p className="text-[1.333rem] font-mono tabular-nums font-light">
@@ -53,7 +53,7 @@ export default function YearOverviewPage() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[0.667rem] font-mono uppercase tracking-widest text-muted-foreground">
+              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Total Expenses
               </p>
               <p className="text-[1.333rem] font-mono tabular-nums font-light">
@@ -61,17 +61,22 @@ export default function YearOverviewPage() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[0.667rem] font-mono uppercase tracking-widest text-muted-foreground">
+              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Net
               </p>
               <p className={`text-[1.333rem] font-mono tabular-nums font-light ${summary.net < 0 ? 'text-destructive' : ''}`}>
                 {formatPHP(summary.net)}
               </p>
             </div>
+            <div className="text-center">
+              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
+                Savings Rate
+              </p>
+              <p className="text-[1.333rem] font-mono tabular-nums font-light">
+                {summary.savingsRate}%
+              </p>
+            </div>
           </div>
-
-          {/* Balance sparkline */}
-          <BalanceSparkline months={months} />
 
           {/* Year grid */}
           <YearGrid
