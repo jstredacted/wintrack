@@ -11,7 +11,7 @@ interface UseBillsResult {
   addBill: (template: {
     name: string;
     amount: number;
-    due_day: number;
+    due_day: number | null;
     recurrence_type: RecurrenceType;
     recurrence_count?: number;
     recurrence_end?: string;
@@ -88,7 +88,7 @@ export function useBills(monthId: string | null): UseBillsResult {
     async (template: {
       name: string;
       amount: number;
-      due_day: number;
+      due_day: number | null;
       recurrence_type: RecurrenceType;
       recurrence_count?: number;
       recurrence_end?: string;

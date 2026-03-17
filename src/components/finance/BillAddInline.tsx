@@ -6,7 +6,7 @@ interface BillAddInlineProps {
   onAddBill: (template: {
     name: string;
     amount: number;
-    due_day: number;
+    due_day: number | null;
     recurrence_type: RecurrenceType;
     start_month: string;
   }) => Promise<void>;
@@ -29,20 +29,27 @@ export default function BillAddInline({ onAddBill }: BillAddInlineProps) {
     setExpanded(false);
   };
 
+  const isOneTime = recurrenceType === 'one_time';
+
   const handleSubmit = async () => {
     const trimmedName = name.trim();
     const parsedAmount = parseFloat(amount);
     const parsedDay = parseInt(dueDay, 10);
 
     if (!trimmedName || isNaN(parsedAmount) || parsedAmount <= 0) return;
-    if (isNaN(parsedDay) || parsedDay < 1 || parsedDay > 31) return;
+
+    // Due day is required for recurring bills, optional for one-time
+    if (!isOneTime && (isNaN(parsedDay) || parsedDay < 1 || parsedDay > 31)) return;
+    if (dueDay !== '' && !isOneTime && (isNaN(parsedDay) || parsedDay < 1 || parsedDay > 31)) return;
+
+    const finalDueDay = dueDay === '' || isNaN(parsedDay) ? null : parsedDay;
 
     setSaving(true);
     try {
       await onAddBill({
         name: trimmedName,
         amount: parsedAmount,
-        due_day: parsedDay,
+        due_day: finalDueDay,
         recurrence_type: recurrenceType,
         start_month: getCurrentMonth(),
       });
@@ -78,6 +85,9 @@ export default function BillAddInline({ onAddBill }: BillAddInlineProps) {
     );
   }
 
+  const inputBase =
+    'bg-transparent border-b border-foreground/20 font-mono text-base py-1 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground';
+
   return (
     <div
       className="flex gap-2 items-center py-2"
@@ -90,31 +100,39 @@ export default function BillAddInline({ onAddBill }: BillAddInlineProps) {
         onChange={(e) => setName(e.target.value)}
         placeholder="Bill name"
         disabled={saving}
-        className="flex-1 bg-transparent border-b border-foreground/20 font-mono text-base py-1 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground"
+        className={`flex-1 ${inputBase}`}
       />
       <input
-        type="number"
+        type="text"
+        inputMode="decimal"
         value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === '' || /^\d*\.?\d*$/.test(v)) setAmount(v);
+        }}
         placeholder="0.00"
         disabled={saving}
-        className="w-24 bg-transparent border-b border-foreground/20 font-mono text-base py-1 text-right tabular-nums focus:outline-none focus:border-foreground/50"
+        className={`w-24 text-right tabular-nums ${inputBase} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
       />
-      <input
-        type="number"
-        value={dueDay}
-        onChange={(e) => setDueDay(e.target.value)}
-        placeholder="Day"
-        min={1}
-        max={31}
-        disabled={saving}
-        className="w-16 bg-transparent border-b border-foreground/20 font-mono text-base py-1 text-center focus:outline-none focus:border-foreground/50"
-      />
+      {!isOneTime && (
+        <input
+          type="text"
+          inputMode="numeric"
+          value={dueDay}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === '' || /^\d{1,2}$/.test(v)) setDueDay(v);
+          }}
+          placeholder="Day"
+          disabled={saving}
+          className={`w-16 text-center ${inputBase} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+        />
+      )}
       <select
         value={recurrenceType}
         onChange={(e) => setRecurrenceType(e.target.value as RecurrenceType)}
         disabled={saving}
-        className="bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1 focus:outline-none focus:border-foreground/50"
+        className={`${inputBase} text-[0.778rem]`}
       >
         <option value="one_time">One-time</option>
         <option value="ongoing">Ongoing</option>
