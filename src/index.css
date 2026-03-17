@@ -210,6 +210,22 @@
   animation: slide-in-right 0.3s ease-out both;
 }
 
+/* MonthBarrel 3D slide animations */
+@keyframes barrel-slide-up {
+  from { transform: perspective(600px) translateY(20px) rotateX(-10deg); opacity: 0; }
+  to { transform: perspective(600px) translateY(0) rotateX(0); opacity: 1; }
+}
+@keyframes barrel-slide-down {
+  from { transform: perspective(600px) translateY(-20px) rotateX(10deg); opacity: 0; }
+  to { transform: perspective(600px) translateY(0) rotateX(0); opacity: 1; }
+}
+.barrel-slide-up {
+  animation: barrel-slide-up 0.3s ease-out both;
+}
+.barrel-slide-down {
+  animation: barrel-slide-down 0.3s ease-out both;
+}
+
 /* Modal fade-in */
 @keyframes modal-fade-in {
   from { opacity: 0; }

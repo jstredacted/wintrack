@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { BarChart3 } from 'lucide-react';
 import { useFinance } from '@/hooks/useFinance';
@@ -6,21 +6,23 @@ import { useBills } from '@/hooks/useBills';
 import { useBalanceHistory } from '@/hooks/useBalanceHistory';
 import { useOneOffIncome } from '@/hooks/useOneOffIncome';
 import { useExchangeRate } from '@/hooks/useExchangeRate';
-import { getCurrentMonth, getPrevMonth, getNextMonth } from '@/lib/utils/month';
+import { getCurrentMonth } from '@/lib/utils/month';
 import { formatPHP } from '@/lib/utils/currency';
-import MonthStrip from '@/components/finance/MonthStrip';
-import BalanceHero from '@/components/finance/BalanceHero';
-import BalanceHistoryIndicator from '@/components/finance/BalanceHistoryIndicator';
+import MonthBarrel from '@/components/finance/MonthBarrel';
+import BudgetProgressBar from '@/components/finance/BudgetProgressBar';
+import BalanceDisplay from '@/components/finance/BalanceDisplay';
+import BillsCard from '@/components/finance/BillsCard';
+import IncomeChecklistCard from '@/components/finance/IncomeChecklistCard';
+import OneOffCard from '@/components/finance/OneOffCard';
+import ViewNavigator from '@/components/finance/ViewNavigator';
 import BalanceHistoryModal from '@/components/finance/BalanceHistoryModal';
-import BudgetGauge from '@/components/finance/BudgetGauge';
-import BillsList from '@/components/finance/BillsList';
-import ExpenseGauge from '@/components/finance/ExpenseGauge';
-import IncomeCard from '@/components/finance/IncomeCard';
-import OneOffIncomeSection from '@/components/finance/OneOffIncomeSection';
 
 export default function FinancePage() {
   const navigate = useNavigate();
   const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonth());
+  const [viewIndex, setViewIndex] = useState(0);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+
   const {
     monthData,
     incomes,
@@ -50,92 +52,79 @@ export default function FinancePage() {
     updateEntry: updateOneOff,
   } = useOneOffIncome(monthData?.id ?? null);
 
-  const [historyModalOpen, setHistoryModalOpen] = useState(false);
-
-  // Month mode determination
+  // Month mode
   const currentMonth = getCurrentMonth();
-  const isCurrentMonth = selectedMonth === currentMonth;
   const isPastMonth = selectedMonth < currentMonth;
   const isFutureMonth = selectedMonth > currentMonth;
 
-  // Generate months list: 6 months back + current + 3 months forward (10 total)
-  const months = useMemo(() => {
-    const current = getCurrentMonth();
-    const result: string[] = [];
-    // Go 6 months back
-    let m = current;
-    for (let i = 0; i < 6; i++) {
-      m = getPrevMonth(m);
-    }
-    // Build forward from 6 back to current (7 entries)
-    result.push(m);
-    for (let i = 1; i < 7; i++) {
-      m = getNextMonth(m);
-      result.push(m);
-    }
-    // Add 3 future months
-    for (let i = 0; i < 3; i++) {
-      m = getNextMonth(m);
-      result.push(m);
-    }
-    return result;
-  }, []);
-
-  // totalSpent: sum of paid bill amounts
-  const totalSpent = useMemo(() => {
-    return bills
-      .filter((b) => b.paid)
-      .reduce((sum, b) => sum + b.amount, 0);
-  }, [bills]);
+  // Computed values
+  const paidTotal = useMemo(
+    () => bills.filter((b) => b.paid).reduce((s, b) => s + b.amount, 0),
+    [bills]
+  );
+  const unpaidTotal = useMemo(
+    () => bills.filter((b) => !b.paid).reduce((s, b) => s + b.amount, 0),
+    [bills]
+  );
+  const totalIncome = useMemo(() => {
+    return incomes.reduce((sum, i) => {
+      if (i.net_php != null) return sum + i.net_php;
+      if (i.currency === 'USD' && rate) return sum + i.expected_amount * rate;
+      return sum + i.expected_amount;
+    }, 0);
+  }, [incomes, rate]);
 
   // Projected balance for future months
   const projectedBalance = useMemo(() => {
     if (!isFutureMonth || !monthData) return 0;
-
-    // Sum expected income, converting USD to PHP using current rate
     const expectedIncome = incomes.reduce((sum, i) => {
       if (i.net_php != null) return sum + i.net_php;
-      if (i.currency === 'USD' && rate) {
-        return sum + i.expected_amount * rate;
-      }
+      if (i.currency === 'USD' && rate) return sum + i.expected_amount * rate;
       return sum + i.expected_amount;
     }, 0);
-
-    // Sum all bill amounts for this future month
-    const recurringBillsTotal = bills.reduce((sum, b) => sum + b.amount, 0);
-
-    return monthData.starting_balance + expectedIncome - recurringBillsTotal;
+    const billsTotal = bills.reduce((sum, b) => sum + b.amount, 0);
+    return monthData.starting_balance + expectedIncome - billsTotal;
   }, [isFutureMonth, monthData, incomes, bills, rate]);
 
+  // Swipe detection for horizontal views
+  const touchStartX = useRef<number | null>(null);
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 50) return;
+    if (delta > 0 && viewIndex === 0) setViewIndex(1);
+    else if (delta < 0 && viewIndex === 1) setViewIndex(0);
+  }, [viewIndex]);
+
   return (
-    <div>
-      {/* MonthStrip - full width */}
-      <MonthStrip
-        months={months}
-        selectedMonth={selectedMonth}
-        onSelectMonth={setSelectedMonth}
-      />
+    <div className="flex flex-col h-full">
+      {/* MonthBarrel at top */}
+      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth} />
 
       {/* Past month indicator */}
       {isPastMonth && (
-        <div className="text-center text-[0.778rem] text-muted-foreground py-2">
+        <div className="text-center text-[0.667rem] text-muted-foreground pb-2">
           Past month — read only
         </div>
       )}
 
-      {/* Content area */}
-      <div className="max-w-[1100px] mx-auto px-8 py-12">
+      {/* Content */}
+      <div
+        className="flex-1 overflow-hidden"
+        onTouchStart={!isFutureMonth ? handleTouchStart : undefined}
+        onTouchEnd={!isFutureMonth ? handleTouchEnd : undefined}
+      >
         {loading ? (
-          <p className="text-sm font-mono text-muted-foreground text-center">
-            Loading...
-          </p>
+          <p className="text-sm font-mono text-muted-foreground text-center py-12">Loading...</p>
         ) : error ? (
-          <p className="text-sm font-mono text-destructive text-center">
-            {error}
-          </p>
+          <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
         ) : isFutureMonth ? (
-          /* Future month: projected balance only */
-          <div className="flex flex-col items-center py-12">
+          /* Future month: projected view only */
+          <div className="flex flex-col items-center py-12 px-6">
             <span className="text-[2.667rem] font-light font-mono tabular-nums text-center">
               {formatPHP(projectedBalance)}
             </span>
@@ -144,92 +133,76 @@ export default function FinancePage() {
             </span>
           </div>
         ) : (
-          /* Current or past month: two-column layout */
-          <div className="flex gap-8">
-            {/* Left column */}
-            <div className="flex-1 space-y-6 min-w-0">
-              <BalanceHero
-                balance={monthData?.current_balance ?? 0}
-                onUpdateBalance={async (newBalance) => {
-                  await updateBalance(newBalance);
-                  refetchHistory();
-                }}
-                readOnly={isPastMonth}
-              />
-
-              <BalanceHistoryIndicator
-                lastChange={lastChange}
-                onClick={() => setHistoryModalOpen(true)}
-              />
-
-              <div className="space-y-2">
-                <h2 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
-                  INCOME
-                </h2>
-                {incomes.length === 0 && (
-                  <div className="text-center py-8">
-                    <p className="text-foreground font-mono">No income sources</p>
-                    <p className="text-muted-foreground text-[0.778rem] mt-1">
-                      Add your first income source in Settings to start tracking.
-                    </p>
-                  </div>
-                )}
-                <div className="space-y-2">
-                  {incomes.map((income) => (
-                    <IncomeCard
-                      key={income.id}
-                      income={income}
-                      rate={rate}
-                      rateLoading={rateLoading}
-                      onToggleReceived={toggleIncomeReceived}
-                      readOnly={isPastMonth}
-                    />
-                  ))}
-                </div>
+          /* Current or past: two horizontal views */
+          <div
+            className="flex transition-transform duration-300 h-full"
+            style={{ transform: `translateX(${viewIndex * -100}%)` }}
+          >
+            {/* View 0: Overview */}
+            <div className="w-full shrink-0 px-6 overflow-y-auto">
+              <div className="max-w-[600px] mx-auto space-y-6 pb-8">
+                <BudgetProgressBar
+                  paidTotal={paidTotal}
+                  unpaidTotal={unpaidTotal}
+                  budgetLimit={monthData?.budget_limit ?? 0}
+                  totalIncome={totalIncome}
+                />
+                <BalanceDisplay
+                  currentBalance={monthData?.current_balance ?? 0}
+                  startingBalance={monthData?.starting_balance ?? 0}
+                  lastChange={lastChange}
+                  onUpdateBalance={async (newBalance) => {
+                    await updateBalance(newBalance);
+                    refetchHistory();
+                  }}
+                  onOpenHistory={() => setHistoryModalOpen(true)}
+                  readOnly={isPastMonth}
+                />
               </div>
-
-              <BillsList
-                bills={bills}
-                onTogglePaid={togglePaid}
-                readOnly={isPastMonth}
-                onAddBill={addBill}
-                monthId={monthData?.id ?? ''}
-              />
-
-              <OneOffIncomeSection
-                entries={oneOffEntries}
-                onAdd={async (amount, date, note) => {
-                  await addOneOff(amount, date, note);
-                  refetchMonth();
-                }}
-                onDelete={async (id) => {
-                  await deleteOneOff(id);
-                  refetchMonth();
-                }}
-                onUpdate={async (id, fields) => {
-                  await updateOneOff(id, fields);
-                  refetchMonth();
-                }}
-                readOnly={isPastMonth}
-              />
             </div>
 
-            {/* Right column - sticky gauges */}
-            <div className="w-80 shrink-0 hidden md:block">
-              <div className="sticky top-4 space-y-6">
-                <BudgetGauge
-                  spent={totalSpent}
-                  limit={monthData?.budget_limit ?? 0}
-                  onUpdateLimit={updateBudgetLimit}
+            {/* View 1: Cards */}
+            <div className="w-full shrink-0 px-6 overflow-y-auto">
+              <div className="flex gap-4 h-full pb-8">
+                <BillsCard
+                  bills={bills}
+                  onTogglePaid={togglePaid}
+                  onAddBill={addBill}
                   readOnly={isPastMonth}
-                  size={200}
                 />
-                <ExpenseGauge bills={bills} size={200} />
+                <IncomeChecklistCard
+                  incomes={incomes}
+                  rate={rate}
+                  rateLoading={rateLoading}
+                  onToggleReceived={toggleIncomeReceived}
+                  readOnly={isPastMonth}
+                />
+                <OneOffCard
+                  entries={oneOffEntries}
+                  onAdd={async (amount, date, note) => {
+                    await addOneOff(amount, date, note);
+                    refetchMonth();
+                  }}
+                  onDelete={async (id) => {
+                    await deleteOneOff(id);
+                    refetchMonth();
+                  }}
+                  onUpdate={async (id, fields) => {
+                    await updateOneOff(id, fields);
+                    refetchMonth();
+                  }}
+                  readOnly={isPastMonth}
+                />
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* View navigator (only for current/past months) */}
+      {!isFutureMonth && !loading && !error && (
+        <ViewNavigator viewIndex={viewIndex} onChangeView={setViewIndex} />
+      )}
 
       <BalanceHistoryModal
         changes={balanceChanges}
