@@ -73,12 +73,13 @@ Plans:
   3. Receiving income auto-adds net PHP amount to balance (USD sources show converted amount after Wise/PayPal fees)
   4. User can set a monthly budget limit and sees a progress visualization showing paid expenses vs budget
   5. MonthStrip navigation lets user move between months; current balance carries forward as next month's starting point
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md — DB migrations, RPC functions, TypeScript types, currency and month utilities
+- [ ] 03-02-PLAN.md — React hooks: useFinance, useExchangeRate, useIncomeConfig with unit tests
+- [ ] 03-03-PLAN.md — Finance page UI: MonthStrip, BalanceHero, BudgetGauge, IncomeCard, route wiring
+- [ ] 03-04-PLAN.md — Income Sources Settings section + visual verification checkpoint
 
 ### Phase 4: Finance Extended
 **Goal**: User can manage bills with recurrence, view financial dashboards, and track external investment balances
@@ -123,6 +124,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1-7 | v1.0 | 18/18 | Complete | 2026-03-16 |
 | 1. Dev Workflow & TS Foundation | 3/3 | Complete   | 2026-03-16 | - |
 | 2. PIN Authentication | v2.0 | 1/2 | In Progress | - |
-| 3. Finance Core | v2.0 | 0/TBD | Not started | - |
+| 3. Finance Core | v2.0 | 0/4 | Not started | - |
 | 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
 | 5. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
