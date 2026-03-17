@@ -165,6 +165,21 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
       exchangeRate?: number,
       feeAmount?: number
     ) => {
+      // Optimistic update
+      const prevIncomes = incomes;
+      setIncomes(prev => prev.map(i =>
+        i.id === monthlyIncomeId
+          ? {
+              ...i,
+              received,
+              received_at: received ? new Date().toISOString() : null,
+              net_php: received ? (netPhp ?? null) : null,
+              exchange_rate: received ? (exchangeRate ?? null) : null,
+              fee_amount: received ? (feeAmount ?? null) : null,
+            }
+          : i
+      ));
+
       const { error: rpcError } = await supabase.rpc('apply_income_received', {
         p_monthly_income_id: monthlyIncomeId,
         p_received: received,
@@ -174,6 +189,8 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
       });
 
       if (rpcError) {
+        // Revert
+        setIncomes(prevIncomes);
         setError(rpcError.message);
         return;
       }
@@ -181,7 +198,7 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
       // Refetch to get updated balance + income state
       refetch();
     },
-    [refetch]
+    [incomes, refetch]
   );
 
   return {

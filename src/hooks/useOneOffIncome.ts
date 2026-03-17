@@ -62,6 +62,20 @@ export function useOneOffIncome(monthId: string | null): UseOneOffIncomeResult {
 
   const addEntry = useCallback(
     async (amount: number, date: string, note: string) => {
+      // Optimistic update
+      const tempId = `temp-${Date.now()}`;
+      const optimisticEntry: OneOffIncome = {
+        id: tempId,
+        user_id: USER_ID,
+        month_id: monthId ?? '',
+        amount,
+        date,
+        note,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      setEntries(prev => [optimisticEntry, ...prev]);
+
       const { error: rpcError } = await supabase.rpc('apply_oneoff_income', {
         p_user_id: USER_ID,
         p_month_id: monthId,
@@ -71,6 +85,8 @@ export function useOneOffIncome(monthId: string | null): UseOneOffIncomeResult {
       });
 
       if (rpcError) {
+        // Revert
+        setEntries(prev => prev.filter(e => e.id !== tempId));
         setError(rpcError.message);
         return;
       }
@@ -82,18 +98,24 @@ export function useOneOffIncome(monthId: string | null): UseOneOffIncomeResult {
 
   const deleteEntry = useCallback(
     async (id: string) => {
+      // Optimistic update
+      const prevEntries = entries;
+      setEntries(prev => prev.filter(e => e.id !== id));
+
       const { error: rpcError } = await supabase.rpc('delete_oneoff_income', {
         p_oneoff_id: id,
       });
 
       if (rpcError) {
+        // Revert
+        setEntries(prevEntries);
         setError(rpcError.message);
         return;
       }
 
       refetch();
     },
-    [refetch]
+    [entries, refetch]
   );
 
   const updateEntry = useCallback(

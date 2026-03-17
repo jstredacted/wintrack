@@ -11,7 +11,7 @@ export default function YearGrid({ months, onMonthClick }: YearGridProps) {
   const currentMonth = getCurrentMonth();
 
   return (
-    <div className="grid grid-cols-4 gap-3 auto-rows-fr">
+    <div className="grid grid-cols-12 gap-1">
       {months.map((summary) => (
         <MonthColumn
           key={summary.month}

@@ -69,16 +69,30 @@ export function useBills(monthId: string | null): UseBillsResult {
 
   const togglePaid = useCallback(
     async (monthlyBillId: string, paid: boolean) => {
+      // Optimistic update
+      setBills(prev => prev.map(b =>
+        b.id === monthlyBillId
+          ? { ...b, paid, paid_at: paid ? new Date().toISOString() : null }
+          : b
+      ));
+
       const { error: rpcError } = await supabase.rpc('apply_bill_paid', {
         p_monthly_bill_id: monthlyBillId,
         p_paid: paid,
       });
 
       if (rpcError) {
+        // Revert optimistic update
+        setBills(prev => prev.map(b =>
+          b.id === monthlyBillId
+            ? { ...b, paid: !paid, paid_at: null }
+            : b
+        ));
         setError(rpcError.message);
         return;
       }
 
+      // Sync with DB
       refetch();
     },
     [refetch]

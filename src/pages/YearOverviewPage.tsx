@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft } from 'lucide-react';
 import { useYearOverview } from '@/hooks/useYearOverview';
 import { formatPHP } from '@/lib/utils/currency';
 import YearGrid from '@/components/finance/YearGrid';
+import BalanceSparkline from '@/components/finance/BalanceSparkline';
 
 export default function YearOverviewPage() {
   const navigate = useNavigate();
@@ -25,16 +25,7 @@ export default function YearOverviewPage() {
   return (
     <div className="max-w-[1100px] mx-auto px-8 py-12 space-y-6 flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-[1.333rem] font-mono font-light">{year} Overview</h1>
-        <button
-          onClick={() => navigate('/finance')}
-          className="flex items-center gap-1 text-muted-foreground hover:text-foreground text-[0.778rem] font-mono transition-colors"
-        >
-          <ArrowLeft size={14} />
-          Back
-        </button>
-      </div>
+      <h1 className="text-[1.333rem] font-mono font-light">{year} Overview</h1>
 
       {loading ? (
         <p className="text-sm font-mono text-muted-foreground text-center">Loading...</p>
@@ -45,7 +36,7 @@ export default function YearOverviewPage() {
           {/* Year summary row */}
           <div className="flex items-center justify-center gap-8 py-4 border-b border-border">
             <div className="text-center">
-              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Total Income
               </p>
               <p className="text-[1.333rem] font-mono tabular-nums font-light">
@@ -53,7 +44,7 @@ export default function YearOverviewPage() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Total Expenses
               </p>
               <p className="text-[1.333rem] font-mono tabular-nums font-light">
@@ -61,7 +52,7 @@ export default function YearOverviewPage() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Net
               </p>
               <p className={`text-[1.333rem] font-mono tabular-nums font-light ${summary.net < 0 ? 'text-destructive' : ''}`}>
@@ -69,7 +60,7 @@ export default function YearOverviewPage() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Savings Rate
               </p>
               <p className="text-[1.333rem] font-mono tabular-nums font-light">
@@ -78,7 +69,10 @@ export default function YearOverviewPage() {
             </div>
           </div>
 
-          {/* Year grid — fills remaining space */}
+          {/* Balance sparkline */}
+          <BalanceSparkline months={months} />
+
+          {/* Year grid — 12-column strip */}
           <div className="flex-1">
             <YearGrid
               months={months}
