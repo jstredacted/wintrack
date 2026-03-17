@@ -12,7 +12,7 @@ import BalanceHistoryIndicator from '@/components/finance/BalanceHistoryIndicato
 import BalanceHistoryModal from '@/components/finance/BalanceHistoryModal';
 import BudgetGauge from '@/components/finance/BudgetGauge';
 import BillsList from '@/components/finance/BillsList';
-import WaterfallChart from '@/components/finance/WaterfallChart';
+import ExpenseGauge from '@/components/finance/ExpenseGauge';
 import IncomeCard from '@/components/finance/IncomeCard';
 import OneOffIncomeSection from '@/components/finance/OneOffIncomeSection';
 
@@ -156,18 +156,15 @@ export default function FinancePage() {
               onClick={() => setHistoryModalOpen(true)}
             />
 
-            <BudgetGauge
-              spent={totalSpent}
-              limit={monthData?.budget_limit ?? 0}
-              onUpdateLimit={updateBudgetLimit}
-              readOnly={isPastMonth}
-            />
-
-            <WaterfallChart
-              startingBalance={monthData?.starting_balance ?? 0}
-              bills={bills}
-              isPastMonth={isPastMonth}
-            />
+            <div className="flex items-center justify-center gap-8">
+              <BudgetGauge
+                spent={totalSpent}
+                limit={monthData?.budget_limit ?? 0}
+                onUpdateLimit={updateBudgetLimit}
+                readOnly={isPastMonth}
+              />
+              <ExpenseGauge bills={bills} />
+            </div>
 
             <BillsList
               bills={bills}
