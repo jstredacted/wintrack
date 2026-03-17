@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { getDueUrgency } from '@/lib/utils/finance';
 import BillRow from '@/components/finance/BillRow';
-import BillAddInline from '@/components/finance/BillAddInline';
+import BillAddModal from '@/components/finance/BillAddModal';
 import type { MonthlyBill, RecurrenceType } from '@/types/finance';
 
 interface BillsListProps {
@@ -25,6 +25,7 @@ export default function BillsList({
   onAddBill,
   monthId,
 }: BillsListProps) {
+  const [modalOpen, setModalOpen] = useState(false);
   const sortedBills = useMemo(() => {
     // Filter out paid one-time bills
     const filtered = bills.filter(
@@ -66,7 +67,21 @@ export default function BillsList({
         </div>
       )}
 
-      {!readOnly && <BillAddInline onAddBill={onAddBill} />}
+      {!readOnly && (
+        <button
+          type="button"
+          onClick={() => setModalOpen(true)}
+          className="text-[0.778rem] text-muted-foreground hover:text-foreground cursor-pointer py-2 transition-colors font-mono"
+        >
+          + Add Bill
+        </button>
+      )}
+
+      <BillAddModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onAddBill={onAddBill}
+      />
     </div>
   );
 }

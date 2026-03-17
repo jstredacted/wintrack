@@ -194,6 +194,15 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* Modal fade-in */
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.modal-fade-in {
+  animation: modal-fade-in 0.2s ease-out both;
+}
+
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
 .dot-grid {
   background-image: radial-gradient(circle, oklch(0.5 0 0 / 0.06) 1px, transparent 1px);
