@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router';
+import { BarChart3 } from 'lucide-react';
 import { useFinance } from '@/hooks/useFinance';
 import { useBills } from '@/hooks/useBills';
 import { useBalanceHistory } from '@/hooks/useBalanceHistory';
@@ -17,6 +19,7 @@ import IncomeCard from '@/components/finance/IncomeCard';
 import OneOffIncomeSection from '@/components/finance/OneOffIncomeSection';
 
 export default function FinancePage() {
+  const navigate = useNavigate();
   const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonth());
   const {
     monthData,
@@ -232,6 +235,16 @@ export default function FinancePage() {
         onClose={() => setHistoryModalOpen(false)}
         open={historyModalOpen}
       />
+
+      {/* Year overview FAB */}
+      <button
+        type="button"
+        onClick={() => navigate('/finance/year')}
+        aria-label="Year overview"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:opacity-80 transition-opacity active:scale-95"
+      >
+        <BarChart3 size={22} />
+      </button>
     </div>
   );
 }

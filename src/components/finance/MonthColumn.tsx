@@ -1,4 +1,3 @@
-import { getCurrentMonth } from '@/lib/utils/month';
 import type { MonthSummary } from '@/types/finance';
 
 interface MonthColumnProps {
@@ -33,9 +32,12 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
   const expensePercent = totalIncome > 0 ? Math.min((totalExpenses / totalIncome) * 100, 100) : 0;
   const oneoffPercent = totalIncome > 0 ? Math.min((totalOneoff / totalIncome) * 100, 100 - expensePercent) : 0;
 
+  const tooltipText = `Income: ${abbreviateAmount(totalIncome)} / Expenses: ${abbreviateAmount(totalExpenses)} / One-off: ${abbreviateAmount(totalOneoff)}`;
+
   return (
     <button
       onClick={onClick}
+      title={tooltipText}
       className={[
         'flex flex-col items-center px-2 py-2 rounded transition-colors cursor-pointer',
         'hover:bg-card/80',
