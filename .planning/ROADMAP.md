@@ -92,12 +92,14 @@ Plans:
   4. Year overview at /finance/year shows 12-month columns with balance, income-vs-expense progress bar, and sparkline trajectory
   5. Every balance override is logged with history modal, last-change indicator, and revert capability
   6. User can add one-off income (bonus, receivable) that extends the year overview progress bar beyond regular income
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — DB migrations (bills, balance_changes, oneoff_income), RPCs, TypeScript types, hooks (useBills, useBalanceHistory, useOneOffIncome)
+- [ ] 04-02-PLAN.md — Bills UI: BillRow with urgency borders, BillsList sorted by due date, BillAddInline form, FinancePage integration
+- [ ] 04-03-PLAN.md — Balance history indicator + modal with revert, one-off income section with inline add, FinancePage wiring
+- [ ] 04-04-PLAN.md — WaterfallChart SVG step chart, FinancePage month view modes (current/past/future)
+- [ ] 04-05-PLAN.md — Year overview page (/finance/year) with YearGrid, MonthColumn, BalanceSparkline, Settings bill CRUD, visual checkpoint
 
 ### Phase 5: Journal Rich Text & Mobile
 **Goal**: Journal entries support rich formatting and all pages work well on mobile devices
@@ -126,5 +128,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. Dev Workflow & TS Foundation | 3/3 | Complete   | 2026-03-16 | - |
 | 2. PIN Authentication | v2.0 | 1/2 | In Progress | - |
 | 3. Finance Core | 3/4 | In Progress|  | - |
-| 4. Finance Extended | v2.0 | 0/TBD | Not started | - |
+| 4. Finance Extended | v2.0 | 0/5 | Not started | - |
 | 5. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
