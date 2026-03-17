@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router';
-import { LayoutDashboard, BookOpen, Settings, Flame, Lock } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Wallet, Settings, Flame, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '../theme/ThemeToggle';
 import { useStreak } from '@/hooks/useStreak';
@@ -11,6 +11,7 @@ import StreakCelebration from './StreakCelebration';
 const TABS = [
   { to: '/', icon: LayoutDashboard, label: 'Today', end: true },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
+  { to: '/finance', icon: Wallet, label: 'Finance' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ];
 
