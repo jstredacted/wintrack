@@ -39,13 +39,13 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 ### Finance: Budget
 
 - [x] **BUD-01**: User can set a monthly budget limit
-- [ ] **BUD-02**: User sees budget progress visualization showing total paid expenses vs budget limit (neutral/approaching/critical states)
+- [x] **BUD-02**: User sees budget progress visualization showing total paid expenses vs budget limit (neutral/approaching/critical states)
 
 ### Finance: Income Streams
 
 - [x] **INC-01**: User can configure income sources in Settings with name, amount, currency (USD or PHP), and conversion method (Wise/PayPal/None)
 - [x] **INC-02**: User can set expected payday (day of month) per income source
-- [ ] **INC-03**: Each income source appears as a toggleable card in the Finance view per month
+- [x] **INC-03**: Each income source appears as a toggleable card in the Finance view per month
 - [x] **INC-04**: When toggled as received, USD sources auto-fetch live rate and deduct Wise/PayPal fees; PHP sources add directly
 - [x] **INC-05**: Received income auto-adds net PHP amount to current balance; toggle greys out the card
 - [ ] **INC-06**: User can add, edit, and remove income sources from Settings
@@ -62,7 +62,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Finance: Dashboard
 
-- [ ] **FIN-01**: MonthStrip navigation to move between months (past shows history, future shows projections)
+- [x] **FIN-01**: MonthStrip navigation to move between months (past shows history, future shows projections)
 - [ ] **FIN-02**: Current month waterfall view — balance cascading as each bill/expense is paid, showing remaining after each
 - [ ] **FIN-03**: Past months show final balance, paid bills, income received (read-only)
 - [ ] **FIN-04**: Future months show projected balance (expected income minus upcoming bills)
@@ -135,14 +135,14 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | BAL-04 | Phase 3 | Complete |
 | BAL-05 | Phase 3 | Complete |
 | BUD-01 | Phase 3 | Complete |
-| BUD-02 | Phase 3 | Pending |
+| BUD-02 | Phase 3 | Complete |
 | INC-01 | Phase 3 | Complete |
 | INC-02 | Phase 3 | Complete |
-| INC-03 | Phase 3 | Pending |
+| INC-03 | Phase 3 | Complete |
 | INC-04 | Phase 3 | Complete |
 | INC-05 | Phase 3 | Complete |
 | INC-06 | Phase 3 | Pending |
-| FIN-01 | Phase 3 | Pending |
+| FIN-01 | Phase 3 | Complete |
 | BILL-01 | Phase 4 | Pending |
 | BILL-02 | Phase 4 | Pending |
 | BILL-03 | Phase 4 | Pending |
