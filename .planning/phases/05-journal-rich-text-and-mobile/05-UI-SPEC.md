@@ -49,7 +49,7 @@ Declared values (must be multiples of 4):
 | 3xl | 64px | Page-level spacing |
 
 Exceptions:
-- Touch targets: all interactive elements on mobile minimum 44x44px (MOB-03). DayStrip cells, tab bar items, checkboxes, and NavLinks must meet this. Achieved via `min-h-[44px] min-w-[44px]` or `p-[10px]` padding additions where needed.
+- Touch targets: all interactive elements on mobile minimum 44x44px (MOB-03). DayStrip cells, tab bar items, checkboxes, and NavLinks must meet this. Achieved via `min-h-[44px] min-w-[44px]` on any element that would otherwise fall below the target.
 - Bottom tab bar height: `3.5rem` (56px at 18px base) + `env(safe-area-inset-bottom)` (~34px on iPhone). Total visual height on iPhone ~90px — AppShell main area must clear this with `calc(3.5rem + env(safe-area-inset-bottom))` bottom padding on mobile.
 - Slash command menu: 4px vertical padding per item, 8px horizontal. Menu max-width 180px, minimum width 140px.
 
@@ -62,12 +62,11 @@ Base font size is 18px on `html` element. All sizes below are at 18px scale (1re
 | Role | Size | Tailwind | Weight | Line Height | Usage |
 |------|------|----------|--------|-------------|-------|
 | Label/caption | 10px (fluid-sm ≈ 0.625–0.8125rem) | `text-[10px]` or `text-xs` | 400 regular | 1.4 | Bottom tab bar labels, badge counts, metadata |
-| Body | 16px (0.889rem) | `text-sm` | 400 regular | 1.5 | Paragraph text, form inputs, card content |
-| UI / default | 18px (1rem) | `text-base` | 400 regular | 1.5 | Default body copy, settings rows, list items |
+| UI / default | 18px (1rem) | `text-base` | 400 regular | 1.5 | Body copy, form inputs, card content, settings rows, list items |
 | Heading | ~25px (1.4rem) | `text-2xl` | 600 semibold | 1.2 | Section headings, Tiptap H2 output |
-| Display | ~36px (2rem) | `text-4xl` | 700 bold | 1.1 | Page titles, hero numerals |
+| Display | ~36px (2rem) | `text-4xl` | 600 semibold | 1.1 | Page titles, hero numerals |
 
-Font weights: 400 (regular) and 600 (semibold) only. 700 (bold) permitted only for Tiptap H2 heading output and display numerals — not for UI chrome.
+Font weights: 400 (regular) and 600 (semibold) only.
 
 Font face: Geist Mono Variable for all roles. The project has both `--font-sans` and `--font-mono` set to Geist Mono — everything is monospace.
 
@@ -78,10 +77,16 @@ Tiptap's ProseMirror output is scoped under `.tiptap-editor`. These sizes apply 
 | Element | Size | Weight | Line Height |
 |---------|------|--------|-------------|
 | Body paragraph | 18px (1rem base) | 400 | 1.7 (more generous for reading) |
-| H2 | 1.4rem = ~25px | 700 | 1.2 |
+| H2 | 1.4rem = ~25px | 600 | 1.2 |
 | H3 | 1.15rem = ~21px | 600 | 1.3 |
 | Bullet / list items | 1rem | 400 | 1.6 |
 | Placeholder | 1rem | 400 | — (muted-foreground at opacity 0.3) |
+
+---
+
+## Visual Focal Point
+
+**Primary screen: JournalEditorOverlay (editing mode).** The primary visual anchor is the journal title input — rendered at `text-4xl` (~36px) monospaced, full-bleed at the top of the overlay content area. The eye lands on the title first; the Tiptap body area below is visually subordinate, separated by 24px of vertical space.
 
 ---
 
@@ -120,7 +125,7 @@ Note: This project uses foreground-as-accent for selection states, not a chromat
 | Background | `bg-background` |
 | Top border | `border-t border-border` |
 | Item layout | `flex items-center justify-around` |
-| Item min touch target | 44x44px via padding |
+| Item min touch target | `min-h-[44px] min-w-[44px]` |
 | Icon size | `size-5` (20x20px) |
 | Label size | `text-[10px] font-mono uppercase tracking-wider` |
 | Active state | `text-foreground` (icon + label) |
@@ -283,7 +288,7 @@ Add to `src/index.css`:
   pointer-events: none;
 }
 
-.tiptap-editor h2 { font-size: 1.4rem; font-weight: 700; margin: 1rem 0 0.5rem; line-height: 1.2; }
+.tiptap-editor h2 { font-size: 1.4rem; font-weight: 600; margin: 1rem 0 0.5rem; line-height: 1.2; }
 .tiptap-editor h3 { font-size: 1.15rem; font-weight: 600; margin: 0.75rem 0 0.25rem; line-height: 1.3; }
 .tiptap-editor p { line-height: 1.7; margin-bottom: 0.5rem; }
 .tiptap-editor ul, .tiptap-editor ol { padding-left: 1.5rem; }
