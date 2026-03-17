@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getMonthYear } from '@/lib/utils/month';
 
@@ -15,25 +15,36 @@ export default function MonthStrip({ months, selectedMonth, onSelectMonth }: Mon
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const updateScrollState = () => {
+  const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     setCanScrollLeft(el.scrollLeft > 1);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
-  };
+  }, []);
 
-  // Scroll to selected month on mount
-  useEffect(() => {
+  // Center the selected month
+  const scrollToSelected = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const idx = months.indexOf(selectedMonth);
     if (idx === -1) return;
-    // Each cell is min-w-[5rem] = 80px at 18px base
-    const cellWidth = 80;
-    const scrollTarget = idx * cellWidth - el.clientWidth / 2 + cellWidth / 2;
+    // Children: [leftSpacer, ...cells, rightSpacer]
+    const cell = el.children[idx + 1] as HTMLElement | undefined;
+    if (!cell) return;
+    const scrollTarget = cell.offsetLeft - el.clientWidth / 2 + cell.offsetWidth / 2;
     el.scrollLeft = Math.max(0, scrollTarget);
     requestAnimationFrame(updateScrollState);
-  }, [months, selectedMonth]);
+  }, [months, selectedMonth, updateScrollState]);
+
+  useEffect(() => {
+    scrollToSelected();
+  }, [scrollToSelected]);
+
+  // Also re-center on resize
+  useEffect(() => {
+    window.addEventListener('resize', scrollToSelected);
+    return () => window.removeEventListener('resize', scrollToSelected);
+  }, [scrollToSelected]);
 
   const scroll = (dir: number) => {
     const el = scrollRef.current;
@@ -74,6 +85,8 @@ export default function MonthStrip({ months, selectedMonth, onSelectMonth }: Mon
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         onScroll={updateScrollState}
       >
+        {/* Spacers allow first/last month to center */}
+        <div className="shrink-0" style={{ width: '50%' }} />
         {cells.map(({ month, abbr, year }) => {
           const isSelected = selectedMonth === month;
           return (
@@ -83,17 +96,18 @@ export default function MonthStrip({ months, selectedMonth, onSelectMonth }: Mon
               aria-pressed={isSelected}
               onClick={() => onSelectMonth(month)}
               className={[
-                'snap-start shrink-0 flex flex-col items-center gap-1 px-3 py-4 min-w-[5rem] font-mono transition-all active:scale-[0.94]',
+                'snap-center shrink-0 flex flex-col items-center gap-1 px-3 py-4 min-w-[5rem] font-mono transition-all active:scale-[0.94]',
                 isSelected
                   ? 'text-foreground border-b-2 border-foreground'
                   : 'text-muted-foreground/40 hover:text-muted-foreground/70 border-b-2 border-transparent',
               ].join(' ')}
             >
-              <span className="text-xs uppercase tracking-widest">{abbr}</span>
-              <span className="text-3xl tabular-nums font-light">{year}</span>
+              <span className="text-xs uppercase tracking-widest text-muted-foreground">{year}</span>
+              <span className="text-3xl tabular-nums font-light">{abbr}</span>
             </button>
           );
         })}
+        <div className="shrink-0" style={{ width: '50%' }} />
       </div>
 
       {/* Right arrow + fade */}
