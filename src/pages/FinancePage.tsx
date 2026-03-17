@@ -203,9 +203,18 @@ export default function FinancePage() {
 
             <OneOffIncomeSection
               entries={oneOffEntries}
-              onAdd={addOneOff}
-              onDelete={deleteOneOff}
-              onUpdate={updateOneOff}
+              onAdd={async (amount, date, note) => {
+                await addOneOff(amount, date, note);
+                refetchMonth();
+              }}
+              onDelete={async (id) => {
+                await deleteOneOff(id);
+                refetchMonth();
+              }}
+              onUpdate={async (id, fields) => {
+                await updateOneOff(id, fields);
+                refetchMonth();
+              }}
               readOnly={isPastMonth}
             />
           </>
