@@ -24,7 +24,7 @@ export default function AppShell() {
   return (
     <div className="flex h-svh bg-background text-foreground dot-grid">
       <SideNav />
-      <main className="ml-14 flex-1 overflow-y-auto">
+      <main className="ml-0 sm:ml-14 flex-1 overflow-y-auto mobile-bottom-clearance">
         <Outlet />
       </main>
       {__DEV_TOOLS_ENABLED__ && (

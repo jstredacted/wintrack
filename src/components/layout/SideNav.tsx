@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router';
-import { LayoutDashboard, BookOpen, Wallet, Settings, Flame, Lock } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Wallet, Settings, Flame, Lock, Home, DollarSign, Settings2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '../theme/ThemeToggle';
 import { useStreak } from '@/hooks/useStreak';
@@ -13,6 +13,13 @@ const TABS = [
   { to: '/journal', icon: BookOpen, label: 'Journal' },
   { to: '/finance', icon: Wallet, label: 'Finance' },
   { to: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const MOBILE_TABS = [
+  { to: '/', icon: Home, label: 'Today', end: true },
+  { to: '/journal', icon: BookOpen, label: 'Journal', end: false },
+  { to: '/finance', icon: DollarSign, label: 'Finance', end: false },
+  { to: '/settings', icon: Settings2, label: 'Settings', end: false },
 ];
 
 const STREAK_STORAGE_KEY = 'lastKnownCombinedStreak';
@@ -37,8 +44,9 @@ export default function SideNav() {
 
   return (
     <>
+      {/* Desktop left nav — hidden on mobile */}
       <nav
-        className="fixed left-0 top-0 bottom-0 w-14 flex flex-col items-center border-r border-border bg-background z-10"
+        className="hidden sm:flex fixed left-0 top-0 bottom-0 w-14 flex-col items-center border-r border-border bg-background z-10"
       >
         {/* Logo */}
         <div aria-label="wintrack" className="h-14 flex items-center justify-center select-none">
@@ -80,7 +88,7 @@ export default function SideNav() {
         </div>
 
         {/* Bottom: streak + theme */}
-        <div className="flex flex-col items-center gap-3 pb-4">
+        <div className="hidden sm:flex flex-col items-center gap-3 pb-4">
           {!loading && combinedStreak > 0 && (
             <span
               className="font-mono text-xs tabular-nums text-muted-foreground leading-none"
@@ -103,6 +111,40 @@ export default function SideNav() {
           </button>
           <ThemeToggle />
         </div>
+      </nav>
+
+      {/* Mobile bottom tab bar — hidden on desktop */}
+      <nav
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-10
+                   flex items-center justify-around
+                   border-t border-border bg-background"
+        style={{
+          height: 'calc(3.5rem + env(safe-area-inset-bottom))',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
+      >
+        {MOBILE_TABS.map(({ to, icon: Icon, label, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center min-h-[44px] min-w-[44px] gap-0.5 ${
+                isActive ? 'text-foreground' : 'text-muted-foreground'
+              }`
+            }
+          >
+            <Icon className="size-5" />
+            <span className="text-[10px] font-mono uppercase tracking-wider">{label}</span>
+          </NavLink>
+        ))}
+        <button
+          onClick={() => usePinStore.getState().lock()}
+          className="flex flex-col items-center justify-center min-h-[44px] min-w-[44px] gap-0.5 text-muted-foreground"
+        >
+          <Lock className="size-5" />
+          <span className="text-[10px] font-mono uppercase tracking-wider">Lock</span>
+        </button>
       </nav>
 
       <StreakCelebration

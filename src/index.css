@@ -131,6 +131,12 @@
     @apply font-sans;
     font-size: 18px;
     }
+  .mobile-bottom-clearance {
+    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 640px) {
+    .mobile-bottom-clearance { padding-bottom: 0; }
+  }
 }
 
 /* Win input overlay slide animation */
