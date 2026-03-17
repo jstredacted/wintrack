@@ -4,13 +4,15 @@ import { useBills } from '@/hooks/useBills';
 import { useBalanceHistory } from '@/hooks/useBalanceHistory';
 import { useOneOffIncome } from '@/hooks/useOneOffIncome';
 import { useExchangeRate } from '@/hooks/useExchangeRate';
-import { getCurrentMonth, getPrevMonth } from '@/lib/utils/month';
+import { getCurrentMonth, getPrevMonth, getNextMonth } from '@/lib/utils/month';
+import { formatPHP } from '@/lib/utils/currency';
 import MonthStrip from '@/components/finance/MonthStrip';
 import BalanceHero from '@/components/finance/BalanceHero';
 import BalanceHistoryIndicator from '@/components/finance/BalanceHistoryIndicator';
 import BalanceHistoryModal from '@/components/finance/BalanceHistoryModal';
 import BudgetGauge from '@/components/finance/BudgetGauge';
 import BillsList from '@/components/finance/BillsList';
+import WaterfallChart from '@/components/finance/WaterfallChart';
 import IncomeCard from '@/components/finance/IncomeCard';
 import OneOffIncomeSection from '@/components/finance/OneOffIncomeSection';
 
@@ -46,28 +48,31 @@ export default function FinancePage() {
 
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
 
-  const isCurrentMonth = selectedMonth === getCurrentMonth();
-  const isPastMonth = !isCurrentMonth;
+  // Month mode determination
+  const currentMonth = getCurrentMonth();
+  const isCurrentMonth = selectedMonth === currentMonth;
+  const isPastMonth = selectedMonth < currentMonth;
+  const isFutureMonth = selectedMonth > currentMonth;
 
-  // Generate months list: 6 months back from current month + current month
+  // Generate months list: 6 months back + current + 3 months forward (10 total)
   const months = useMemo(() => {
     const current = getCurrentMonth();
     const result: string[] = [];
+    // Go 6 months back
     let m = current;
     for (let i = 0; i < 6; i++) {
       m = getPrevMonth(m);
     }
-    // Now m is 6 months before current. Build forward.
-    for (let i = 0; i < 7; i++) {
-      if (i === 0) {
-        result.push(m);
-      } else {
-        // Advance one month
-        const [y, mo] = result[result.length - 1].split('-').map(Number);
-        const nextMonth = mo === 12 ? 1 : mo + 1;
-        const nextYear = mo === 12 ? y + 1 : y;
-        result.push(`${nextYear}-${String(nextMonth).padStart(2, '0')}`);
-      }
+    // Build forward from 6 back to current (7 entries)
+    result.push(m);
+    for (let i = 1; i < 7; i++) {
+      m = getNextMonth(m);
+      result.push(m);
+    }
+    // Add 3 future months
+    for (let i = 0; i < 3; i++) {
+      m = getNextMonth(m);
+      result.push(m);
     }
     return result;
   }, []);
@@ -86,6 +91,17 @@ export default function FinancePage() {
       monthData.starting_balance + totalIncomeReceived - monthData.current_balance
     );
   }, [monthData, totalIncomeReceived]);
+
+  // Projected balance for future months
+  const projectedBalance = useMemo(() => {
+    if (!isFutureMonth || !monthData) return 0;
+    const expectedIncome = incomes.reduce(
+      (sum, i) => sum + (i.net_php ?? i.expected_amount),
+      0
+    );
+    const recurringBillsTotal = bills.reduce((sum, b) => sum + b.amount, 0);
+    return monthData.current_balance + expectedIncome - recurringBillsTotal;
+  }, [isFutureMonth, monthData, incomes, bills]);
 
   return (
     <div>
@@ -113,7 +129,18 @@ export default function FinancePage() {
           <p className="text-sm font-mono text-destructive text-center">
             {error}
           </p>
+        ) : isFutureMonth ? (
+          /* Future month: projected balance only */
+          <div className="flex flex-col items-center py-12">
+            <span className="text-[2.667rem] font-light font-mono tabular-nums text-center">
+              {formatPHP(projectedBalance)}
+            </span>
+            <span className="text-[0.778rem] text-muted-foreground text-center mt-2">
+              Projected balance based on expected income and recurring bills
+            </span>
+          </div>
         ) : (
+          /* Current or past month: full layout */
           <>
             <BalanceHero
               balance={monthData?.current_balance ?? 0}
@@ -121,7 +148,7 @@ export default function FinancePage() {
                 await updateBalance(newBalance);
                 refetchHistory();
               }}
-              readOnly={false}
+              readOnly={isPastMonth}
             />
 
             <BalanceHistoryIndicator
@@ -134,6 +161,12 @@ export default function FinancePage() {
               limit={monthData?.budget_limit ?? 0}
               onUpdateLimit={updateBudgetLimit}
               readOnly={isPastMonth}
+            />
+
+            <WaterfallChart
+              startingBalance={monthData?.starting_balance ?? 0}
+              bills={bills}
+              isPastMonth={isPastMonth}
             />
 
             <BillsList
