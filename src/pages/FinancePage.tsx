@@ -143,8 +143,8 @@ export default function FinancePage() {
                 style={{ transform: `translateX(${viewIndex * -100}%)` }}
               >
                 {/* View 0: Overview */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto">
-                  <div className="max-w-[600px] mx-auto space-y-6 pb-8">
+                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full">
+                  <div className="max-w-[600px] w-full space-y-6">
                     <BudgetProgressBar
                       paidTotal={paidTotal}
                       unpaidTotal={unpaidTotal}
@@ -167,17 +167,15 @@ export default function FinancePage() {
                   </div>
                 </div>
 
-                {/* View 1: Cards (borderless sections) */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto">
-                  <div className="max-w-[600px] mx-auto space-y-8 pb-8">
+                {/* View 1: Cards side by side */}
+                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full">
+                  <div className="flex gap-4 w-full max-w-4xl h-[70%]">
                     <BillsCard
                       bills={bills}
                       onTogglePaid={togglePaid}
                       onAddBill={addBill}
                       readOnly={isPastMonth}
                     />
-
-                    <div className="border-t border-foreground/10" />
 
                     <IncomeChecklistCard
                       incomes={incomes}
@@ -186,8 +184,6 @@ export default function FinancePage() {
                       onToggleReceived={toggleIncomeReceived}
                       readOnly={isPastMonth}
                     />
-
-                    <div className="border-t border-foreground/10" />
 
                     <OneOffCard
                       entries={oneOffEntries}

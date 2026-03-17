@@ -81,51 +81,53 @@ export default function IncomeChecklistCard({
   };
 
   return (
-    <div>
-      {/* Section header */}
-      <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground mb-4">
+    <div className="flex-1 bg-card border border-border rounded-lg p-5 flex flex-col min-w-0">
+      {/* Card header */}
+      <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground mb-4 shrink-0">
         Income
       </h3>
 
-      {/* Income rows */}
-      <div className="space-y-3">
-        {incomes.length === 0 ? (
-          <div className="flex items-center justify-center py-8">
-            <span className="text-[0.778rem] font-mono text-muted-foreground">
-              No income sources
-            </span>
-          </div>
-        ) : (
-          incomes.map((income) => {
-            const source = income.income_sources;
-            const isToggling = togglingId === income.id;
-            const isUSD = income.currency === 'USD';
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <div className="space-y-0">
+          {incomes.length === 0 ? (
+            <div className="flex items-center justify-center py-8">
+              <span className="text-[0.778rem] font-mono text-muted-foreground">
+                No income sources
+              </span>
+            </div>
+          ) : (
+            incomes.map((income) => {
+              const source = income.income_sources;
+              const isToggling = togglingId === income.id;
+              const isUSD = income.currency === 'USD';
 
-            return (
-              <button
-                key={income.id}
-                type="button"
-                onClick={() => handleToggle(income)}
-                disabled={readOnly || isToggling || (isUSD && rateLoading && !income.received)}
-                className={`flex items-center gap-3 w-full text-left transition-opacity ${
-                  income.received ? 'opacity-40' : ''
-                } ${isToggling ? 'opacity-30' : ''} disabled:cursor-default`}
-              >
-                {income.received ? (
-                  <div className="w-4 h-4 rounded-full bg-foreground shrink-0" />
-                ) : (
-                  <Circle size={16} className="text-muted-foreground shrink-0" />
-                )}
-                <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate">
-                  {source?.name ?? 'Income'}
-                </span>
-                <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
-                  {getDisplayAmount(income)}
-                </span>
-              </button>
-            );
-          })
-        )}
+              return (
+                <button
+                  key={income.id}
+                  type="button"
+                  onClick={() => handleToggle(income)}
+                  disabled={readOnly || isToggling || (isUSD && rateLoading && !income.received)}
+                  className={`flex items-center gap-3 w-full text-left py-3 transition-opacity ${
+                    income.received ? 'opacity-40' : ''
+                  } ${isToggling ? 'opacity-30' : ''} disabled:cursor-default`}
+                >
+                  {income.received ? (
+                    <div className="w-4 h-4 rounded-full bg-foreground shrink-0" />
+                  ) : (
+                    <Circle size={16} className="text-muted-foreground shrink-0" />
+                  )}
+                  <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate">
+                    {source?.name ?? 'Income'}
+                  </span>
+                  <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
+                    {getDisplayAmount(income)}
+                  </span>
+                </button>
+              );
+            })
+          )}
+        </div>
       </div>
 
       {/* Settings link */}
@@ -133,7 +135,7 @@ export default function IncomeChecklistCard({
         <button
           type="button"
           onClick={() => navigate('/settings')}
-          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4"
+          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4 shrink-0"
         >
           <Plus size={12} />
           <span>Manage in Settings</span>

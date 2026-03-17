@@ -37,6 +37,7 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
     try {
       await onAdd(parsedAmount, date, note.trim() || 'One-off');
       resetForm();
+      setTimeout(() => amountRef.current?.focus(), 0);
     } finally {
       setSaving(false);
     }
@@ -87,16 +88,16 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
   };
 
   const inputBase =
-    'bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground w-full';
+    'bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1.5 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground w-full';
 
   return (
-    <div>
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="flex-1 bg-card border border-border rounded-lg p-5 flex flex-col min-w-0">
+      {/* Card header */}
+      <div className="flex items-center justify-between mb-4 shrink-0">
         <h3 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
           One-Off
         </h3>
-        {!readOnly && entries.length > 0 && (
+        {!readOnly && entries.length > 0 && !showForm && (
           <button
             type="button"
             onClick={() => {
@@ -111,165 +112,175 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
         )}
       </div>
 
-      {/* Inline add form */}
-      {showForm && (
-        <div className="space-y-2 mb-4 pb-4 border-b border-foreground/10" onKeyDown={handleKeyDown}>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Note"
-              disabled={saving}
-              className={`${inputBase} flex-1`}
-            />
-            <input
-              ref={amountRef}
-              type="text"
-              inputMode="decimal"
-              value={amount}
-              onChange={(e) => {
-                const v = e.target.value;
-                if (v === '' || /^\d*\.?\d*$/.test(v)) setAmount(v);
-              }}
-              placeholder="Amount"
-              disabled={saving}
-              className={`${inputBase} w-24 text-right`}
-            />
-          </div>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            disabled={saving}
-            className={`${inputBase} text-[0.667rem]`}
-          />
-          <div className="flex gap-3 pt-1">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={saving}
-              className="text-[0.667rem] font-mono text-foreground hover:underline disabled:opacity-50"
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              onClick={handleDone}
-              className="text-[0.667rem] font-mono text-muted-foreground hover:underline"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Entry rows */}
-      <div className="space-y-3">
-        {entries.length === 0 && !showForm ? (
-          <div className="flex items-center justify-center py-8">
-            {!readOnly ? (
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {/* Inline add form — stacked vertically */}
+        {showForm && (
+          <div className="space-y-3 mb-4 pb-4 border-b border-foreground/10" onKeyDown={handleKeyDown}>
+            <div>
+              <label className="text-[0.611rem] font-mono text-muted-foreground uppercase tracking-wider">Amount</label>
+              <input
+                ref={amountRef}
+                type="text"
+                inputMode="decimal"
+                value={amount}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === '' || /^\d*\.?\d*$/.test(v)) setAmount(v);
+                }}
+                placeholder="₱ 0.00"
+                disabled={saving}
+                className={inputBase}
+              />
+            </div>
+            <div>
+              <label className="text-[0.611rem] font-mono text-muted-foreground uppercase tracking-wider">Date</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={saving}
+                className={inputBase}
+              />
+            </div>
+            <div>
+              <label className="text-[0.611rem] font-mono text-muted-foreground uppercase tracking-wider">Note</label>
+              <input
+                type="text"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Description"
+                disabled={saving}
+                className={inputBase}
+              />
+            </div>
+            <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => {
-                  setShowForm(true);
-                  setTimeout(() => amountRef.current?.focus(), 0);
-                }}
-                className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+                onClick={handleSubmit}
+                disabled={saving}
+                className="text-[0.667rem] font-mono text-foreground hover:underline disabled:opacity-50"
               >
-                <Plus size={32} strokeWidth={1} />
+                Add Another
               </button>
-            ) : (
-              <span className="text-[0.778rem] font-mono text-muted-foreground">No entries</span>
-            )}
+              <button
+                type="button"
+                onClick={handleDone}
+                className="text-[0.667rem] font-mono text-muted-foreground hover:underline"
+              >
+                Done
+              </button>
+            </div>
           </div>
-        ) : (
-          entries.map((entry) => {
-            if (confirmDeleteId === entry.id) {
-              return (
-                <div key={entry.id} className="space-y-1">
-                  <p className="text-[0.667rem] font-mono text-muted-foreground">
-                    Remove {formatPHP(entry.amount)}?
-                  </p>
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(entry.id)}
-                      disabled={saving}
-                      className="text-[0.667rem] font-mono text-destructive hover:underline"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setConfirmDeleteId(null)}
-                      className="text-[0.667rem] font-mono text-muted-foreground hover:underline"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              );
-            }
-
-            if (editingId === entry.id) {
-              return (
-                <div key={entry.id} className="space-y-1" onKeyDown={handleEditKeyDown}>
-                  <input
-                    type="text"
-                    value={editNote}
-                    onChange={(e) => setEditNote(e.target.value)}
-                    className={inputBase}
-                    autoFocus
-                  />
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={editAmount}
-                    onChange={(e) => setEditAmount(e.target.value)}
-                    className={`${inputBase} text-right`}
-                  />
-                </div>
-              );
-            }
-
-            return (
-              <div key={entry.id} className="flex items-start gap-3 group">
-                <div className="flex-1 min-w-0">
-                  <span className="font-mono text-[0.833rem] block truncate">
-                    {entry.note}
-                  </span>
-                  <span className="text-[0.667rem] text-muted-foreground font-mono">
-                    {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </span>
-                </div>
-                <span className="font-mono text-[0.833rem] tabular-nums shrink-0 pt-0.5">
-                  {formatPHP(entry.amount)}
-                </span>
-                {!readOnly && (
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0 pt-0.5">
-                    <button
-                      type="button"
-                      onClick={() => startEdit(entry)}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label="Edit"
-                    >
-                      <Pencil size={12} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setConfirmDeleteId(entry.id)}
-                      className="text-muted-foreground hover:text-destructive transition-colors"
-                      aria-label="Delete"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })
         )}
+
+        {/* Entry rows */}
+        <div className="space-y-0">
+          {entries.length === 0 && !showForm ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              {!readOnly ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForm(true);
+                    setTimeout(() => amountRef.current?.focus(), 0);
+                  }}
+                  className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+                >
+                  <Plus size={32} strokeWidth={1} />
+                </button>
+              ) : (
+                <span className="text-[0.778rem] font-mono text-muted-foreground">No entries</span>
+              )}
+            </div>
+          ) : (
+            entries.map((entry) => {
+              if (confirmDeleteId === entry.id) {
+                return (
+                  <div key={entry.id} className="py-3 space-y-1">
+                    <p className="text-[0.667rem] font-mono text-muted-foreground">
+                      Remove {formatPHP(entry.amount)}?
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(entry.id)}
+                        disabled={saving}
+                        className="text-[0.667rem] font-mono text-destructive hover:underline"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeleteId(null)}
+                        className="text-[0.667rem] font-mono text-muted-foreground hover:underline"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
+
+              if (editingId === entry.id) {
+                return (
+                  <div key={entry.id} className="py-3 space-y-2" onKeyDown={handleEditKeyDown}>
+                    <input
+                      type="text"
+                      value={editNote}
+                      onChange={(e) => setEditNote(e.target.value)}
+                      className={inputBase}
+                      autoFocus
+                    />
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={editAmount}
+                      onChange={(e) => setEditAmount(e.target.value)}
+                      className={inputBase}
+                    />
+                  </div>
+                );
+              }
+
+              return (
+                <div key={entry.id} className="flex items-start gap-3 py-3 group">
+                  <div className="flex-1 min-w-0">
+                    <span className="font-mono text-[0.833rem] block truncate">
+                      {entry.note}
+                    </span>
+                    <span className="text-[0.667rem] text-muted-foreground font-mono">
+                      {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                  <span className="font-mono text-[0.833rem] tabular-nums shrink-0 pt-0.5">
+                    {formatPHP(entry.amount)}
+                  </span>
+                  {!readOnly && (
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0 pt-0.5">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(entry)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Edit"
+                      >
+                        <Pencil size={12} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeleteId(entry.id)}
+                        className="text-muted-foreground hover:text-destructive transition-colors"
+                        aria-label="Delete"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
       {/* Add link at bottom */}
@@ -280,7 +291,7 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
             setShowForm(true);
             setTimeout(() => amountRef.current?.focus(), 0);
           }}
-          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4"
+          className="flex items-center gap-1 text-[0.667rem] font-mono text-muted-foreground hover:text-foreground transition-colors mt-4 shrink-0"
         >
           <Plus size={12} />
           <span>Add Payment</span>
