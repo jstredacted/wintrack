@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-03-17T05:33:38.576Z"
-last_activity: 2026-03-16 — Completed 02-01 (PIN auth foundation)
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-17T05:54:00Z"
+last_activity: 2026-03-17 — Completed 03-01 (finance database foundation)
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
-  percent: 80
+  total_plans: 9
+  completed_plans: 6
+  percent: 67
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** The daily discipline loop: set intentions, complete them, reflect honestly -- now expanded with personal finance management.
-**Current focus:** Phase 1: Dev Workflow & TypeScript Foundation
+**Current focus:** Phase 3: Finance Core
 
 ## Current Position
 
-Phase: 2 of 5 (PIN Authentication)
-Plan: 1 of 2 in current phase
+Phase: 3 of 5 (Finance Core)
+Plan: 1 of 4 in current phase
 Status: In Progress
-Last activity: 2026-03-16 — Completed 02-01 (PIN auth foundation)
+Last activity: 2026-03-17 — Completed 03-01 (finance database foundation)
 
-Progress: [████████░░] 80%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Progress: [████████░░] 80%
 | Phase 01 P02 | 8min | 2 tasks | 40 files |
 | Phase 01 P03 | 12min | 2 tasks | 54 files |
 | Phase 02 P01 | 3min | 2 tasks | 11 files |
+| Phase 03 P01 | 2min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,10 @@ Recent decisions affecting current work:
 - [Phase 02]: pinStore uses sessionStorage backing + Zustand for reactive state
 - [Phase 02]: usePinAuth is a plain function (not a React hook with useEffect) — PinGate controls lifecycle
 - [Phase 02]: Fail-closed design: DB fetch errors show lock screen, not app content
+- [Phase 03]: Ported source app schema with user_id + RLS added to every finance table
+- [Phase 03]: Wise fee: $1.02 flat + 0.57% variable; PayPal: 3% spread — exported as constants
+- [Phase 03]: Month format "YYYY-MM" with Intl.DateTimeFormat for labels
+- [Phase 03]: numeric(14,2) for all Postgres amounts (exact precision, no floating point)
 
 ### Research Flags
 
@@ -94,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T05:33:38.572Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-finance-core/03-UI-SPEC.md
+Last session: 2026-03-17T05:54:00Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-finance-core/03-02-PLAN.md

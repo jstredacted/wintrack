@@ -30,23 +30,23 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Finance: Balance
 
-- [ ] **BAL-01**: User sees current balance as the single source of truth ("what I have right now")
+- [x] **BAL-01**: User sees current balance as the single source of truth ("what I have right now")
 - [ ] **BAL-02**: User can manually override current balance at any time
 - [ ] **BAL-03**: When income is marked received, net PHP amount auto-adds to current balance
-- [ ] **BAL-04**: When a bill/expense is marked paid, amount auto-deducts from current balance
-- [ ] **BAL-05**: Current balance carries forward to next month as starting point
+- [x] **BAL-04**: When a bill/expense is marked paid, amount auto-deducts from current balance
+- [x] **BAL-05**: Current balance carries forward to next month as starting point
 
 ### Finance: Budget
 
-- [ ] **BUD-01**: User can set a monthly budget limit
+- [x] **BUD-01**: User can set a monthly budget limit
 - [ ] **BUD-02**: User sees budget progress visualization showing total paid expenses vs budget limit (neutral/approaching/critical states)
 
 ### Finance: Income Streams
 
-- [ ] **INC-01**: User can configure income sources in Settings with name, amount, currency (USD or PHP), and conversion method (Wise/PayPal/None)
-- [ ] **INC-02**: User can set expected payday (day of month) per income source
+- [x] **INC-01**: User can configure income sources in Settings with name, amount, currency (USD or PHP), and conversion method (Wise/PayPal/None)
+- [x] **INC-02**: User can set expected payday (day of month) per income source
 - [ ] **INC-03**: Each income source appears as a toggleable card in the Finance view per month
-- [ ] **INC-04**: When toggled as received, USD sources auto-fetch live rate and deduct Wise/PayPal fees; PHP sources add directly
+- [x] **INC-04**: When toggled as received, USD sources auto-fetch live rate and deduct Wise/PayPal fees; PHP sources add directly
 - [ ] **INC-05**: Received income auto-adds net PHP amount to current balance; toggle greys out the card
 - [ ] **INC-06**: User can add, edit, and remove income sources from Settings
 
@@ -129,17 +129,17 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
 | AUTH-05 | Phase 2 | Pending |
-| BAL-01 | Phase 3 | Pending |
+| BAL-01 | Phase 3 | Complete |
 | BAL-02 | Phase 3 | Pending |
 | BAL-03 | Phase 3 | Pending |
-| BAL-04 | Phase 3 | Pending |
-| BAL-05 | Phase 3 | Pending |
-| BUD-01 | Phase 3 | Pending |
+| BAL-04 | Phase 3 | Complete |
+| BAL-05 | Phase 3 | Complete |
+| BUD-01 | Phase 3 | Complete |
 | BUD-02 | Phase 3 | Pending |
-| INC-01 | Phase 3 | Pending |
-| INC-02 | Phase 3 | Pending |
+| INC-01 | Phase 3 | Complete |
+| INC-02 | Phase 3 | Complete |
 | INC-03 | Phase 3 | Pending |
-| INC-04 | Phase 3 | Pending |
+| INC-04 | Phase 3 | Complete |
 | INC-05 | Phase 3 | Pending |
 | INC-06 | Phase 3 | Pending |
 | FIN-01 | Phase 3 | Pending |
