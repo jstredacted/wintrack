@@ -123,24 +123,22 @@ export default function FinancePage() {
   }, [viewIndex]);
 
   return (
-    <div className="flex flex-col h-full">
-      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth} />
+    <>
+      <MonthBarrel selected={selectedMonth} onSelect={setSelectedMonth}>
+        {/* Past month indicator */}
+        {isPastMonth && (
+          <div className="text-center text-xs text-muted-foreground pb-2 mt-4">
+            Past month — read only
+          </div>
+        )}
 
-      {/* Past month indicator */}
-      {isPastMonth && (
-        <div className="text-center text-xs text-muted-foreground pb-2">
-          Past month — read only
-        </div>
-      )}
-
-      {loading ? (
-        <p className="text-sm font-mono text-muted-foreground text-center py-12">Loading...</p>
-      ) : error ? (
-        <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
-      ) : isFutureMonth ? (
-        /* Future month: projected view */
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-[900px] relative p-8">
+        {loading ? (
+          <p className="text-sm font-mono text-muted-foreground text-center py-12">Loading...</p>
+        ) : error ? (
+          <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
+        ) : isFutureMonth ? (
+          /* Future month: projected view */
+          <div className="w-[900px] relative p-8 mt-6">
             <div className="flex flex-col items-center gap-8">
               {/* Projected balance — hero */}
               <div className="text-center">
@@ -202,147 +200,147 @@ export default function FinancePage() {
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        /* Current or past: horizontal views in centered container */
-        <div
-          className="flex-1 flex items-center justify-center"
-          onTouchStart={handleViewTouchStart}
-          onTouchEnd={handleViewTouchEnd}
-        >
-          <div className="w-[900px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
-            {/* Left arrow (only on View 1) */}
-            {viewIndex === 1 && (
-              <button
-                type="button"
-                onClick={() => setViewIndex(0)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Overview"
-              >
-                <ChevronLeft size={20} />
-              </button>
-            )}
-            {/* Right arrow (only on View 0) */}
-            {viewIndex === 0 && (
-              <button
-                type="button"
-                onClick={() => setViewIndex(1)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Cards"
-              >
-                <ChevronRight size={20} />
-              </button>
-            )}
-
-            {/* Horizontal slide */}
-            <div
-              className="flex transition-transform duration-300"
-              style={{ transform: `translateX(${viewIndex * -100}%)` }}
-            >
-              {/* View 0: Overview */}
-              <div className="w-[900px] shrink-0 p-8 flex flex-col items-center gap-8">
-                {/* Budget bar — full width inside container */}
-                <div className="w-full">
-                  <BudgetProgressBar
-                    paidTotal={paidTotal}
-                    unpaidTotal={unpaidTotal}
-                    budgetLimit={monthData?.budget_limit ?? 0}
-                    totalIncome={totalIncome}
-                    onUpdateBudgetLimit={updateBudgetLimit}
-                    readOnly={isPastMonth}
-                  />
-                </div>
-
-                {/* Stats row */}
-                <div className="flex justify-between w-full max-w-lg">
-                  <div className="text-center">
-                    <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
-                    <div className="text-base font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
-                    <div className="text-base font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
-                    <div className="text-base font-mono tabular-nums">{savingsRate}%</div>
-                  </div>
-                </div>
-
-                {/* Hero balance */}
-                <div>
-                  <BalanceDisplay
-                    currentBalance={monthData?.current_balance ?? 0}
-                    startingBalance={monthData?.starting_balance ?? 0}
-                    lastChange={lastChange}
-                    onUpdateBalance={async (newBalance) => {
-                      await updateBalance(newBalance);
-                      refetchHistory();
-                    }}
-                    onOpenHistory={() => setHistoryModalOpen(true)}
-                    readOnly={isPastMonth}
-                  />
-                </div>
-              </div>
-
-              {/* View 1: Cards side by side */}
-              <div className="w-[900px] shrink-0 p-8 flex justify-center gap-4 items-start">
-                <BillsCard
-                  bills={bills}
-                  onTogglePaid={togglePaid}
-                  onAddBill={addBill}
-                  readOnly={isPastMonth}
-                  className="w-[260px]"
-                />
-
-                <IncomeChecklistCard
-                  incomes={incomes}
-                  rate={rate}
-                  rateLoading={rateLoading}
-                  onToggleReceived={toggleIncomeReceived}
-                  readOnly={isPastMonth}
-                  className="w-[260px]"
-                />
-
-                <OneOffCard
-                  entries={oneOffEntries}
-                  onAdd={async (amount, date, note) => {
-                    await addOneOff(amount, date, note);
-                    refetchMonth();
-                  }}
-                  onDelete={async (id) => {
-                    await deleteOneOff(id);
-                    refetchMonth();
-                  }}
-                  onUpdate={async (id, fields) => {
-                    await updateOneOff(id, fields);
-                    refetchMonth();
-                  }}
-                  readOnly={isPastMonth}
-                  className="w-[260px]"
-                />
-              </div>
-            </div>
-
-            {/* Dot indicators at bottom of container */}
-            <div className="flex items-center justify-center gap-2 pb-4">
-              {[0, 1].map((i) => (
+        ) : (
+          /* Current or past: horizontal views in centered container */
+          <div
+            className="mt-6"
+            onTouchStart={handleViewTouchStart}
+            onTouchEnd={handleViewTouchEnd}
+          >
+            <div className="w-[900px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
+              {/* Left arrow (only on View 1) */}
+              {viewIndex === 1 && (
                 <button
-                  key={i}
                   type="button"
-                  onClick={() => setViewIndex(i)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    viewIndex === i
-                      ? 'bg-foreground'
-                      : 'bg-foreground/20 hover:bg-foreground/40'
-                  }`}
-                  aria-label={i === 0 ? 'Overview' : 'Cards'}
-                />
-              ))}
+                  onClick={() => setViewIndex(0)}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Overview"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+              )}
+              {/* Right arrow (only on View 0) */}
+              {viewIndex === 0 && (
+                <button
+                  type="button"
+                  onClick={() => setViewIndex(1)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Cards"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              )}
+
+              {/* Horizontal slide */}
+              <div
+                className="flex transition-transform duration-300"
+                style={{ transform: `translateX(${viewIndex * -100}%)` }}
+              >
+                {/* View 0: Overview */}
+                <div className="w-[900px] shrink-0 p-8 flex flex-col items-center gap-8">
+                  {/* Budget bar — full width inside container */}
+                  <div className="w-full">
+                    <BudgetProgressBar
+                      paidTotal={paidTotal}
+                      unpaidTotal={unpaidTotal}
+                      budgetLimit={monthData?.budget_limit ?? 0}
+                      totalIncome={totalIncome}
+                      onUpdateBudgetLimit={updateBudgetLimit}
+                      readOnly={isPastMonth}
+                    />
+                  </div>
+
+                  {/* Stats row */}
+                  <div className="flex justify-between w-full max-w-lg">
+                    <div className="text-center">
+                      <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
+                      <div className="text-base font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
+                      <div className="text-base font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
+                      <div className="text-base font-mono tabular-nums">{savingsRate}%</div>
+                    </div>
+                  </div>
+
+                  {/* Hero balance */}
+                  <div>
+                    <BalanceDisplay
+                      currentBalance={monthData?.current_balance ?? 0}
+                      startingBalance={monthData?.starting_balance ?? 0}
+                      lastChange={lastChange}
+                      onUpdateBalance={async (newBalance) => {
+                        await updateBalance(newBalance);
+                        refetchHistory();
+                      }}
+                      onOpenHistory={() => setHistoryModalOpen(true)}
+                      readOnly={isPastMonth}
+                    />
+                  </div>
+                </div>
+
+                {/* View 1: Cards side by side */}
+                <div className="w-[900px] shrink-0 p-8 flex justify-center gap-4 items-start">
+                  <BillsCard
+                    bills={bills}
+                    onTogglePaid={togglePaid}
+                    onAddBill={addBill}
+                    readOnly={isPastMonth}
+                    className="w-[260px]"
+                  />
+
+                  <IncomeChecklistCard
+                    incomes={incomes}
+                    rate={rate}
+                    rateLoading={rateLoading}
+                    onToggleReceived={toggleIncomeReceived}
+                    readOnly={isPastMonth}
+                    className="w-[260px]"
+                  />
+
+                  <OneOffCard
+                    entries={oneOffEntries}
+                    onAdd={async (amount, date, note) => {
+                      await addOneOff(amount, date, note);
+                      refetchMonth();
+                    }}
+                    onDelete={async (id) => {
+                      await deleteOneOff(id);
+                      refetchMonth();
+                    }}
+                    onUpdate={async (id, fields) => {
+                      await updateOneOff(id, fields);
+                      refetchMonth();
+                    }}
+                    readOnly={isPastMonth}
+                    className="w-[260px]"
+                  />
+                </div>
+              </div>
+
+              {/* Dot indicators at bottom of container */}
+              <div className="flex items-center justify-center gap-2 pb-4">
+                {[0, 1].map((i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setViewIndex(i)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      viewIndex === i
+                        ? 'bg-foreground'
+                        : 'bg-foreground/20 hover:bg-foreground/40'
+                    }`}
+                    aria-label={i === 0 ? 'Overview' : 'Cards'}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </MonthBarrel>
 
       <BalanceHistoryModal
         changes={balanceChanges}
@@ -364,6 +362,6 @@ export default function FinancePage() {
       >
         <BarChart3 size={22} />
       </button>
-    </div>
+    </>
   );
 }

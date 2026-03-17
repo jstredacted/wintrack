@@ -23,8 +23,9 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
   const expenseRatio = totalIncome > 0 ? Math.min(totalExpenses / totalIncome, 1) : 0;
   const oneoffRatio = totalIncome > 0 ? Math.min(Number(summary.total_oneoff) / totalIncome, 1 - expenseRatio) : 0;
 
-  // Dim months with no activity
-  const isEmpty = endingBalance === 0 && totalIncome === 0 && totalExpenses === 0;
+  // Dim months with no activity (carry-forward-only months have balance but no income/expenses)
+  const hasActivity = totalIncome > 0 || totalExpenses > 0;
+  const isEmpty = !hasActivity && endingBalance === 0;
 
   return (
     <button
@@ -32,14 +33,14 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={[
-        'relative flex flex-col items-center h-48 rounded-md transition-all',
+        'relative flex flex-col items-center h-64 rounded-md transition-all',
         isCurrent ? 'border border-foreground/50' : 'border border-transparent',
-        isEmpty ? 'opacity-40' : '',
+        isEmpty ? 'opacity-40' : !hasActivity ? 'opacity-40' : '',
         hovered ? 'ring-1 ring-foreground/40' : '',
       ].join(' ')}
     >
       {/* Month abbreviation at top */}
-      <div className="text-[0.6rem] font-mono font-semibold tracking-wider pt-2 pb-1 shrink-0">
+      <div className="text-xs font-mono font-semibold tracking-wider pt-2 pb-1 shrink-0">
         {monthName}
       </div>
 
@@ -68,7 +69,7 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
       </div>
 
       {/* Balance at bottom */}
-      <div className="text-[0.55rem] font-mono tabular-nums text-muted-foreground pb-1.5 shrink-0 truncate w-full text-center px-0.5">
+      <div className="text-xs font-mono tabular-nums text-muted-foreground pb-1.5 shrink-0 w-full text-center px-0.5">
         {formatPHP(endingBalance)}
       </div>
 

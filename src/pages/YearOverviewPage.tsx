@@ -11,8 +11,12 @@ export default function YearOverviewPage() {
   const { months, loading, error } = useYearOverview(year);
 
   const summary = useMemo(() => {
-    const totalIncome = months.reduce((s, m) => s + Number(m.total_income) + Number(m.total_oneoff), 0);
-    const totalExpenses = months.reduce((s, m) => s + Number(m.total_expenses), 0);
+    // Only include months that have actual activity (income received or bills paid)
+    const activeMonths = months.filter(
+      (m) => Number(m.total_income) > 0 || Number(m.total_expenses) > 0 || Number(m.total_oneoff) > 0
+    );
+    const totalIncome = activeMonths.reduce((s, m) => s + Number(m.total_income) + Number(m.total_oneoff), 0);
+    const totalExpenses = activeMonths.reduce((s, m) => s + Number(m.total_expenses), 0);
     const net = totalIncome - totalExpenses;
     const savingsRate = totalIncome > 0 ? Math.round((1 - totalExpenses / totalIncome) * 100) : 0;
     return { totalIncome, totalExpenses, net, savingsRate };
