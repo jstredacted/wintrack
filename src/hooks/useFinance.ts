@@ -71,7 +71,12 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
         if (rpcError) throw new Error(rpcError.message);
         if (cancelled) return;
 
-        setMonthData(monthRow as Month);
+        // Normalize numeric fields from Supabase (returned as strings for numeric type)
+        const normalized = monthRow as Month;
+        normalized.current_balance = Number(normalized.current_balance);
+        normalized.starting_balance = Number(normalized.starting_balance);
+        normalized.budget_limit = Number(normalized.budget_limit);
+        setMonthData(normalized);
 
         // 2. Populate monthly_income from active sources (no-op if already exists)
         await supabase.rpc('populate_monthly_income', {

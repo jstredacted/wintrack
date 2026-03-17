@@ -57,7 +57,8 @@ export default function BalanceDisplay({
       return;
     }
     // Don't save if value hasn't changed — avoids a ₱0 delta in balance history
-    if (parsed === currentBalance) {
+    // currentBalance may be a string from Supabase numeric type, so compare as numbers
+    if (parsed === Number(currentBalance)) {
       setEditing(false);
       return;
     }
