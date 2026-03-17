@@ -111,11 +111,14 @@ Plans:
   3. SideNav collapses to a bottom tab bar on mobile widths; all pages are usable on 430px width with no horizontal scroll
   4. All interactive elements meet 44x44px touch targets; finance pages use stacked layout on mobile
   5. DayStrip centers the selected day with proper carousel scrolling on touch devices
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — DayStartHour bug fixes: DayStrip date mismatch, heatmap NaN, rollover completed wins
+- [ ] 05-02-PLAN.md — Tiptap rich text editor: install packages, slash commands, editor swap, format-aware rendering
+- [ ] 05-03-PLAN.md — Mobile bottom tab bar navigation and responsive AppShell layout
+- [ ] 05-04-PLAN.md — Finance mobile layout, DayStrip centering, Settings tabs, layout consistency audit
+- [ ] 05-05-PLAN.md — Journal count in year overview + full phase visual verification checkpoint
 
 ## Progress
 
@@ -129,4 +132,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. PIN Authentication | v2.0 | 1/2 | In Progress | - |
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
-| 5. Journal Rich Text & Mobile | v2.0 | 0/TBD | Not started | - |
+| 5. Journal Rich Text & Mobile | v2.0 | 0/5 | Not started | - |
