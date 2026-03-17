@@ -94,6 +94,7 @@ export default function FinancePage() {
   }, [monthData, totalIncomeReceived]);
 
   // Projected balance for future months
+  // starting_balance is carry-forwarded from the previous month's ending balance
   const projectedBalance = useMemo(() => {
     if (!isFutureMonth || !monthData) return 0;
     const expectedIncome = incomes.reduce(
@@ -101,7 +102,7 @@ export default function FinancePage() {
       0
     );
     const recurringBillsTotal = bills.reduce((sum, b) => sum + b.amount, 0);
-    return monthData.current_balance + expectedIncome - recurringBillsTotal;
+    return monthData.starting_balance + expectedIncome - recurringBillsTotal;
   }, [isFutureMonth, monthData, incomes, bills]);
 
   return (
