@@ -31,8 +31,8 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 ### Finance: Balance
 
 - [x] **BAL-01**: User sees current balance as the single source of truth ("what I have right now")
-- [ ] **BAL-02**: User can manually override current balance at any time
-- [ ] **BAL-03**: When income is marked received, net PHP amount auto-adds to current balance
+- [x] **BAL-02**: User can manually override current balance at any time
+- [x] **BAL-03**: When income is marked received, net PHP amount auto-adds to current balance
 - [x] **BAL-04**: When a bill/expense is marked paid, amount auto-deducts from current balance
 - [x] **BAL-05**: Current balance carries forward to next month as starting point
 
@@ -47,7 +47,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [x] **INC-02**: User can set expected payday (day of month) per income source
 - [ ] **INC-03**: Each income source appears as a toggleable card in the Finance view per month
 - [x] **INC-04**: When toggled as received, USD sources auto-fetch live rate and deduct Wise/PayPal fees; PHP sources add directly
-- [ ] **INC-05**: Received income auto-adds net PHP amount to current balance; toggle greys out the card
+- [x] **INC-05**: Received income auto-adds net PHP amount to current balance; toggle greys out the card
 - [ ] **INC-06**: User can add, edit, and remove income sources from Settings
 
 ### Finance: Bills
@@ -130,8 +130,8 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | AUTH-04 | Phase 2 | Complete |
 | AUTH-05 | Phase 2 | Pending |
 | BAL-01 | Phase 3 | Complete |
-| BAL-02 | Phase 3 | Pending |
-| BAL-03 | Phase 3 | Pending |
+| BAL-02 | Phase 3 | Complete |
+| BAL-03 | Phase 3 | Complete |
 | BAL-04 | Phase 3 | Complete |
 | BAL-05 | Phase 3 | Complete |
 | BUD-01 | Phase 3 | Complete |
@@ -140,7 +140,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | INC-02 | Phase 3 | Complete |
 | INC-03 | Phase 3 | Pending |
 | INC-04 | Phase 3 | Complete |
-| INC-05 | Phase 3 | Pending |
+| INC-05 | Phase 3 | Complete |
 | INC-06 | Phase 3 | Pending |
 | FIN-01 | Phase 3 | Pending |
 | BILL-01 | Phase 4 | Pending |
