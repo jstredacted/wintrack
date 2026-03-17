@@ -11,7 +11,7 @@ export default function YearOverviewPage() {
   const { months, loading, error } = useYearOverview(year);
 
   const summary = useMemo(() => {
-    const totalIncome = months.reduce((s, m) => s + m.total_income, 0);
+    const totalIncome = months.reduce((s, m) => s + m.total_income + m.total_oneoff, 0);
     const totalExpenses = months.reduce((s, m) => s + m.total_expenses, 0);
     const net = totalIncome - totalExpenses;
     const savingsRate = totalIncome > 0 ? Math.round((1 - totalExpenses / totalIncome) * 100) : 0;

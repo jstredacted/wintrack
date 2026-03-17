@@ -43,7 +43,15 @@ export function useYearOverview(year: number): UseYearOverviewResult {
         if (rpcError) throw new Error(rpcError.message);
         if (cancelled) return;
 
-        const dataArr = (data ?? []) as MonthSummary[];
+        // Supabase RPC returns numeric fields as strings — parse them
+        const dataArr = ((data ?? []) as Record<string, unknown>[]).map((raw): MonthSummary => ({
+          month: String(raw.month),
+          ending_balance: Number(raw.ending_balance) || 0,
+          starting_balance: Number(raw.starting_balance) || 0,
+          total_income: Number(raw.total_income) || 0,
+          total_expenses: Number(raw.total_expenses) || 0,
+          total_oneoff: Number(raw.total_oneoff) || 0,
+        }));
 
         // Build lookup from returned data
         const lookup = new Map<string, MonthSummary>();
