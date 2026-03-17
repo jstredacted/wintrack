@@ -26,6 +26,7 @@ export default function FinancePage() {
     updateBalance,
     updateBudgetLimit,
     toggleIncomeReceived,
+    refetch: refetchMonth,
   } = useFinance(selectedMonth);
   const { rate, loading: rateLoading } = useExchangeRate();
   const {
@@ -216,6 +217,7 @@ export default function FinancePage() {
         onRevert={async (id) => {
           await revertChange(id);
           refetchHistory();
+          refetchMonth();
         }}
         onClose={() => setHistoryModalOpen(false)}
         open={historyModalOpen}
