@@ -98,10 +98,10 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Mobile Responsiveness
 
-- [ ] **MOB-01**: All pages usable on iPhone 15 Pro Max viewport (430px width)
-- [ ] **MOB-02**: SideNav collapses to bottom tab bar on mobile widths
-- [ ] **MOB-03**: Touch targets minimum 44x44px on all interactive elements
-- [ ] **MOB-04**: No horizontal scroll on any page at mobile widths
+- [x] **MOB-01**: All pages usable on iPhone 15 Pro Max viewport (430px width)
+- [x] **MOB-02**: SideNav collapses to bottom tab bar on mobile widths
+- [x] **MOB-03**: Touch targets minimum 44x44px on all interactive elements
+- [x] **MOB-04**: No horizontal scroll on any page at mobile widths
 - [ ] **MOB-05**: Finance pages responsive with stacked layout on mobile
 - [ ] **MOB-06**: DayStrip centers the current/selected day with carousel scrolling left (past) and right (future)
 - [ ] **MOB-07**: Fix DayStrip/header date mismatch when dayStartHour offset is active (off-by-one between strip dates and displayed date)
@@ -185,10 +185,10 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | JRNL-03 | Phase 5 | Pending |
 | JRNL-04 | Phase 5 | Pending |
 | JRNL-05 | Phase 5 | Pending |
-| MOB-01 | Phase 5 | Pending |
-| MOB-02 | Phase 5 | Pending |
-| MOB-03 | Phase 5 | Pending |
-| MOB-04 | Phase 5 | Pending |
+| MOB-01 | Phase 5 | Complete |
+| MOB-02 | Phase 5 | Complete |
+| MOB-03 | Phase 5 | Complete |
+| MOB-04 | Phase 5 | Complete |
 | MOB-05 | Phase 5 | Pending |
 | MOB-06 | Phase 5 | Pending |
 | MOB-07 | Phase 5 | Pending |
