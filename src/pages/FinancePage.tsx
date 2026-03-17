@@ -140,7 +140,7 @@ export default function FinancePage() {
       ) : isFutureMonth ? (
         /* Future month: projected view */
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-[720px] relative overflow-hidden p-8">
+          <div className="w-[900px] relative p-8">
             <div className="flex flex-col items-center gap-8">
               {/* Projected balance — hero */}
               <div className="text-center">
@@ -161,7 +161,7 @@ export default function FinancePage() {
                     <div className="space-y-0">
                       {bills.map((bill) => (
                         <div key={bill.id} className="flex items-center gap-3 py-2">
-                          <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{bill.name}</span>
+                          <span className="font-mono text-[0.833rem] flex-1 min-w-0 text-muted-foreground">{bill.name}</span>
                           <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{formatPHP(bill.amount)}</span>
                         </div>
                       ))}
@@ -187,7 +187,7 @@ export default function FinancePage() {
                           : formatPHP(income.expected_amount);
                         return (
                           <div key={income.id} className="flex items-center gap-3 py-2">
-                            <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{source?.name ?? 'Income'}</span>
+                            <span className="font-mono text-[0.833rem] flex-1 min-w-0 text-muted-foreground">{source?.name ?? 'Income'}</span>
                             <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{displayAmount}</span>
                           </div>
                         );
@@ -210,7 +210,7 @@ export default function FinancePage() {
           onTouchStart={handleViewTouchStart}
           onTouchEnd={handleViewTouchEnd}
         >
-          <div className="w-[720px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
+          <div className="w-[900px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
             {/* Left arrow (only on View 1) */}
             {viewIndex === 1 && (
               <button
@@ -240,7 +240,7 @@ export default function FinancePage() {
               style={{ transform: `translateX(${viewIndex * -100}%)` }}
             >
               {/* View 0: Overview */}
-              <div className="w-[720px] shrink-0 p-8 flex flex-col items-center gap-8">
+              <div className="w-[900px] shrink-0 p-8 flex flex-col items-center gap-8">
                 {/* Budget bar — full width inside container */}
                 <div className="w-full">
                   <BudgetProgressBar
@@ -286,13 +286,13 @@ export default function FinancePage() {
               </div>
 
               {/* View 1: Cards side by side */}
-              <div className="w-[720px] shrink-0 p-8 flex justify-center gap-4">
+              <div className="w-[900px] shrink-0 p-8 flex justify-center gap-4 items-start">
                 <BillsCard
                   bills={bills}
                   onTogglePaid={togglePaid}
                   onAddBill={addBill}
                   readOnly={isPastMonth}
-                  className="w-[210px]"
+                  className="w-[260px]"
                 />
 
                 <IncomeChecklistCard
@@ -301,7 +301,7 @@ export default function FinancePage() {
                   rateLoading={rateLoading}
                   onToggleReceived={toggleIncomeReceived}
                   readOnly={isPastMonth}
-                  className="w-[210px]"
+                  className="w-[260px]"
                 />
 
                 <OneOffCard
@@ -319,7 +319,7 @@ export default function FinancePage() {
                     refetchMonth();
                   }}
                   readOnly={isPastMonth}
-                  className="w-[210px]"
+                  className="w-[260px]"
                 />
               </div>
             </div>

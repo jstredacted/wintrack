@@ -103,8 +103,8 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly, cl
         )}
       </div>
 
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto min-h-0">
+      {/* Content */}
+      <div>
         {/* Bill rows */}
         <div className="space-y-0">
           {sortedBills.length === 0 && !showForm ? (
@@ -144,7 +144,7 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly, cl
                   )}
                 </button>
                 <span
-                  className={`font-mono text-[0.833rem] flex-1 min-w-0 truncate ${
+                  className={`font-mono text-[0.833rem] flex-1 min-w-0 ${
                     bill.paid ? 'line-through' : ''
                   }`}
                 >

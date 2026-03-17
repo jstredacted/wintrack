@@ -89,8 +89,8 @@ export default function IncomeChecklistCard({
         Income
       </h3>
 
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto min-h-0">
+      {/* Content */}
+      <div>
         <div className="space-y-0">
           {incomes.length === 0 ? (
             <div className="flex items-center justify-center py-8">
@@ -119,7 +119,7 @@ export default function IncomeChecklistCard({
                   ) : (
                     <Circle size={16} className="text-muted-foreground/30 shrink-0" />
                   )}
-                  <span className={`font-mono text-[0.833rem] flex-1 min-w-0 truncate ${income.received ? 'line-through' : ''}`}>
+                  <span className={`font-mono text-[0.833rem] flex-1 min-w-0 ${income.received ? 'line-through' : ''}`}>
                     {source?.name ?? 'Income'}
                   </span>
                   <span className={`font-mono text-[0.833rem] tabular-nums shrink-0 ${income.received ? 'line-through' : ''}`}>

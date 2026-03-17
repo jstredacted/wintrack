@@ -113,8 +113,8 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
         )}
       </div>
 
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto min-h-0">
+      {/* Content */}
+      <div>
         {/* Inline add form — stacked vertically */}
         {showForm && (
           <div className="space-y-3 mb-4 pb-4 border-b border-foreground/10" onKeyDown={handleKeyDown}>
@@ -247,7 +247,7 @@ export default function OneOffCard({ entries, onAdd, onDelete, onUpdate, readOnl
               return (
                 <div key={entry.id} className="flex items-start gap-3 py-3 group">
                   <div className="flex-1 min-w-0">
-                    <span className="font-mono text-[0.833rem] block truncate">
+                    <span className="font-mono text-[0.833rem] block">
                       {entry.note}
                     </span>
                     <span className="text-[0.667rem] text-muted-foreground font-mono">
