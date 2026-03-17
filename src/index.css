@@ -194,6 +194,22 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* MonthStrip slide animations */
+@keyframes slide-in-left {
+  from { transform: translateX(-20px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.month-slide-in-left {
+  animation: slide-in-left 0.3s ease-out both;
+}
+.month-slide-in-right {
+  animation: slide-in-right 0.3s ease-out both;
+}
+
 /* Modal fade-in */
 @keyframes modal-fade-in {
   from { opacity: 0; }

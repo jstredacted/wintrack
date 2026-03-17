@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getMonthYear } from '@/lib/utils/month';
 
@@ -11,6 +12,18 @@ const MONTH_ABBR = new Intl.DateTimeFormat('en-US', { month: 'short' });
 
 export default function MonthStrip({ months, selectedMonth, onSelectMonth }: MonthStripProps) {
   const idx = months.indexOf(selectedMonth);
+  const prevIdxRef = useRef(idx);
+  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
+  const [animKey, setAnimKey] = useState(0);
+
+  useEffect(() => {
+    const prevIdx = prevIdxRef.current;
+    if (prevIdx !== idx) {
+      setDirection(idx > prevIdx ? 'right' : 'left');
+      setAnimKey((k) => k + 1);
+      prevIdxRef.current = idx;
+    }
+  }, [idx]);
 
   const goPrev = () => {
     if (idx > 0) onSelectMonth(months[idx - 1]);
@@ -37,6 +50,8 @@ export default function MonthStrip({ months, selectedMonth, onSelectMonth }: Mon
   const canGoPrev = idx > 0;
   const canGoNext = idx < months.length - 1;
 
+  const animClass = direction === 'right' ? 'month-slide-in-right' : direction === 'left' ? 'month-slide-in-left' : '';
+
   return (
     <div className="relative flex items-center justify-center py-2">
       {/* Left fade gradient */}
@@ -61,7 +76,10 @@ export default function MonthStrip({ months, selectedMonth, onSelectMonth }: Mon
       </button>
 
       {/* Visible months */}
-      <div className="flex items-center gap-0">
+      <div
+        key={animKey}
+        className={`flex items-center gap-0 ${animClass}`}
+      >
         {cells.map(({ month, abbr, year, isSelected }) => (
           <button
             key={month}
