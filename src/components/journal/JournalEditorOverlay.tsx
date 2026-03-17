@@ -2,9 +2,16 @@ import { createPortal } from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import CharacterCount from '@tiptap/extension-character-count';
+import Placeholder from '@tiptap/extension-placeholder';
+import SlashCommand from './SlashCommand';
 
-function wordCount(text: string): number {
-  return text.trim() ? text.trim().split(/\s+/).length : 0;
+function parseBodyForTiptap(body: string, format?: string): string {
+  if (!body.trim()) return '';
+  if (format === 'html' || body.startsWith('<')) return body;
+  return body.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
 }
 
 const CATEGORIES = [
@@ -17,8 +24,9 @@ interface JournalEditorOverlayProps {
   open: boolean;
   initialTitle?: string;
   initialBody?: string;
+  initialBodyFormat?: string;
   initialCategory?: string;
-  onSave: (entry: { title: string; body: string; category: string }) => Promise<void>;
+  onSave: (entry: { title: string; body: string; body_format: string; category: string }) => Promise<void>;
   onClose: () => void;
 }
 
@@ -26,6 +34,7 @@ export default function JournalEditorOverlay({
   open,
   initialTitle = '',
   initialBody = '',
+  initialBodyFormat,
   initialCategory = 'daily',
   onSave,
   onClose,
@@ -34,7 +43,6 @@ export default function JournalEditorOverlay({
   const [exiting, setExiting] = useState(false);
   const [screen, setScreen] = useState<'editing' | 'summary'>('editing');
   const [title, setTitle] = useState(initialTitle);
-  const [body, setBody] = useState(initialBody);
   const [category, setCategory] = useState(initialCategory ?? 'daily');
   const [liveWordCount, setLiveWordCount] = useState(0);
   const [summaryWordCount, setSummaryWordCount] = useState(0);
@@ -44,6 +52,24 @@ export default function JournalEditorOverlay({
   const titleRef = useRef<HTMLInputElement>(null);
   const liveWordCountRef = useRef(0);
   const savingRef = useRef(false);
+  const bodyRef = useRef<string>('');
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      CharacterCount,
+      Placeholder.configure({ placeholder: 'Write your entry...' }),
+      SlashCommand,
+    ],
+    content: parseBodyForTiptap(initialBody, initialBodyFormat),
+    shouldRerenderOnTransaction: false,
+    onUpdate: ({ editor }) => {
+      bodyRef.current = editor.getHTML();
+      const wc = editor.storage.characterCount.words();
+      setLiveWordCount(wc);
+      liveWordCountRef.current = wc;
+    },
+  });
 
   useEffect(() => {
     if (open) {
@@ -51,10 +77,13 @@ export default function JournalEditorOverlay({
       setExiting(false);
       setScreen('editing');
       setTitle(initialTitle);
-      setBody(initialBody);
       setCategory(initialCategory ?? 'daily');
-      liveWordCountRef.current = wordCount(initialBody);
-      setLiveWordCount(liveWordCountRef.current);
+      const parsedContent = parseBodyForTiptap(initialBody, initialBodyFormat);
+      editor?.commands.setContent(parsedContent);
+      bodyRef.current = parsedContent;
+      const initialWc = editor?.storage.characterCount.words() ?? 0;
+      liveWordCountRef.current = initialWc;
+      setLiveWordCount(initialWc);
       startedAtRef.current = Date.now();
       savingRef.current = false;
     } else if (visible) {
@@ -69,14 +98,6 @@ export default function JournalEditorOverlay({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
-  function handleBodyChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    const val = e.target.value;
-    const wc = wordCount(val);
-    setBody(val);
-    setLiveWordCount(wc);
-    liveWordCountRef.current = wc;
-  }
-
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     const currentTitle = title.trim();
@@ -85,7 +106,7 @@ export default function JournalEditorOverlay({
     setSaving(true);
     const wc = liveWordCountRef.current;
     const minutes = Math.round((Date.now() - (startedAtRef.current ?? Date.now())) / 60000);
-    await onSave({ title: currentTitle, body: body.trim(), category });
+    await onSave({ title: currentTitle, body: bodyRef.current, body_format: 'html', category });
     setSummaryWordCount(wc);
     setSummaryMinutes(minutes);
     setSaving(false);
@@ -155,13 +176,9 @@ export default function JournalEditorOverlay({
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full bg-transparent text-3xl font-bold outline-none placeholder:text-muted-foreground/40 mb-6 border-b border-border/40 pb-3"
               />
-              <textarea
-                aria-label="body"
-                placeholder="Write your entry..."
-                value={body}
-                onChange={handleBodyChange}
-                className="flex-1 w-full bg-transparent text-lg leading-relaxed outline-none resize-none placeholder:text-muted-foreground/30"
-              />
+              <div className="flex-1 w-full tiptap-editor">
+                <EditorContent editor={editor} className="h-full" />
+              </div>
               <div className="flex gap-6 mt-8 pb-4">
                 <button
                   type="submit"

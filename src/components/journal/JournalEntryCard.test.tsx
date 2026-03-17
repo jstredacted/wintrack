@@ -11,6 +11,7 @@ const mockEntry = {
   id: 'entry-1',
   title: 'My journal entry',
   body: 'Today was a good day.',
+  body_format: 'plaintext',
   category: 'daily',
   created_at: '2026-03-09T10:00:00Z',
   updated_at: '2026-03-09T10:00:00Z',
@@ -85,6 +86,37 @@ describe('JournalEntryCard', () => {
       );
       await user.click(screen.getByRole('button', { name: /edit/i }));
       expect(onEdit).toHaveBeenCalledWith('entry-1');
+    });
+  });
+
+  describe('format-aware body rendering', () => {
+    it('renders body with whitespace-pre-wrap when body_format is plaintext', () => {
+      const { container } = render(
+        <JournalEntryCard
+          entry={{ ...mockEntry, body_format: 'plaintext' }}
+          onEdit={vi.fn()}
+          onDelete={vi.fn()}
+          editingId={null}
+        />
+      );
+      const pre = container.querySelector('.whitespace-pre-wrap');
+      expect(pre).toBeInTheDocument();
+      expect(pre?.textContent).toBe('Today was a good day.');
+    });
+
+    it('renders body with tiptap-content class and dangerouslySetInnerHTML when body_format is html', () => {
+      const htmlBody = '<p>Hello <strong>world</strong></p>';
+      const { container } = render(
+        <JournalEntryCard
+          entry={{ ...mockEntry, body: htmlBody, body_format: 'html' }}
+          onEdit={vi.fn()}
+          onDelete={vi.fn()}
+          editingId={null}
+        />
+      );
+      const htmlDiv = container.querySelector('.tiptap-content');
+      expect(htmlDiv).toBeInTheDocument();
+      expect(htmlDiv?.innerHTML).toBe(htmlBody);
     });
   });
 

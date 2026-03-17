@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from 'lucide-react'
 import type { Database } from '@/lib/database.types'
 
-type JournalEntry = Database['public']['Tables']['journal_entries']['Row']
+type JournalEntry = Database['public']['Tables']['journal_entries']['Row'] & { body_format?: string }
 
 interface JournalEntryCardProps {
   entry: JournalEntry;
@@ -18,6 +18,22 @@ function formatEntryDate(isoString: string): string {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+function renderBody(body: string, format: string) {
+  if (format === 'html') {
+    return (
+      <div
+        className="tiptap-content text-base leading-loose text-muted-foreground line-clamp-4"
+        dangerouslySetInnerHTML={{ __html: body }}
+      />
+    )
+  }
+  return (
+    <p className="text-base leading-loose text-muted-foreground line-clamp-4 whitespace-pre-wrap">
+      {body}
+    </p>
+  )
 }
 
 export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }: JournalEntryCardProps) {
@@ -37,12 +53,8 @@ export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }:
       {/* Title — the hero */}
       <h2 className="text-3xl font-bold leading-tight mb-4">{entry.title}</h2>
 
-      {/* Body preview */}
-      {entry.body && (
-        <p className="text-base leading-loose text-muted-foreground line-clamp-4 whitespace-pre-wrap">
-          {entry.body}
-        </p>
-      )}
+      {/* Body preview — format-aware */}
+      {entry.body && renderBody(entry.body, entry.body_format || 'plaintext')}
 
       {/* Actions — visible on hover only */}
       <div className="flex gap-4 mt-5 opacity-0 group-hover:opacity-100 transition-opacity">

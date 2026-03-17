@@ -3,9 +3,28 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import JournalEditorOverlay from './JournalEditorOverlay';
 
-// Wave 0 stub — fails with module-not-found until plan 05-04 creates JournalEditorOverlay.jsx
-
 vi.mock('@/lib/supabase', () => ({ supabase: { from: vi.fn() } }));
+
+// Mock Tiptap — provide stubs so tests don't need a full DOM ProseMirror environment
+vi.mock('@tiptap/react', () => ({
+  useEditor: vi.fn(() => ({
+    getHTML: () => '<p>test</p>',
+    storage: { characterCount: { words: () => 5 } },
+    isActive: () => false,
+    commands: { setContent: vi.fn() },
+    on: () => {},
+  })),
+  EditorContent: ({ editor }: { editor: unknown }) => (
+    <div data-testid="tiptap-editor" aria-label="body" role="textbox" contentEditable>
+      {editor ? 'editor' : ''}
+    </div>
+  ),
+}));
+
+vi.mock('@tiptap/starter-kit', () => ({ default: {} }));
+vi.mock('@tiptap/extension-character-count', () => ({ default: {} }));
+vi.mock('@tiptap/extension-placeholder', () => ({ default: { configure: vi.fn(() => ({})) } }));
+vi.mock('./SlashCommand', () => ({ default: {} }));
 
 describe('JournalEditorOverlay', () => {
   it('renders nothing when open is false', () => {
@@ -18,24 +37,23 @@ describe('JournalEditorOverlay', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  it('shows live word count that updates as user types in body textarea', async () => {
-    const user = userEvent.setup();
+  it('renders the Tiptap editor in place of a textarea', () => {
     render(<JournalEditorOverlay open={true} onSave={vi.fn()} onClose={vi.fn()} />);
-    const textarea = screen.getByRole('textbox', { name: /body/i });
-    await user.type(textarea, 'Hello world');
-    expect(screen.getByText(/2 words/i)).toBeInTheDocument();
+    expect(screen.getByTestId('tiptap-editor')).toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: /body/i })).not.toBeNull();
+    // no native textarea
+    expect(document.querySelector('textarea')).not.toBeInTheDocument();
   });
 
-  it('shows summary screen with word count chip after save', async () => {
+  it('calls onSave with body_format="html" when save is submitted', async () => {
     const user = userEvent.setup();
-    const onSave = vi.fn<(entry: { title: string; body: string; category: string }) => Promise<void>>().mockResolvedValue(undefined);
+    const onSave = vi.fn().mockResolvedValue(undefined);
     render(<JournalEditorOverlay open={true} onSave={onSave} onClose={vi.fn()} />);
-    // Fill title (required)
     await user.type(screen.getByRole('textbox', { name: /title/i }), 'Test entry');
-    await user.type(screen.getByRole('textbox', { name: /body/i }), 'One two three');
     await user.click(screen.getByRole('button', { name: /save/i }));
-    // After save: summary screen with word count
-    expect(await screen.findByText(/3 words/i)).toBeInTheDocument();
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({ body_format: 'html' })
+    );
   });
 
   it('calls onClose when Escape is pressed', async () => {
@@ -53,7 +71,6 @@ describe('JournalEditorOverlay', () => {
     render(<JournalEditorOverlay open={true} onSave={onSave} onClose={vi.fn()} />);
     await user.type(screen.getByRole('textbox', { name: /title/i }), 'My entry');
     await user.click(screen.getByRole('button', { name: /save/i }));
-    // While save is pending, button text should be 'Saving...'
     expect(screen.getByRole('button', { name: /saving/i })).toBeInTheDocument();
     resolveSave!();
   });

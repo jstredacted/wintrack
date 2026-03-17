@@ -21,20 +21,20 @@ export function useJournal() {
       })
   }, [])
 
-  const addEntry = useCallback(async ({ title, body, category = 'daily' }: { title: string; body: string; category?: string }) => {
+  const addEntry = useCallback(async ({ title, body, category = 'daily', body_format = 'plaintext' }: { title: string; body: string; category?: string; body_format?: string }) => {
     const { data, error } = await supabase
       .from('journal_entries')
-      .insert({ user_id: USER_ID, title, body, category })
+      .insert({ user_id: USER_ID, title, body, category, body_format } as Database['public']['Tables']['journal_entries']['Insert'] & { body_format: string })
       .select()
       .single()
     if (!error && data) setEntries(prev => [data, ...prev])
   }, [])
 
-  const editEntry = useCallback(async (id: string, { title, body, category = 'daily' }: { title: string; body: string; category?: string }) => {
-    setEntries(prev => prev.map(e => e.id === id ? { ...e, title, body, category } : e))
+  const editEntry = useCallback(async (id: string, { title, body, category = 'daily', body_format = 'plaintext' }: { title: string; body: string; category?: string; body_format?: string }) => {
+    setEntries(prev => prev.map(e => e.id === id ? { ...e, title, body, category, body_format } as JournalEntry : e))
     await supabase
       .from('journal_entries')
-      .update({ title, body, category, updated_at: new Date().toISOString() })
+      .update({ title, body, category, body_format, updated_at: new Date().toISOString() } as Database['public']['Tables']['journal_entries']['Update'] & { body_format: string })
       .eq('id', id)
       .eq('user_id', USER_ID)
   }, [])
