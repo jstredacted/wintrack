@@ -256,6 +256,34 @@
   animation: modal-fade-in 0.2s ease-out both;
 }
 
+/* Tiptap editor — scoped ProseMirror styles */
+.tiptap-editor .ProseMirror {
+  outline: none;
+  min-height: 200px;
+}
+
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--muted-foreground);
+  opacity: 0.3;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap-editor h2 { font-size: 1.4rem; font-weight: 600; margin: 1rem 0 0.5rem; line-height: 1.2; }
+.tiptap-editor h3 { font-size: 1.15rem; font-weight: 600; margin: 0.75rem 0 0.25rem; line-height: 1.3; }
+.tiptap-editor p { line-height: 1.7; margin-bottom: 0.5rem; }
+.tiptap-editor ul, .tiptap-editor ol { padding-left: 1.5rem; }
+.tiptap-editor li { margin: 0.2rem 0; line-height: 1.6; }
+
+/* Tiptap content — scoped styles for rendering saved HTML in JournalEntryCard */
+.tiptap-content h2 { font-size: 1.4rem; font-weight: 600; margin: 1rem 0 0.5rem; line-height: 1.2; }
+.tiptap-content h3 { font-size: 1.15rem; font-weight: 600; margin: 0.75rem 0 0.25rem; line-height: 1.3; }
+.tiptap-content p { line-height: 1.7; margin-bottom: 0.5rem; }
+.tiptap-content ul, .tiptap-content ol { padding-left: 1.5rem; }
+.tiptap-content li { margin: 0.2rem 0; line-height: 1.6; }
+
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
 .dot-grid {
   background-image: radial-gradient(circle, oklch(0.5 0 0 / 0.06) 1px, transparent 1px);
