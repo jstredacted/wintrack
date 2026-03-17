@@ -1,10 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useFinance } from '@/hooks/useFinance';
+import { useBills } from '@/hooks/useBills';
 import { useExchangeRate } from '@/hooks/useExchangeRate';
 import { getCurrentMonth, getPrevMonth } from '@/lib/utils/month';
 import MonthStrip from '@/components/finance/MonthStrip';
 import BalanceHero from '@/components/finance/BalanceHero';
 import BudgetGauge from '@/components/finance/BudgetGauge';
+import BillsList from '@/components/finance/BillsList';
 import IncomeCard from '@/components/finance/IncomeCard';
 
 export default function FinancePage() {
@@ -19,6 +21,11 @@ export default function FinancePage() {
     toggleIncomeReceived,
   } = useFinance(selectedMonth);
   const { rate, loading: rateLoading } = useExchangeRate();
+  const {
+    bills,
+    togglePaid,
+    addBill,
+  } = useBills(monthData?.id ?? null);
 
   const isCurrentMonth = selectedMonth === getCurrentMonth();
   const isPastMonth = !isCurrentMonth;
@@ -100,6 +107,14 @@ export default function FinancePage() {
               limit={monthData?.budget_limit ?? 0}
               onUpdateLimit={updateBudgetLimit}
               readOnly={isPastMonth}
+            />
+
+            <BillsList
+              bills={bills}
+              onTogglePaid={togglePaid}
+              readOnly={isPastMonth}
+              onAddBill={addBill}
+              monthId={monthData?.id ?? ''}
             />
 
             <div className="space-y-2">
