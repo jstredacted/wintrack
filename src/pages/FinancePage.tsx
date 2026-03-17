@@ -139,14 +139,66 @@ export default function FinancePage() {
         ) : error ? (
           <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
         ) : isFutureMonth ? (
-          /* Future month: projected view only */
-          <div className="flex flex-col items-center py-12 px-6">
-            <span className="text-[2.667rem] font-light font-mono tabular-nums text-center">
-              {formatPHP(projectedBalance)}
-            </span>
-            <span className="text-[0.778rem] text-muted-foreground text-center mt-2">
-              Projected balance based on expected income and recurring bills
-            </span>
+          /* Future month: projected view with expected bills & income */
+          <div className="flex flex-col items-center py-8 px-6 gap-8 overflow-y-auto">
+            {/* Projected balance — hero */}
+            <div className="text-center">
+              <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground mb-2">Projected Balance</div>
+              <span className="text-[3rem] font-light font-mono tabular-nums text-center">
+                {formatPHP(projectedBalance)}
+              </span>
+            </div>
+
+            {/* Expected sections */}
+            <div className="flex gap-6 w-full max-w-3xl items-start">
+              {/* Expected Bills */}
+              <div className="flex-1 bg-card border border-border rounded-lg p-5">
+                <h3 className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Bills</h3>
+                {bills.length === 0 ? (
+                  <p className="text-[0.778rem] font-mono text-muted-foreground">No recurring bills</p>
+                ) : (
+                  <div className="space-y-0">
+                    {bills.map((bill) => (
+                      <div key={bill.id} className="flex items-center gap-3 py-2">
+                        <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{bill.name}</span>
+                        <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{formatPHP(bill.amount)}</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-border mt-2 pt-2 flex justify-between">
+                      <span className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">Total</span>
+                      <span className="font-mono text-[0.833rem] tabular-nums">{formatPHP(bills.reduce((s, b) => s + b.amount, 0))}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Expected Income */}
+              <div className="flex-1 bg-card border border-border rounded-lg p-5">
+                <h3 className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Income</h3>
+                {incomes.length === 0 ? (
+                  <p className="text-[0.778rem] font-mono text-muted-foreground">No income sources</p>
+                ) : (
+                  <div className="space-y-0">
+                    {incomes.map((income) => {
+                      const source = income.income_sources;
+                      const displayAmount = income.currency === 'USD' && rate
+                        ? formatPHP(income.expected_amount * rate)
+                        : formatPHP(income.expected_amount);
+                      return (
+                        <div key={income.id} className="flex items-center gap-3 py-2">
+                          <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate text-muted-foreground">{source?.name ?? 'Income'}</span>
+                          <span className="font-mono text-[0.833rem] tabular-nums shrink-0 text-muted-foreground">{displayAmount}</span>
+                        </div>
+                      );
+                    })}
+                    <div className="border-t border-border mt-2 pt-2 flex justify-between">
+                      <span className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground font-mono">Total</span>
+                      <span className="font-mono text-[0.833rem] tabular-nums">{formatPHP(totalIncome)}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         ) : (
           /* Current or past: horizontal views inside month barrel */

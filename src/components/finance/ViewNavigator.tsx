@@ -7,7 +7,7 @@ interface ViewNavigatorProps {
 
 export default function ViewNavigator({ viewIndex, onChangeView }: ViewNavigatorProps) {
   return (
-    <div className="flex items-center justify-center gap-4 py-4">
+    <div className="flex items-center justify-center gap-4 py-4 pb-6 shrink-0">
       {/* Left arrow (visible when on cards view) */}
       <button
         type="button"

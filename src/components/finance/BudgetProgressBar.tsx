@@ -115,7 +115,17 @@ export default function BudgetProgressBar({
 
       {/* Editable budget limit */}
       <div className="pt-1">
-        {editingBudget ? (
+        {readOnly ? (
+          budgetLimit > 0 ? (
+            <span className="text-[0.667rem] uppercase tracking-[0.2em] font-mono text-muted-foreground">
+              Budget: {formatPHP(budgetLimit)}
+            </span>
+          ) : (
+            <span className="text-[0.667rem] uppercase tracking-[0.2em] font-mono text-muted-foreground">
+              No budget set
+            </span>
+          )
+        ) : editingBudget ? (
           <div className="flex items-center gap-2">
             <span className="text-[0.778rem] font-mono text-muted-foreground">Budget:</span>
             <input
@@ -138,7 +148,7 @@ export default function BudgetProgressBar({
           <button
             type="button"
             onClick={startBudgetEdit}
-            disabled={readOnly || !onUpdateBudgetLimit}
+            disabled={!onUpdateBudgetLimit}
             className="text-[0.667rem] uppercase tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground transition-colors disabled:hover:text-muted-foreground"
           >
             {budgetLimit > 0
