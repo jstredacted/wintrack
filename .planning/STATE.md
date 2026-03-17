@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-03-17T11:58:14Z"
-last_activity: 2026-03-17 — Completed 04-03 (balance history + one-off income UI)
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-03-17T12:04:25.843Z"
+last_activity: 2026-03-17 — Completed 04-04 (waterfall chart + month view modes)
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 14
-  completed_plans: 12
-  percent: 83
+  completed_plans: 13
+  percent: 93
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Phase: 4 of 5 (Finance Extended)
-Plan: 3 of 5 in current phase
+Plan: 4 of 5 in current phase
 Status: In Progress
-Last activity: 2026-03-17 — Completed 04-03 (balance history + one-off income UI)
+Last activity: 2026-03-17 — Completed 04-04 (waterfall chart + month view modes)
 
-Progress: [████████░░] 83%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [████████░░] 83%
 | Phase 04 P01 | 4min | 2 tasks | 11 files |
 | Phase 04 P03 | 3min | 2 tasks | 5 files |
 | Phase 04 P02 | 3min | 2 tasks | 4 files |
+| Phase 04 P04 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,9 @@ Recent decisions affecting current work:
 - [Phase 04 P02]: Urgency borders use foreground opacity levels (20/40/70) with destructive for overdue
 - [Phase 04 P02]: Paid one-time bills filtered from list, recurring bills sort paid to bottom
 - [Phase 04 P02]: BillAddInline uses Enter to submit, Escape to cancel, auto-collapse on success
+- [Phase 04]: Raw SVG waterfall with viewBox for responsive scaling, no charting library
+- [Phase 04]: Future months show projected balance only (no waterfall, no bills, no income)
+- [Phase 04]: MonthStrip extended to 10 months (6 back + current + 3 forward)
 
 ### Research Flags
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T11:58:14Z
-Stopped at: Completed 04-03-PLAN.md
-Resume file: .planning/phases/04-finance-extended/04-04-PLAN.md
+Last session: 2026-03-17T12:04:25.841Z
+Stopped at: Completed 04-04-PLAN.md
+Resume file: None

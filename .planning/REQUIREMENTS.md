@@ -63,9 +63,9 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 ### Finance: Dashboard
 
 - [x] **FIN-01**: MonthStrip navigation to move between months (past shows history, future shows projections)
-- [ ] **FIN-02**: Current month waterfall view — balance cascading as each bill/expense is paid, showing remaining after each
-- [ ] **FIN-03**: Past months show final balance, paid bills, income received (read-only)
-- [ ] **FIN-04**: Future months show projected balance (expected income minus upcoming bills)
+- [x] **FIN-02**: Current month waterfall view — balance cascading as each bill/expense is paid, showing remaining after each
+- [x] **FIN-03**: Past months show final balance, paid bills, income received (read-only)
+- [x] **FIN-04**: Future months show projected balance (expected income minus upcoming bills)
 - [ ] **FIN-05**: Year overview showing 12 months with balance trajectory, total income, total expenses
 
 ### Finance: Balance History
@@ -167,9 +167,9 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | BILL-05 | Phase 4 | Complete |
 | BILL-06 | Phase 4 | Complete |
 | BILL-07 | Phase 4 | Complete |
-| FIN-02 | Phase 4 | Pending |
-| FIN-03 | Phase 4 | Pending |
-| FIN-04 | Phase 4 | Pending |
+| FIN-02 | Phase 4 | Complete |
+| FIN-03 | Phase 4 | Complete |
+| FIN-04 | Phase 4 | Complete |
 | FIN-05 | Phase 4 | Pending |
 | HIST-01 | Phase 4 | Complete |
 | HIST-02 | Phase 4 | Complete |
