@@ -74,6 +74,16 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
 
         if (cancelled) return;
 
+        // 2b. Populate monthly_bills from active templates (no-op if already exists)
+        await supabase.rpc('populate_monthly_bills', {
+          p_user_id: USER_ID,
+          p_month_id: (monthRow as Month).id,
+          p_year: year,
+          p_month: month,
+        });
+
+        if (cancelled) return;
+
         // 3. Fetch monthly_income joined with income_sources
         const { data: incomeData, error: incomeError } = await supabase
           .from('monthly_income')
@@ -107,16 +117,16 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
       const prev = monthData.current_balance;
       setMonthData((m) => (m ? { ...m, current_balance: newBalance } : m));
 
-      const { error: updateError } = await supabase
-        .from('months')
-        .update({ current_balance: newBalance })
-        .eq('id', monthData.id)
-        .eq('user_id', USER_ID);
+      const { error: rpcError } = await supabase.rpc('apply_balance_override', {
+        p_month_id: monthData.id,
+        p_new_balance: newBalance,
+        p_note: null,
+      });
 
-      if (updateError) {
+      if (rpcError) {
         // Rollback
         setMonthData((m) => (m ? { ...m, current_balance: prev } : m));
-        setError(updateError.message);
+        setError(rpcError.message);
       }
     },
     [monthData]

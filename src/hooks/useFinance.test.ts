@@ -135,29 +135,21 @@ describe('useFinance', () => {
     expect(result.current.monthData?.current_balance).toBe(45000);
   });
 
-  it('updateBalance updates months.current_balance', async () => {
+  it('updateBalance calls apply_balance_override RPC', async () => {
     const { useFinance } = await import('@/hooks/useFinance');
     const { result } = renderHook(() => useFinance('2026-03'));
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    // Make from().update().eq().eq() resolve
-    const updateChain: Record<string, ReturnType<typeof vi.fn>> = {};
-    updateChain.eq = vi.fn().mockReturnValue(updateChain);
-    updateChain.update = vi.fn().mockReturnValue(updateChain);
-    updateChain.then = vi.fn((cb: (v: unknown) => unknown) =>
-      Promise.resolve({ data: null, error: null }).then(cb)
-    );
-    mockFromFn.mockReturnValue(updateChain);
-
     await act(async () => {
       await result.current.updateBalance(50000);
     });
 
-    expect(mockFromFn).toHaveBeenCalledWith('months');
-    expect(updateChain.update).toHaveBeenCalledWith(
-      expect.objectContaining({ current_balance: 50000 })
-    );
+    expect(mockRpcFn).toHaveBeenCalledWith('apply_balance_override', {
+      p_month_id: 'month-1',
+      p_new_balance: 50000,
+      p_note: null,
+    });
   });
 
   it('toggleIncomeReceived calls apply_income_received RPC with net PHP', async () => {
