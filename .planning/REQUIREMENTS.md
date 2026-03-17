@@ -90,6 +90,8 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [ ] **MOB-05**: Finance pages responsive with stacked layout on mobile
 - [ ] **MOB-06**: DayStrip centers the current/selected day with carousel scrolling left (past) and right (future)
 - [ ] **MOB-07**: Fix DayStrip/header date mismatch when dayStartHour offset is active (off-by-one between strip dates and displayed date)
+- [ ] **MOB-08**: Fix consistency heatmap NaN wins count and incorrect intensity when dayStartHour offset is active
+- [ ] **MOB-09**: Fix rollover prompting for already-completed wins when completed after midnight but before dayStartHour boundary
 
 ## Future Requirements
 
@@ -168,10 +170,12 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | MOB-05 | Phase 5 | Pending |
 | MOB-06 | Phase 5 | Pending |
 | MOB-07 | Phase 5 | Pending |
+| MOB-08 | Phase 5 | Pending |
+| MOB-09 | Phase 5 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 51 total
-- Mapped to phases: 51
+- v2.0 requirements: 53 total
+- Mapped to phases: 53
 - Unmapped: 0
 
 ---
