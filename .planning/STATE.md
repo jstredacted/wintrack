@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-17T23:56:50.832Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-17T23:58:42.617Z"
 last_activity: 2026-03-18 — Completed 05-01 (dayStartHour bug fixes)
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
-  completed_plans: 16
+  completed_plans: 17
   percent: 93
 ---
 
@@ -60,6 +60,7 @@ Progress: [█████████░] 93%
 | Phase 04 P04 | 2min | 2 tasks | 2 files |
 | Phase 05 P03 | 2 | 2 tasks | 4 files |
 | Phase 05 P01 | 8min | 2 tasks | 6 files |
+| Phase 05 P02 | 3 | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,7 @@ Recent decisions affecting current work:
 - [Phase 05-03]: safe-area-inset-bottom applied via inline style to support env() CSS function for iPhone safe area
 - [Phase 05]: DayStrip derives all cell labels from logicalToday (offset-aware) rather than raw calendar Date
 - [Phase 05]: yesterdayWins query adds .eq('completed', false) for server-side filter rather than client-side exclusion
+- [Phase 05]: Tiptap v3 (3.20.4) with shouldRerenderOnTransaction:false; parseBodyForTiptap for backward-compatible plaintext migration; body_format typed via Row & extension pattern
 
 ### Research Flags
 
@@ -128,6 +130,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T23:56:50.830Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-17T23:58:42.615Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

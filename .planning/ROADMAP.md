@@ -132,4 +132,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. PIN Authentication | v2.0 | 1/2 | In Progress | - |
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
-| 5. Journal Rich Text & Mobile | 2/5 | In Progress|  | - |
+| 5. Journal Rich Text & Mobile | 3/5 | In Progress|  | - |

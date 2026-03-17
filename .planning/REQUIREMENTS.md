@@ -90,10 +90,10 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Journal Rich Text
 
-- [ ] **JRNL-01**: User can format journal entries with bold, italic, bullet lists, numbered lists, and headings (H2, H3)
-- [ ] **JRNL-02**: Formatting via keyboard shortcuts only (Cmd+B, Cmd+I, etc.) — no visible toolbar
-- [ ] **JRNL-03**: Existing plain-text journal entries render correctly after migration (backward compatible)
-- [ ] **JRNL-04**: Journal content stored as HTML in Supabase with body_format column for migration safety
+- [x] **JRNL-01**: User can format journal entries with bold, italic, bullet lists, numbered lists, and headings (H2, H3)
+- [x] **JRNL-02**: Formatting via keyboard shortcuts only (Cmd+B, Cmd+I, etc.) — no visible toolbar
+- [x] **JRNL-03**: Existing plain-text journal entries render correctly after migration (backward compatible)
+- [x] **JRNL-04**: Journal content stored as HTML in Supabase with body_format column for migration safety
 - [ ] **JRNL-05**: Journal count summary — per-month entry count on Finance/Year overview and total for the year
 
 ### Mobile Responsiveness
@@ -180,10 +180,10 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | ONEOFF-02 | Phase 4 | Complete |
 | ONEOFF-03 | Phase 4 | Complete |
 | ONEOFF-04 | Phase 4 | Complete |
-| JRNL-01 | Phase 5 | Pending |
-| JRNL-02 | Phase 5 | Pending |
-| JRNL-03 | Phase 5 | Pending |
-| JRNL-04 | Phase 5 | Pending |
+| JRNL-01 | Phase 5 | Complete |
+| JRNL-02 | Phase 5 | Complete |
+| JRNL-03 | Phase 5 | Complete |
+| JRNL-04 | Phase 5 | Complete |
 | JRNL-05 | Phase 5 | Pending |
 | MOB-01 | Phase 5 | Complete |
 | MOB-02 | Phase 5 | Complete |
