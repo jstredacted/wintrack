@@ -29,9 +29,9 @@ Three workstreams: (1) Tiptap rich text editor for journal entries with slash co
 - Breakpoint: `sm` (640px) — only phones get mobile layout, tablets keep desktop
 
 ### DayStrip + Night Owl Fixes
-- dayStartHour offset applies to wins and journal only — finance is NOT affected
+- dayStartHour offset applies to: win date attribution, streak calculation (journal entries before boundary count toward previous day's streak), DayStrip "today", heatmap cell dates, rollover logic
+- dayStartHour does NOT affect: journal recorded date (always actual calendar date), finance (calendar months)
 - DayStrip centers on the "logical today" (offset-aware): at 2:30 AM with dayStartHour=3, "today" is yesterday
-- This applies universally to: DayStrip date cells, header date display, win date attribution, journal date, heatmap cell dates
 - Heatmap: days with no wins show as empty cells (0 count, border only)
 - Rollover: must respect dayStartHour — wins completed before the boundary count as that "logical day"'s completions, not rollover candidates
 
