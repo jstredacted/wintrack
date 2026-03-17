@@ -91,13 +91,21 @@ export default function FinancePage() {
   // Projected balance for future months
   const projectedBalance = useMemo(() => {
     if (!isFutureMonth || !monthData) return 0;
-    const expectedIncome = incomes.reduce(
-      (sum, i) => sum + (i.net_php ?? i.expected_amount),
-      0
-    );
+
+    // Sum expected income, converting USD to PHP using current rate
+    const expectedIncome = incomes.reduce((sum, i) => {
+      if (i.net_php != null) return sum + i.net_php;
+      if (i.currency === 'USD' && rate) {
+        return sum + i.expected_amount * rate;
+      }
+      return sum + i.expected_amount;
+    }, 0);
+
+    // Sum all bill amounts for this future month
     const recurringBillsTotal = bills.reduce((sum, b) => sum + b.amount, 0);
+
     return monthData.starting_balance + expectedIncome - recurringBillsTotal;
-  }, [isFutureMonth, monthData, incomes, bills]);
+  }, [isFutureMonth, monthData, incomes, bills, rate]);
 
   return (
     <div>
