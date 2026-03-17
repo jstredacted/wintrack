@@ -47,7 +47,8 @@ export function useWins() {
           .from('wins')
           .select('title, id, category')
           .eq('win_date', yesterday)
-          .eq('user_id', USER_ID),
+          .eq('user_id', USER_ID)
+          .eq('completed', false),
       ]);
 
       if (cancelled) return;

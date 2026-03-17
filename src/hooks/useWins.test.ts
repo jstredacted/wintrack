@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { getLocalDateString } from '@/lib/utils/date';
 
@@ -8,12 +8,18 @@ vi.mock('@/stores/settingsStore', () => ({
   useSettingsStore: (selector: (s: { settings: typeof mockSettings }) => unknown) => selector({ settings: mockSettings }),
 }));
 
+// Track eq calls for assertion in tests
+const eqCalls: Array<[string, unknown]> = [];
+
 // Mock supabase
 vi.mock('@/lib/supabase', () => {
   const chain = () => {
     const obj = {
       select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockImplementation(function(this: unknown, col: string, val: unknown) {
+        eqCalls.push([col, val]);
+        return obj;
+      }),
       order: vi.fn().mockReturnThis(),
       insert: vi.fn().mockReturnThis(),
       update: vi.fn().mockReturnThis(),
@@ -33,6 +39,7 @@ describe('useWins — night-owl offset', () => {
   afterEach(() => {
     vi.useRealTimers();
     mockSettings.dayStartHour = 0;
+    eqCalls.length = 0;
   });
 
   it('with dayStartHour=0, today resolves to current calendar date', () => {
@@ -67,5 +74,15 @@ describe('useWins — night-owl offset', () => {
     // After our changes, the yesterday calculation should use setDate
     // This is a source-level check
     expect(src).not.toMatch(/yesterday.*86400000|86400000.*yesterday/s);
+  });
+
+  it('yesterdayWins query applies .eq("completed", false) to exclude completed wins from rollover', async () => {
+    const { useWins } = await import('@/hooks/useWins');
+    const { result } = renderHook(() => useWins());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    // Verify that eq('completed', false) was called as part of the query chain
+    const completedFilter = eqCalls.find(([col, val]) => col === 'completed' && val === false);
+    expect(completedFilter).toBeDefined();
   });
 });
