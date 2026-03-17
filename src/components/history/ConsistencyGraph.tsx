@@ -97,7 +97,13 @@ export default function ConsistencyGraph({ completionMap = {}, days = 84, daySta
   // Total wins summary
   let totalCompleted = 0;
   for (const cell of cells) {
-    if (cell.entry) totalCompleted += typeof cell.entry === 'boolean' ? 1 : cell.entry.completed;
+    if (cell.entry) {
+      if (typeof cell.entry === 'boolean') {
+        totalCompleted += cell.entry ? 1 : 0;
+      } else {
+        totalCompleted += Number(cell.entry.completed) || 0;
+      }
+    }
   }
 
   const gridW = weeks.length * COL - GAP;

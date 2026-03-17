@@ -17,13 +17,16 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const cells = [];
-  const today = new Date();
+  // Compute logical today using dayStartHour offset, then build cells backward from it.
+  // This ensures dateStr, dayAbbr, and dateNum all agree on the same offset-aware date.
+  const logicalToday = getLocalDateString(new Date(), dayStartHour);
+  const [ly, lm, ld] = logicalToday.split('-').map(Number);
   for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const dateStr = getLocalDateString(d, dayStartHour);
-    const dayAbbr = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(d);
-    const dateNum = d.getDate();
+    const base = new Date(ly, lm - 1, ld);
+    base.setDate(base.getDate() - i);
+    const dateStr = new Intl.DateTimeFormat('en-CA').format(base);
+    const dayAbbr = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(base);
+    const dateNum = base.getDate();
     const completed = completionMap[dateStr] === true;
     cells.push({ date: dateStr, dayAbbr, dateNum, completed });
   }
