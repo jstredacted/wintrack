@@ -15,7 +15,7 @@ export default function BalanceSparkline({ months }: BalanceSparklineProps) {
   const range = max - min || 1; // Avoid division by zero
 
   const viewBoxWidth = 400;
-  const viewBoxHeight = 48;
+  const viewBoxHeight = 80;
   const padding = 4;
   const usableWidth = viewBoxWidth - padding * 2;
   const usableHeight = viewBoxHeight - padding * 2;
@@ -32,7 +32,7 @@ export default function BalanceSparkline({ months }: BalanceSparklineProps) {
     <svg
       viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
       className="w-full"
-      style={{ height: 48 }}
+      style={{ height: 80 }}
       preserveAspectRatio="none"
     >
       <path

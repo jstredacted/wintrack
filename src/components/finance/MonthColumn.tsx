@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { MonthSummary } from '@/types/finance';
 
 interface MonthColumnProps {
@@ -20,7 +21,14 @@ function abbreviateAmount(amount: number): string {
   return `${sign}P${Math.round(abs)}`;
 }
 
+interface TooltipData {
+  x: number;
+  y: number;
+  label: string;
+}
+
 export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumnProps) {
+  const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const monthIndex = parseInt(summary.month.split('-')[1], 10) - 1;
   const abbr = MONTH_ABBR[monthIndex];
 
@@ -32,16 +40,26 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
   const expensePercent = totalIncome > 0 ? Math.min((totalExpenses / totalIncome) * 100, 100) : 0;
   const oneoffPercent = totalIncome > 0 ? Math.min((totalOneoff / totalIncome) * 100, 100 - expensePercent) : 0;
 
-  const tooltipText = `Income: ${abbreviateAmount(totalIncome)} / Expenses: ${abbreviateAmount(totalExpenses)} / One-off: ${abbreviateAmount(totalOneoff)}`;
+  const handleSegmentEnter = (e: React.MouseEvent, label: string) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setTooltip({
+      x: rect.left + rect.width / 2,
+      y: rect.top - 8,
+      label,
+    });
+  };
+
+  const handleSegmentLeave = () => {
+    setTooltip(null);
+  };
 
   return (
     <button
       onClick={onClick}
-      title={tooltipText}
       className={[
-        'flex flex-col items-center px-2 py-2 rounded transition-colors cursor-pointer',
+        'relative flex flex-col items-center px-2 py-2 rounded transition-colors cursor-pointer',
         'hover:bg-card/80',
-        isCurrent ? 'border border-foreground/30' : '',
+        isCurrent ? 'border-2 border-foreground/30' : '',
       ].join(' ')}
     >
       {/* Month label */}
@@ -49,32 +67,50 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
         {abbr}
       </span>
 
-      {/* Ending balance */}
-      <span className="text-[1.333rem] font-mono tabular-nums font-light">
-        {abbreviateAmount(summary.ending_balance)}
-      </span>
-
       {/* Vertical progress bar */}
-      <div className="w-full h-32 bg-card rounded relative overflow-hidden mt-1">
+      <div className="w-full h-40 bg-card rounded relative overflow-hidden mt-1">
         {/* Expense fill from bottom */}
         {expensePercent > 0 && (
           <div
-            className="absolute bottom-0 left-0 right-0 bg-foreground/30 transition-all duration-300"
+            className="absolute bottom-0 left-0 right-0 bg-foreground/30 transition-all duration-300 hover:bg-foreground/50"
             style={{ height: `${expensePercent}%` }}
+            onMouseEnter={(e) => handleSegmentEnter(e, `Expenses: ${abbreviateAmount(totalExpenses)}`)}
+            onMouseLeave={handleSegmentLeave}
           />
         )}
 
         {/* One-off extension above expense fill */}
         {oneoffPercent > 0 && (
           <div
-            className="absolute left-0 right-0 bg-foreground/15 transition-all duration-300"
+            className="absolute left-0 right-0 bg-foreground/15 transition-all duration-300 hover:bg-foreground/30"
             style={{
               bottom: `${expensePercent}%`,
               height: `${oneoffPercent}%`,
             }}
+            onMouseEnter={(e) => handleSegmentEnter(e, `One-off: ${abbreviateAmount(totalOneoff)}`)}
+            onMouseLeave={handleSegmentLeave}
           />
         )}
       </div>
+
+      {/* Ending balance below bar */}
+      <span className="text-[0.778rem] font-mono tabular-nums font-light mt-1 text-muted-foreground">
+        {abbreviateAmount(summary.ending_balance)}
+      </span>
+
+      {/* Tooltip */}
+      {tooltip && (
+        <div
+          className="fixed z-50 pointer-events-none bg-foreground text-background text-[0.667rem] font-mono px-2 py-1 rounded whitespace-nowrap"
+          style={{
+            left: tooltip.x,
+            top: tooltip.y,
+            transform: 'translate(-50%, -100%)',
+          }}
+        >
+          {tooltip.label}
+        </div>
+      )}
     </button>
   );
 }
