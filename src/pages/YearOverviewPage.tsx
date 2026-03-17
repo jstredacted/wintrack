@@ -23,7 +23,7 @@ export default function YearOverviewPage() {
   };
 
   return (
-    <div className="max-w-[1100px] mx-auto px-8 py-12 space-y-6">
+    <div className="max-w-[1100px] mx-auto px-8 py-12 space-y-6 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-[1.333rem] font-mono font-light">{year} Overview</h1>
@@ -78,11 +78,13 @@ export default function YearOverviewPage() {
             </div>
           </div>
 
-          {/* Year grid */}
-          <YearGrid
-            months={months}
-            onMonthClick={handleMonthClick}
-          />
+          {/* Year grid — fills remaining space */}
+          <div className="flex-1">
+            <YearGrid
+              months={months}
+              onMonthClick={handleMonthClick}
+            />
+          </div>
         </>
       )}
     </div>

@@ -109,18 +109,18 @@ export default function IncomeChecklistCard({
                   onClick={() => handleToggle(income)}
                   disabled={readOnly || isToggling || (isUSD && rateLoading && !income.received)}
                   className={`flex items-center gap-3 w-full text-left py-3 transition-opacity ${
-                    income.received ? 'opacity-40' : ''
+                    income.received ? 'opacity-60' : ''
                   } ${isToggling ? 'opacity-30' : ''} disabled:cursor-default`}
                 >
                   {income.received ? (
                     <CheckCircle2 size={16} className="text-foreground shrink-0" />
                   ) : (
-                    <Circle size={16} className="text-muted-foreground shrink-0 opacity-30" />
+                    <Circle size={16} className="text-muted-foreground/30 shrink-0" />
                   )}
-                  <span className="font-mono text-[0.833rem] flex-1 min-w-0 truncate">
+                  <span className={`font-mono text-[0.833rem] flex-1 min-w-0 truncate ${income.received ? 'line-through' : ''}`}>
                     {source?.name ?? 'Income'}
                   </span>
-                  <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
+                  <span className={`font-mono text-[0.833rem] tabular-nums shrink-0 ${income.received ? 'line-through' : ''}`}>
                     {getDisplayAmount(income)}
                   </span>
                 </button>
