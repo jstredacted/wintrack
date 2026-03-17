@@ -1,13 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { useBills } from '@/hooks/useBills';
+import { useBalanceHistory } from '@/hooks/useBalanceHistory';
+import { useOneOffIncome } from '@/hooks/useOneOffIncome';
 import { useExchangeRate } from '@/hooks/useExchangeRate';
 import { getCurrentMonth, getPrevMonth } from '@/lib/utils/month';
 import MonthStrip from '@/components/finance/MonthStrip';
 import BalanceHero from '@/components/finance/BalanceHero';
+import BalanceHistoryIndicator from '@/components/finance/BalanceHistoryIndicator';
+import BalanceHistoryModal from '@/components/finance/BalanceHistoryModal';
 import BudgetGauge from '@/components/finance/BudgetGauge';
 import BillsList from '@/components/finance/BillsList';
 import IncomeCard from '@/components/finance/IncomeCard';
+import OneOffIncomeSection from '@/components/finance/OneOffIncomeSection';
 
 export default function FinancePage() {
   const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonth());
@@ -26,6 +31,20 @@ export default function FinancePage() {
     togglePaid,
     addBill,
   } = useBills(monthData?.id ?? null);
+  const {
+    changes: balanceChanges,
+    lastChange,
+    revertChange,
+    refetch: refetchHistory,
+  } = useBalanceHistory(monthData?.id ?? null);
+  const {
+    entries: oneOffEntries,
+    addEntry: addOneOff,
+    deleteEntry: deleteOneOff,
+    updateEntry: updateOneOff,
+  } = useOneOffIncome(monthData?.id ?? null);
+
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
 
   const isCurrentMonth = selectedMonth === getCurrentMonth();
   const isPastMonth = !isCurrentMonth;
@@ -98,8 +117,16 @@ export default function FinancePage() {
           <>
             <BalanceHero
               balance={monthData?.current_balance ?? 0}
-              onUpdateBalance={updateBalance}
+              onUpdateBalance={async (newBalance) => {
+                await updateBalance(newBalance);
+                refetchHistory();
+              }}
               readOnly={false}
+            />
+
+            <BalanceHistoryIndicator
+              lastChange={lastChange}
+              onClick={() => setHistoryModalOpen(true)}
             />
 
             <BudgetGauge
@@ -142,9 +169,27 @@ export default function FinancePage() {
                 ))}
               </div>
             </div>
+
+            <OneOffIncomeSection
+              entries={oneOffEntries}
+              onAdd={addOneOff}
+              onDelete={deleteOneOff}
+              onUpdate={updateOneOff}
+              readOnly={isPastMonth}
+            />
           </>
         )}
       </div>
+
+      <BalanceHistoryModal
+        changes={balanceChanges}
+        onRevert={async (id) => {
+          await revertChange(id);
+          refetchHistory();
+        }}
+        onClose={() => setHistoryModalOpen(false)}
+        open={historyModalOpen}
+      />
     </div>
   );
 }
