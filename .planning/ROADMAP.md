@@ -101,7 +101,7 @@ Plans:
 ### Phase 5: Journal Rich Text & Mobile
 **Goal**: Journal entries support rich formatting and all pages work well on mobile devices
 **Depends on**: Phase 4
-**Requirements**: JRNL-01, JRNL-02, JRNL-03, JRNL-04, MOB-01, MOB-02, MOB-03, MOB-04, MOB-05, MOB-06, MOB-07, MOB-08, MOB-09
+**Requirements**: JRNL-01, JRNL-02, JRNL-03, JRNL-04, MOB-01, MOB-02, MOB-03, MOB-04, MOB-05, MOB-06, MOB-07, MOB-08, MOB-09, MOB-10
 **Success Criteria** (what must be TRUE):
   1. User can format journal entries with bold, italic, lists, and headings using keyboard shortcuts (no visible toolbar)
   2. Existing plain-text journal entries render correctly without data loss after Tiptap migration

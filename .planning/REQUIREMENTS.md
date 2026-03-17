@@ -92,6 +92,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [ ] **MOB-07**: Fix DayStrip/header date mismatch when dayStartHour offset is active (off-by-one between strip dates and displayed date)
 - [ ] **MOB-08**: Fix consistency heatmap NaN wins count and incorrect intensity when dayStartHour offset is active
 - [ ] **MOB-09**: Fix rollover prompting for already-completed wins when completed after midnight but before dayStartHour boundary
+- [ ] **MOB-10**: Settings page layout consistency — constrain content width, align heatmap and category radar, cap income source card width
 
 ## Future Requirements
 
@@ -172,10 +173,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | MOB-07 | Phase 5 | Pending |
 | MOB-08 | Phase 5 | Pending |
 | MOB-09 | Phase 5 | Pending |
+| MOB-10 | Phase 5 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 53 total
-- Mapped to phases: 53
+- v2.0 requirements: 54 total
+- Mapped to phases: 54
 - Unmapped: 0
 
 ---
