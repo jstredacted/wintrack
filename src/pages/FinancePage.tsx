@@ -214,8 +214,8 @@ export default function FinancePage() {
                 style={{ transform: `translateX(${viewIndex * -100}%)` }}
               >
                 {/* View 0: Overview */}
-                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full py-8">
-                  <div className="max-w-[600px] w-full flex flex-col items-center gap-10">
+                <div className="w-full shrink-0 px-6 overflow-y-auto flex flex-col items-center justify-center h-full py-12">
+                  <div className="max-w-[600px] w-full flex flex-col items-center gap-0">
                     <BudgetProgressBar
                       paidTotal={paidTotal}
                       unpaidTotal={unpaidTotal}
@@ -226,32 +226,34 @@ export default function FinancePage() {
                     />
 
                     {/* Summary stats row */}
-                    <div className="flex justify-between w-full max-w-lg">
+                    <div className="flex justify-between w-full max-w-lg mt-8">
                       <div className="text-center">
-                        <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Total Income</div>
+                        <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
                         <div className="text-sm font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Total Expenses</div>
+                        <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
                         <div className="text-sm font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-[0.667rem] uppercase tracking-[0.2em] text-muted-foreground">Savings Rate</div>
+                        <div className="text-[0.667rem] uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
                         <div className="text-sm font-mono tabular-nums">{savingsRate}%</div>
                       </div>
                     </div>
 
-                    <BalanceDisplay
-                      currentBalance={monthData?.current_balance ?? 0}
-                      startingBalance={monthData?.starting_balance ?? 0}
-                      lastChange={lastChange}
-                      onUpdateBalance={async (newBalance) => {
-                        await updateBalance(newBalance);
-                        refetchHistory();
-                      }}
-                      onOpenHistory={() => setHistoryModalOpen(true)}
-                      readOnly={isPastMonth}
-                    />
+                    <div className="mt-10">
+                      <BalanceDisplay
+                        currentBalance={monthData?.current_balance ?? 0}
+                        startingBalance={monthData?.starting_balance ?? 0}
+                        lastChange={lastChange}
+                        onUpdateBalance={async (newBalance) => {
+                          await updateBalance(newBalance);
+                          refetchHistory();
+                        }}
+                        onOpenHistory={() => setHistoryModalOpen(true)}
+                        readOnly={isPastMonth}
+                      />
+                    </div>
                   </div>
                 </div>
 
