@@ -81,23 +81,14 @@ export default function FinancePage() {
     return result;
   }, []);
 
-  // Calculate totalSpent: starting_balance + total received income - current_balance
-  const totalIncomeReceived = useMemo(() => {
-    return incomes
-      .filter((i) => i.received)
-      .reduce((sum, i) => sum + (i.net_php ?? i.expected_amount), 0);
-  }, [incomes]);
-
+  // totalSpent: sum of paid bill amounts
   const totalSpent = useMemo(() => {
-    if (!monthData) return 0;
-    return Math.max(
-      0,
-      monthData.starting_balance + totalIncomeReceived - monthData.current_balance
-    );
-  }, [monthData, totalIncomeReceived]);
+    return bills
+      .filter((b) => b.paid)
+      .reduce((sum, b) => sum + b.amount, 0);
+  }, [bills]);
 
   // Projected balance for future months
-  // starting_balance is carry-forwarded from the previous month's ending balance
   const projectedBalance = useMemo(() => {
     if (!isFutureMonth || !monthData) return 0;
     const expectedIncome = incomes.reduce(
@@ -125,7 +116,7 @@ export default function FinancePage() {
       )}
 
       {/* Content area */}
-      <div className="max-w-[1100px] mx-auto px-8 py-12 space-y-6">
+      <div className="max-w-[1100px] mx-auto px-8 py-12">
         {loading ? (
           <p className="text-sm font-mono text-muted-foreground text-center">
             Loading...
@@ -145,83 +136,90 @@ export default function FinancePage() {
             </span>
           </div>
         ) : (
-          /* Current or past month: full layout */
-          <>
-            <BalanceHero
-              balance={monthData?.current_balance ?? 0}
-              onUpdateBalance={async (newBalance) => {
-                await updateBalance(newBalance);
-                refetchHistory();
-              }}
-              readOnly={isPastMonth}
-            />
-
-            <BalanceHistoryIndicator
-              lastChange={lastChange}
-              onClick={() => setHistoryModalOpen(true)}
-            />
-
-            <div className="flex items-center justify-center gap-8">
-              <BudgetGauge
-                spent={totalSpent}
-                limit={monthData?.budget_limit ?? 0}
-                onUpdateLimit={updateBudgetLimit}
+          /* Current or past month: two-column layout */
+          <div className="flex gap-8">
+            {/* Left column */}
+            <div className="flex-1 space-y-6 min-w-0">
+              <BalanceHero
+                balance={monthData?.current_balance ?? 0}
+                onUpdateBalance={async (newBalance) => {
+                  await updateBalance(newBalance);
+                  refetchHistory();
+                }}
                 readOnly={isPastMonth}
               />
-              <ExpenseGauge bills={bills} />
+
+              <BalanceHistoryIndicator
+                lastChange={lastChange}
+                onClick={() => setHistoryModalOpen(true)}
+              />
+
+              <div className="space-y-2">
+                <h2 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
+                  INCOME
+                </h2>
+                {incomes.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-foreground font-mono">No income sources</p>
+                    <p className="text-muted-foreground text-[0.778rem] mt-1">
+                      Add your first income source in Settings to start tracking.
+                    </p>
+                  </div>
+                )}
+                <div className="space-y-2">
+                  {incomes.map((income) => (
+                    <IncomeCard
+                      key={income.id}
+                      income={income}
+                      rate={rate}
+                      rateLoading={rateLoading}
+                      onToggleReceived={toggleIncomeReceived}
+                      readOnly={isPastMonth}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <BillsList
+                bills={bills}
+                onTogglePaid={togglePaid}
+                readOnly={isPastMonth}
+                onAddBill={addBill}
+                monthId={monthData?.id ?? ''}
+              />
+
+              <OneOffIncomeSection
+                entries={oneOffEntries}
+                onAdd={async (amount, date, note) => {
+                  await addOneOff(amount, date, note);
+                  refetchMonth();
+                }}
+                onDelete={async (id) => {
+                  await deleteOneOff(id);
+                  refetchMonth();
+                }}
+                onUpdate={async (id, fields) => {
+                  await updateOneOff(id, fields);
+                  refetchMonth();
+                }}
+                readOnly={isPastMonth}
+              />
             </div>
 
-            <BillsList
-              bills={bills}
-              onTogglePaid={togglePaid}
-              readOnly={isPastMonth}
-              onAddBill={addBill}
-              monthId={monthData?.id ?? ''}
-            />
-
-            <div className="space-y-2">
-              <h2 className="font-mono text-[0.778rem] uppercase tracking-widest text-muted-foreground">
-                INCOME
-              </h2>
-              {incomes.length === 0 && (
-                <div className="text-center py-8">
-                  <p className="text-foreground font-mono">No income sources</p>
-                  <p className="text-muted-foreground text-[0.778rem] mt-1">
-                    Add your first income source in Settings to start tracking.
-                  </p>
-                </div>
-              )}
-              <div className="space-y-2">
-                {incomes.map((income) => (
-                  <IncomeCard
-                    key={income.id}
-                    income={income}
-                    rate={rate}
-                    rateLoading={rateLoading}
-                    onToggleReceived={toggleIncomeReceived}
-                    readOnly={isPastMonth}
-                  />
-                ))}
+            {/* Right column - sticky gauges */}
+            <div className="w-80 shrink-0 hidden md:block">
+              <div className="sticky top-4 space-y-6">
+                <BudgetGauge
+                  spent={totalSpent}
+                  limit={monthData?.budget_limit ?? 0}
+                  onUpdateLimit={updateBudgetLimit}
+                  readOnly={isPastMonth}
+                  size={200}
+                />
+                <ExpenseGauge bills={bills} size={200} />
               </div>
             </div>
-
-            <OneOffIncomeSection
-              entries={oneOffEntries}
-              onAdd={async (amount, date, note) => {
-                await addOneOff(amount, date, note);
-                refetchMonth();
-              }}
-              onDelete={async (id) => {
-                await deleteOneOff(id);
-                refetchMonth();
-              }}
-              onUpdate={async (id, fields) => {
-                await updateOneOff(id, fields);
-                refetchMonth();
-              }}
-              readOnly={isPastMonth}
-            />
-          </>
+          </div>
         )}
       </div>
 
