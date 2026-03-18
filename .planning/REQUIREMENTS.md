@@ -102,12 +102,12 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [x] **MOB-02**: SideNav collapses to bottom tab bar on mobile widths
 - [x] **MOB-03**: Touch targets minimum 44x44px on all interactive elements
 - [x] **MOB-04**: No horizontal scroll on any page at mobile widths
-- [ ] **MOB-05**: Finance pages responsive with stacked layout on mobile
-- [ ] **MOB-06**: DayStrip centers the current/selected day with carousel scrolling left (past) and right (future)
+- [x] **MOB-05**: Finance pages responsive with stacked layout on mobile
+- [x] **MOB-06**: DayStrip centers the current/selected day with carousel scrolling left (past) and right (future)
 - [x] **MOB-07**: Fix DayStrip/header date mismatch when dayStartHour offset is active (off-by-one between strip dates and displayed date)
 - [x] **MOB-08**: Fix consistency heatmap NaN wins count and incorrect intensity when dayStartHour offset is active
 - [x] **MOB-09**: Fix rollover prompting for already-completed wins when completed after midnight but before dayStartHour boundary
-- [ ] **MOB-10**: Layout consistency audit — constrain all page content widths, align heatmap and category radar, cap card/list widths universally across all pages (Settings, Finance, Today, Journal) so nothing stretches edge-to-edge on desktop
+- [x] **MOB-10**: Layout consistency audit — constrain all page content widths, align heatmap and category radar, cap card/list widths universally across all pages (Settings, Finance, Today, Journal) so nothing stretches edge-to-edge on desktop
 
 ## Future Requirements
 
@@ -189,12 +189,12 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | MOB-02 | Phase 5 | Complete |
 | MOB-03 | Phase 5 | Complete |
 | MOB-04 | Phase 5 | Complete |
-| MOB-05 | Phase 5 | Pending |
-| MOB-06 | Phase 5 | Pending |
+| MOB-05 | Phase 5 | Complete |
+| MOB-06 | Phase 5 | Complete |
 | MOB-07 | Phase 5 | Complete |
 | MOB-08 | Phase 5 | Complete |
 | MOB-09 | Phase 5 | Complete |
-| MOB-10 | Phase 5 | Pending |
+| MOB-10 | Phase 5 | Complete |
 
 **Coverage:**
 - v2.0 requirements: 60 total
