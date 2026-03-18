@@ -32,7 +32,7 @@ export default function JournalPage() {
   if (loading) return null
 
   return (
-    <div className="flex flex-col min-h-svh px-16 py-12">
+    <div className="flex flex-col min-h-svh px-4 sm:px-16 py-12 max-w-[1000px] mx-auto w-full">
       {/* Header */}
       <div className="mb-10">
         <h1 className="text-5xl font-bold leading-none tracking-tight">Journal</h1>

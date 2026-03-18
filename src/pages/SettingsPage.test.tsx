@@ -25,10 +25,45 @@ vi.mock('@/hooks/useHistory', () => {
   };
 });
 
+vi.mock('@/hooks/useIncomeConfig', () => ({
+  useIncomeConfig: () => ({
+    sources: [],
+    loading: false,
+    addSource: vi.fn(),
+    updateSource: vi.fn(),
+    removeSource: vi.fn(),
+  }),
+}));
+
 vi.mock('@/components/history/ConsistencyGraph', () => ({
   default: (_props: { completionMap: Record<string, boolean> }) => (
     <div data-testid="consistency-graph" />
   ),
+}));
+
+vi.mock('@/components/history/CategoryRadar', () => ({
+  default: () => <div data-testid="category-radar" />,
+}));
+
+vi.mock('@/components/NotificationPermission', () => ({
+  default: () => <div data-testid="notification-permission" />,
+}));
+
+vi.mock('@/components/theme/ThemeToggle', () => ({
+  default: () => <button data-testid="theme-toggle">Theme</button>,
+}));
+
+vi.mock('@/stores/pinStore', () => ({
+  usePinStore: { getState: () => ({ setGateState: vi.fn() }) },
+}));
+
+vi.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: () => ({
+      select: () => ({ eq: () => ({ eq: () => Promise.resolve({ data: [] }) }) }),
+      update: () => ({ eq: () => Promise.resolve({}) }),
+    }),
+  },
 }));
 
 describe('SettingsPage', () => {
@@ -63,5 +98,19 @@ describe('SettingsPage', () => {
   it('renders ConsistencyGraph', () => {
     render(<SettingsPage />);
     expect(screen.getByTestId('consistency-graph')).toBeInTheDocument();
+  });
+
+  it('renders 4 tab triggers', () => {
+    render(<SettingsPage />);
+    expect(screen.getByRole('tab', { name: 'General' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Notifications' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Income' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Security' })).toBeInTheDocument();
+  });
+
+  it('defaults to General tab active', () => {
+    render(<SettingsPage />);
+    const generalTab = screen.getByRole('tab', { name: 'General' });
+    expect(generalTab).toHaveAttribute('data-state', 'active');
   });
 });

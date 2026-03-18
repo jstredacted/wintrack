@@ -81,7 +81,7 @@ export default function TodayPage() {
   const showRollForward = isToday && yesterdayWins.length > 0 && rollForwardOfferedDate !== today;
 
   return (
-    <div className="flex flex-col min-h-svh px-16 py-12 gap-10">
+    <div className="flex flex-col min-h-svh px-4 sm:px-16 py-12 gap-10 max-w-[1000px] mx-auto w-full">
 
       {/* Fixed header — greeting + date + DayStrip stay pinned */}
       <div>
@@ -94,7 +94,7 @@ export default function TodayPage() {
       </div>
 
       {/* DayStrip -- always mounted, edge-to-edge bleed */}
-      <div className="mb-0 -mx-16 px-16 border-y border-border/30 py-4 -mt-4">
+      <div className="mb-0 -mx-4 sm:-mx-16 px-4 sm:px-16 border-y border-border/30 py-4 -mt-4">
         <DayStrip
           completionMap={mergedCompletionMap}
           selectedDate={selectedDate}
