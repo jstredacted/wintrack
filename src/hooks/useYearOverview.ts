@@ -19,6 +19,7 @@ function emptyMonth(year: number, monthNum: string): MonthSummary {
     total_income: 0,
     total_expenses: 0,
     total_oneoff: 0,
+    journal_count: 0,
   };
 }
 
@@ -51,6 +52,7 @@ export function useYearOverview(year: number): UseYearOverviewResult {
           total_income: Number(raw.total_income) || 0,
           total_expenses: Number(raw.total_expenses) || 0,
           total_oneoff: Number(raw.total_oneoff) || 0,
+          journal_count: Number(raw.journal_count) || 0,
         }));
 
         // Build lookup from returned data

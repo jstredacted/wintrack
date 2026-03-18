@@ -110,4 +110,5 @@ export interface MonthSummary {
   total_income: number;
   total_expenses: number;
   total_oneoff: number;
+  journal_count: number;
 }
