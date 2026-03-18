@@ -19,7 +19,8 @@ export default function YearOverviewPage() {
     const totalExpenses = activeMonths.reduce((s, m) => s + Number(m.total_expenses), 0);
     const net = totalIncome - totalExpenses;
     const savingsRate = totalIncome > 0 ? Math.round((1 - totalExpenses / totalIncome) * 100) : 0;
-    return { totalIncome, totalExpenses, net, savingsRate };
+    const totalJournalEntries = months.reduce((sum, m) => sum + (m.journal_count || 0), 0);
+    return { totalIncome, totalExpenses, net, savingsRate, totalJournalEntries };
   }, [months]);
 
   const handleMonthClick = (month: string) => {
@@ -27,7 +28,7 @@ export default function YearOverviewPage() {
   };
 
   return (
-    <div className="max-w-[1100px] mx-auto px-8 py-12 space-y-6 flex flex-col h-full">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-12 space-y-6 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-[1.333rem] font-mono font-light">{year} Overview</h1>
@@ -43,7 +44,7 @@ export default function YearOverviewPage() {
       ) : (
         <>
           {/* Year summary row */}
-          <div className="flex items-center justify-center gap-8 py-4 border-b border-border">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 py-4 border-b border-border">
             <div className="text-center">
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
                 Total Income
@@ -74,6 +75,14 @@ export default function YearOverviewPage() {
               </p>
               <p className="text-[1.333rem] font-mono tabular-nums font-light">
                 {summary.savingsRate}%
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
+                Journal Entries
+              </p>
+              <p className="text-[1.333rem] font-mono tabular-nums font-light">
+                {summary.totalJournalEntries}
               </p>
             </div>
           </div>

@@ -77,6 +77,16 @@ export default function MonthColumn({ summary, isCurrent, onClick }: MonthColumn
         </div>
       </div>
 
+      {/* Journal count — shown above balance when present */}
+      {summary.journal_count > 0 && (
+        <div
+          className="text-[0.6rem] font-mono tabular-nums text-muted-foreground/60 shrink-0 w-full text-center"
+          title="Journal entries"
+        >
+          {summary.journal_count}
+        </div>
+      )}
+
       {/* Balance at bottom — abbreviated to prevent overlap */}
       <div className="text-xs font-mono tabular-nums text-muted-foreground pb-1.5 shrink-0 w-full text-center px-0.5">
         {hasActivity ? abbreviateBalance(displayBalance) : '\u2014'}
