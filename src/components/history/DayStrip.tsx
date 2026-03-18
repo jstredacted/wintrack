@@ -38,13 +38,19 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
   };
 
-  // Scroll to today (rightmost) on mount
+  // Scroll to center the selected day on mount and when selectedDate changes
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollLeft = el.scrollWidth;
+    const selectedCell = el.querySelector(`[data-date="${selectedDate}"]`) as HTMLElement;
+    if (selectedCell) {
+      const cellCenter = selectedCell.offsetLeft + selectedCell.offsetWidth / 2;
+      el.scrollLeft = cellCenter - el.clientWidth / 2;
+    } else {
+      el.scrollLeft = el.scrollWidth; // fallback: scroll to end
+    }
     requestAnimationFrame(updateScrollState);
-  }, []);
+  }, [selectedDate]);
 
   const scroll = (dir: number) => {
     const el = scrollRef.current;
@@ -85,6 +91,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
             <button
               key={date}
               data-testid="day-cell"
+              data-date={date}
               aria-label={date}
               aria-pressed={isSelected}
               data-completed={completed ? 'true' : 'false'}

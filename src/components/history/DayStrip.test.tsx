@@ -43,6 +43,15 @@ describe('DayStrip', () => {
     expect(onSelectDate).toHaveBeenCalledWith(expect.any(String));
   });
 
+  it('centers the selected date cell in the scroll container', () => {
+    render(<DayStrip completionMap={{}} selectedDate={today} onSelectDate={vi.fn()} days={7} />);
+    const cells = screen.getAllByTestId('day-cell');
+    // Verify selected cell has data-date attribute matching the selectedDate
+    const selectedCell = cells.find((c) => c.getAttribute('data-date') === today);
+    expect(selectedCell).toBeDefined();
+    expect(selectedCell).toHaveAttribute('data-date', today);
+  });
+
   it('when dayStartHour=3 and current time is 2:30 AM, the rightmost cell dateStr and dateNum both represent yesterday', () => {
     // At 2:30 AM with dayStartHour=3, the logical day is "yesterday"
     vi.useFakeTimers();

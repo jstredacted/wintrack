@@ -138,7 +138,7 @@ export default function FinancePage() {
           <p className="text-sm font-mono text-destructive text-center py-12">{error}</p>
         ) : isFutureMonth ? (
           /* Future month: projected view */
-          <div className="w-[1000px] relative p-8 mt-6">
+          <div className="w-full max-w-[1000px] mx-auto relative p-4 sm:p-8 mt-6">
             <div className="flex flex-col items-center gap-8">
               {/* Projected balance — hero */}
               <div className="text-center">
@@ -149,9 +149,9 @@ export default function FinancePage() {
               </div>
 
               {/* Expected sections */}
-              <div className="flex gap-6 w-full items-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full items-start">
                 {/* Expected Bills */}
-                <div className="flex-1 bg-card border border-border rounded-lg p-5">
+                <div className="bg-card border border-border rounded-lg p-5">
                   <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Bills</h3>
                   {bills.length === 0 ? (
                     <p className="text-[0.778rem] font-mono text-muted-foreground">No recurring bills</p>
@@ -172,7 +172,7 @@ export default function FinancePage() {
                 </div>
 
                 {/* Expected Income */}
-                <div className="flex-1 bg-card border border-border rounded-lg p-5">
+                <div className="bg-card border border-border rounded-lg p-5">
                   <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">Expected Income</h3>
                   {incomes.length === 0 ? (
                     <p className="text-[0.778rem] font-mono text-muted-foreground">No income sources</p>
@@ -207,7 +207,7 @@ export default function FinancePage() {
             onTouchStart={handleViewTouchStart}
             onTouchEnd={handleViewTouchEnd}
           >
-            <div className="w-[1000px] relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
+            <div className="w-full max-w-[1000px] mx-auto relative overflow-hidden bg-card/50 border border-border/30 rounded-2xl">
               {/* Left arrow (only on View 1) */}
               {viewIndex === 1 && (
                 <button
@@ -237,7 +237,7 @@ export default function FinancePage() {
                 style={{ transform: `translateX(${viewIndex * -100}%)` }}
               >
                 {/* View 0: Overview */}
-                <div className="w-[1000px] shrink-0 p-8 flex flex-col items-center gap-8">
+                <div className="w-full shrink-0 p-4 sm:p-8 flex flex-col items-center gap-8">
                   {/* Budget bar — full width inside container */}
                   <div className="w-full">
                     <BudgetProgressBar
@@ -251,7 +251,7 @@ export default function FinancePage() {
                   </div>
 
                   {/* Stats row */}
-                  <div className="flex justify-between w-full max-w-lg">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full max-w-lg">
                     <div className="text-center">
                       <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
                       <div className="text-base font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
@@ -260,7 +260,7 @@ export default function FinancePage() {
                       <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
                       <div className="text-base font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
                     </div>
-                    <div className="text-center">
+                    <div className="text-center col-span-2 sm:col-span-1">
                       <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
                       <div className="text-base font-mono tabular-nums">{savingsRate}%</div>
                     </div>
@@ -282,14 +282,14 @@ export default function FinancePage() {
                   </div>
                 </div>
 
-                {/* View 1: Cards side by side */}
-                <div className="w-[1000px] shrink-0 p-8 flex justify-center gap-4 items-start">
+                {/* View 1: Cards */}
+                <div className="w-full shrink-0 p-4 sm:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
                   <BillsCard
                     bills={bills}
                     onTogglePaid={togglePaid}
                     onAddBill={addBill}
                     readOnly={isPastMonth}
-                    className="w-[300px]"
+                    className="w-full"
                   />
 
                   <IncomeChecklistCard
@@ -299,7 +299,7 @@ export default function FinancePage() {
                     fetchFreshRate={fetchFreshRate}
                     onToggleReceived={toggleIncomeReceived}
                     readOnly={isPastMonth}
-                    className="w-[300px]"
+                    className="w-full"
                   />
 
                   <OneOffCard
@@ -317,7 +317,7 @@ export default function FinancePage() {
                       refetchMonth();
                     }}
                     readOnly={isPastMonth}
-                    className="w-[300px]"
+                    className="w-full"
                   />
                 </div>
               </div>
