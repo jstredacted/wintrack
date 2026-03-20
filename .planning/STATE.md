@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Completed 05-04-PLAN.md
-last_updated: "2026-03-18T00:05:07.212Z"
-last_activity: 2026-03-18 — Completed 05-01 (dayStartHour bug fixes)
+stopped_at: Completed 05-05-PLAN.md
+last_updated: "2026-03-20T17:22:19.348Z"
+last_activity: 2026-03-20
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 19
-  completed_plans: 18
+  completed_plans: 19
   percent: 93
 ---
 
@@ -26,15 +26,16 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Phase: 5 of 5 (Journal Rich Text and Mobile)
-Plan: 1 of 5 in current phase
+Plan: 2 of 5 in current phase
 Status: In Progress
-Last activity: 2026-03-18 — Completed 05-01 (dayStartHour bug fixes)
+Last activity: 2026-03-20
 
 Progress: [█████████░] 93%
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 18 (v1.0) + 18 (v1.1) = 36
 - Average duration: ~3 min/plan
 - Total execution time: carried from v1.0/v1.1
@@ -62,6 +63,7 @@ Progress: [█████████░] 93%
 | Phase 05 P01 | 8min | 2 tasks | 6 files |
 | Phase 05 P02 | 3 | 2 tasks | 11 files |
 | Phase 05 P04 | 4min | 2 tasks | 9 files |
+| Phase 05 P05 | 15min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -118,6 +120,9 @@ Recent decisions affecting current work:
 - [Phase 05-04]: DayStrip centering: useEffect depends on selectedDate so re-centering happens on selection change, not only on mount
 - [Phase 05-04]: max-w-[1000px] applied at page level rather than AppShell — AppShell unconstrained for Finance which has own internal container
 - [Phase 05-04]: Settings tabs use underline border-b-2 pattern override rather than default shadcn pill style
+- [Phase 05]: Drop-and-recreate get_year_overview RPC for journal_count extension — Postgres requires recreating functions to change return type
+- [Phase 05]: Journal count hidden when 0 in MonthColumn to reduce visual clutter in months with no entries
+- [Phase 05]: Summary stats grid changed from grid-cols-4 to grid-cols-2 sm:grid-cols-5 to accommodate 5th Journal Entries stat tile
 
 ### Research Flags
 
@@ -134,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T00:05:07.210Z
-Stopped at: Completed 05-04-PLAN.md
+Last session: 2026-03-20T17:22:19.346Z
+Stopped at: Completed 05-05-PLAN.md
 Resume file: None

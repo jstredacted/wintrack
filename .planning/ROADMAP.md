@@ -28,7 +28,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 - [ ] **Phase 2: PIN Authentication** - PIN gate with setup flow, session management, idle timeout
 - [ ] **Phase 3: Finance Core** - Balance model, budget tracking, income streams, month navigation
 - [ ] **Phase 4: Finance Extended** - Bills management, dashboard views, external balances
-- [ ] **Phase 5: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages
+- [x] **Phase 5: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages (completed 2026-03-20)
 
 ## Phase Details
 
@@ -114,11 +114,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — DayStartHour bug fixes: DayStrip date mismatch, heatmap NaN, rollover completed wins
-- [ ] 05-02-PLAN.md — Tiptap rich text editor: install packages, slash commands, editor swap, format-aware rendering
-- [ ] 05-03-PLAN.md — Mobile bottom tab bar navigation and responsive AppShell layout
-- [ ] 05-04-PLAN.md — Finance mobile layout, DayStrip centering, Settings tabs, layout consistency audit
-- [ ] 05-05-PLAN.md — Journal count in year overview + full phase visual verification checkpoint
+- [x] 05-01-PLAN.md — DayStartHour bug fixes: DayStrip date mismatch, heatmap NaN, rollover completed wins
+- [x] 05-02-PLAN.md — Tiptap rich text editor: install packages, slash commands, editor swap, format-aware rendering
+- [x] 05-03-PLAN.md — Mobile bottom tab bar navigation and responsive AppShell layout
+- [x] 05-04-PLAN.md — Finance mobile layout, DayStrip centering, Settings tabs, layout consistency audit
+- [x] 05-05-PLAN.md — Journal count in year overview + full phase visual verification checkpoint
 
 ## Progress
 
@@ -132,4 +132,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. PIN Authentication | v2.0 | 1/2 | In Progress | - |
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
-| 5. Journal Rich Text & Mobile | 4/5 | In Progress|  | - |
+| 5. Journal Rich Text & Mobile | 4/5 | 5/5 | Complete   | 2026-03-20 |

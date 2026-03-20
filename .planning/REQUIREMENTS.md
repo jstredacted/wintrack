@@ -94,7 +94,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [x] **JRNL-02**: Formatting via keyboard shortcuts only (Cmd+B, Cmd+I, etc.) — no visible toolbar
 - [x] **JRNL-03**: Existing plain-text journal entries render correctly after migration (backward compatible)
 - [x] **JRNL-04**: Journal content stored as HTML in Supabase with body_format column for migration safety
-- [ ] **JRNL-05**: Journal count summary — per-month entry count on Finance/Year overview and total for the year
+- [x] **JRNL-05**: Journal count summary — per-month entry count on Finance/Year overview and total for the year
 
 ### Mobile Responsiveness
 
@@ -184,7 +184,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | JRNL-02 | Phase 5 | Complete |
 | JRNL-03 | Phase 5 | Complete |
 | JRNL-04 | Phase 5 | Complete |
-| JRNL-05 | Phase 5 | Pending |
+| JRNL-05 | Phase 5 | Complete |
 | MOB-01 | Phase 5 | Complete |
 | MOB-02 | Phase 5 | Complete |
 | MOB-03 | Phase 5 | Complete |
