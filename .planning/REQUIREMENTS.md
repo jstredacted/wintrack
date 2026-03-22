@@ -54,7 +54,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 - [x] **BILL-01**: User can add a bill with name, amount, due date, and recurrence type (one-time / recurring for N months / recurring until end date / ongoing)
 - [x] **BILL-02**: User can toggle a bill as paid per month (deducts from current balance)
-- [ ] **BILL-03**: User can edit and delete bills
+- [x] **BILL-03**: User can edit and delete bills
 - [x] **BILL-04**: Recurring and ongoing bills automatically appear each month until their end condition
 - [x] **BILL-05**: User sees unpaid bills highlighted by due date urgency
 - [x] **BILL-06**: One-time bills disappear after being paid
@@ -66,7 +66,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [x] **FIN-02**: Current month waterfall view — balance cascading as each bill/expense is paid, showing remaining after each
 - [x] **FIN-03**: Past months show final balance, paid bills, income received (read-only)
 - [x] **FIN-04**: Future months show projected balance (expected income minus upcoming bills)
-- [ ] **FIN-05**: Year overview showing 12 months with balance trajectory, total income, total expenses
+- [x] **FIN-05**: Year overview showing 12 months with balance trajectory, total income, total expenses
 
 ### Finance: Balance History
 
@@ -163,7 +163,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | FIN-01 | Phase 3 | Complete |
 | BILL-01 | Phase 4 | Complete |
 | BILL-02 | Phase 4 | Complete |
-| BILL-03 | Phase 6 | Pending |
+| BILL-03 | Phase 6 | Complete |
 | BILL-04 | Phase 4 | Complete |
 | BILL-05 | Phase 4 | Complete |
 | BILL-06 | Phase 4 | Complete |
@@ -171,7 +171,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | FIN-02 | Phase 4 | Complete |
 | FIN-03 | Phase 4 | Complete |
 | FIN-04 | Phase 4 | Complete |
-| FIN-05 | Phase 6 | Pending |
+| FIN-05 | Phase 6 | Complete |
 | HIST-01 | Phase 4 | Complete |
 | HIST-02 | Phase 4 | Complete |
 | HIST-03 | Phase 4 | Complete |
