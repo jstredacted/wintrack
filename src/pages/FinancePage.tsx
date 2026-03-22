@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { BarChart3, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useFinance } from '@/hooks/useFinance';
 import { useBills } from '@/hooks/useBills';
@@ -18,7 +18,11 @@ import BalanceHistoryModal from '@/components/finance/BalanceHistoryModal';
 
 export default function FinancePage() {
   const navigate = useNavigate();
-  const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonth());
+  const [searchParams] = useSearchParams();
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const fromUrl = searchParams.get('month');
+    return fromUrl && /^\d{4}-\d{2}$/.test(fromUrl) ? fromUrl : getCurrentMonth();
+  });
   const [viewIndex, setViewIndex] = useState(0);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
 
@@ -251,18 +255,18 @@ export default function FinancePage() {
                   </div>
 
                   {/* Stats row */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full max-w-lg">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full max-w-lg px-4">
                     <div className="text-center">
-                      <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
-                      <div className="text-base font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
+                      <div className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-muted-foreground font-mono">Total Income</div>
+                      <div className="text-sm sm:text-base font-mono tabular-nums">{formatPHP(totalIncomeForStats)}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
-                      <div className="text-base font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
+                      <div className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-muted-foreground font-mono">Total Expenses</div>
+                      <div className="text-sm sm:text-base font-mono tabular-nums">{formatPHP(totalExpenses)}</div>
                     </div>
                     <div className="text-center col-span-2 sm:col-span-1">
-                      <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
-                      <div className="text-base font-mono tabular-nums">{savingsRate}%</div>
+                      <div className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-muted-foreground font-mono">Savings Rate</div>
+                      <div className="text-sm sm:text-base font-mono tabular-nums">{savingsRate}%</div>
                     </div>
                   </div>
 
