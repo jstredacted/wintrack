@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Daily Discipline Loop** — Phases 1-7 (shipped 2026-03-16)
-- 📋 **v2.0 Finance & Platform** — Phases 1-5 (planned)
+- 📋 **v2.0 Finance & Platform** — Phases 1-6 (planned)
 
 ## Phases
 
@@ -131,10 +131,11 @@ Plans:
   2. Bills can be deleted from the UI via BillsCard
   3. All 13 orphaned finance components are deleted
   4. REQUIREMENTS.md shows 60/60 requirements Complete
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: TBD
+- [ ] 06-01-PLAN.md — Fix FIN-05 month navigation query param + BILL-03 delete button in BillsCard
+- [ ] 06-02-PLAN.md — Delete 13 orphaned finance components + update REQUIREMENTS.md to 60/60 complete
 
 ## Progress
 
@@ -149,4 +150,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
 | 5. Journal Rich Text & Mobile | 4/5 | 5/5 | Complete    | 2026-03-20 |
-| 6. Cleanup & Contract Fixes | v2.0 | 0/TBD | Not started | - |
+| 6. Cleanup & Contract Fixes | v2.0 | 0/2 | Not started | - |
