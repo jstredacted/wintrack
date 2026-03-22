@@ -135,7 +135,7 @@ Plans:
 
 Plans:
 - [ ] 06-01-PLAN.md — Fix FIN-05 month navigation query param + BILL-03 delete button in BillsCard
-- [ ] 06-02-PLAN.md — Delete 13 orphaned finance components + update REQUIREMENTS.md to 60/60 complete
+- [x] 06-02-PLAN.md — Delete 13 orphaned finance components + update REQUIREMENTS.md to 60/60 complete
 
 ## Progress
 
@@ -150,4 +150,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
 | 5. Journal Rich Text & Mobile | 4/5 | 5/5 | Complete    | 2026-03-20 |
-| 6. Cleanup & Contract Fixes | v2.0 | 0/2 | Not started | - |
+| 6. Cleanup & Contract Fixes | v2.0 | 1/2 | In Progress|  |

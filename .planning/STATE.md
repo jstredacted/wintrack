@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Completed 05-05-PLAN.md
-last_updated: "2026-03-20T17:32:59.067Z"
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-22T17:08:05.769Z"
 last_activity: 2026-03-20
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 5
-  total_plans: 19
-  completed_plans: 19
+  total_plans: 21
+  completed_plans: 20
   percent: 93
 ---
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 93%
 | Phase 05 P02 | 3 | 2 tasks | 11 files |
 | Phase 05 P04 | 4min | 2 tasks | 9 files |
 | Phase 05 P05 | 15min | 3 tasks | 6 files |
+| Phase 06-02 P02 | 3 | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,7 @@ Recent decisions affecting current work:
 - [Phase 05]: Drop-and-recreate get_year_overview RPC for journal_count extension — Postgres requires recreating functions to change return type
 - [Phase 05]: Journal count hidden when 0 in MonthColumn to reduce visual clutter in months with no entries
 - [Phase 05]: Summary stats grid changed from grid-cols-4 to grid-cols-2 sm:grid-cols-5 to accommodate 5th Journal Entries stat tile
+- [Phase 06-02]: EXT-01/02/03 remain unchecked — intentionally deferred to v2.1, struck through in REQUIREMENTS.md, not counted in the 60 v2.0 requirements
 
 ### Research Flags
 
@@ -139,6 +141,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T17:22:19.346Z
-Stopped at: Completed 05-05-PLAN.md
+Last session: 2026-03-22T17:08:05.767Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
