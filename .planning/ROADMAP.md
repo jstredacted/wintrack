@@ -29,7 +29,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 - [ ] **Phase 3: Finance Core** - Balance model, budget tracking, income streams, month navigation
 - [ ] **Phase 4: Finance Extended** - Bills management, dashboard views, external balances
 - [x] **Phase 5: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages (completed 2026-03-20)
-- [ ] **Phase 6: Cleanup & Contract Fixes** - Gap closure: FIN-05 month navigation, BILL-03 delete UI, orphaned component cleanup, documentation updates
+- [x] **Phase 6: Cleanup & Contract Fixes** - Gap closure: FIN-05 month navigation, BILL-03 delete UI, orphaned component cleanup, documentation updates (completed 2026-03-22)
 
 ## Phase Details
 
@@ -134,7 +134,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Fix FIN-05 month navigation query param + BILL-03 delete button in BillsCard
+- [x] 06-01-PLAN.md — Fix FIN-05 month navigation query param + BILL-03 delete button in BillsCard
 - [x] 06-02-PLAN.md — Delete 13 orphaned finance components + update REQUIREMENTS.md to 60/60 complete
 
 ## Progress
@@ -150,4 +150,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
 | 5. Journal Rich Text & Mobile | 4/5 | 5/5 | Complete    | 2026-03-20 |
-| 6. Cleanup & Contract Fixes | v2.0 | 1/2 | In Progress|  |
+| 6. Cleanup & Contract Fixes | v2.0 | 2/2 | Complete   | 2026-03-22 |

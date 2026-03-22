@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Finance & Platform
 status: executing
-stopped_at: Completed 06-02-PLAN.md
-last_updated: "2026-03-22T17:08:05.769Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-22T17:09:41.561Z"
 last_activity: 2026-03-20
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 21
-  completed_plans: 20
+  completed_plans: 21
   percent: 93
 ---
 
@@ -65,6 +65,7 @@ Progress: [█████████░] 93%
 | Phase 05 P04 | 4min | 2 tasks | 9 files |
 | Phase 05 P05 | 15min | 3 tasks | 6 files |
 | Phase 06-02 P02 | 3 | 2 tasks | 14 files |
+| Phase 06-cleanup-and-contract-fixes P01 | 8 | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Journal count hidden when 0 in MonthColumn to reduce visual clutter in months with no entries
 - [Phase 05]: Summary stats grid changed from grid-cols-4 to grid-cols-2 sm:grid-cols-5 to accommodate 5th Journal Entries stat tile
 - [Phase 06-02]: EXT-01/02/03 remain unchecked — intentionally deferred to v2.1, struck through in REQUIREMENTS.md, not counted in the 60 v2.0 requirements
+- [Phase 06-01]: useSearchParams initializes selectedMonth from URL; regex validates YYYY-MM format before use, falls back to getCurrentMonth()
+- [Phase 06-01]: updateBill updates bill_templates first, then monthly_bills for current month, then refetches — dual-table update pattern
+- [Phase 06-01]: editingId is single string (not a Set) — only one bill editable at a time, matches existing inline-edit pattern
 
 ### Research Flags
 
@@ -141,6 +145,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T17:08:05.767Z
-Stopped at: Completed 06-02-PLAN.md
+Last session: 2026-03-22T17:09:41.559Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
