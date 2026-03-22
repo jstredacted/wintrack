@@ -150,4 +150,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
 | 5. Journal Rich Text & Mobile | 4/5 | 5/5 | Complete    | 2026-03-20 |
-| 6. Cleanup & Contract Fixes | v2.0 | 2/2 | Complete   | 2026-03-22 |
+| 6. Cleanup & Contract Fixes | v2.0 | 2/2 | Complete    | 2026-03-22 |
