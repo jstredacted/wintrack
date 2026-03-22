@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
-import { Plus, CheckCircle2, Circle, Trash2 } from 'lucide-react';
+import { Plus, CheckCircle2, Circle, Trash2, Pencil, Check, X } from 'lucide-react';
 import { getDueUrgency } from '@/lib/utils/finance';
 import { formatPHP } from '@/lib/utils/currency';
 import { getCurrentMonth } from '@/lib/utils/month';
@@ -16,11 +16,12 @@ interface BillsCardProps {
     start_month: string;
   }) => Promise<void>;
   onDeleteBill?: (templateId: string) => void;
+  onEditBill?: (templateId: string, updates: { name?: string; amount?: number; due_day?: number | null }) => Promise<void>;
   readOnly: boolean;
   className?: string;
 }
 
-export default function BillsCard({ bills, onTogglePaid, onAddBill, onDeleteBill, readOnly, className }: BillsCardProps) {
+export default function BillsCard({ bills, onTogglePaid, onAddBill, onDeleteBill, onEditBill, readOnly, className }: BillsCardProps) {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState('');
@@ -28,6 +29,12 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, onDeleteBill
   const [dueDay, setDueDay] = useState('');
   const [recurrenceType, setRecurrenceType] = useState<RecurrenceType>('one_time');
   const nameRef = useRef<HTMLInputElement>(null);
+
+  // Inline edit state
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editAmount, setEditAmount] = useState('');
+  const [editDueDay, setEditDueDay] = useState('');
 
   const sortedBills = useMemo(() => {
     return [...bills].sort((a, b) => {
@@ -79,6 +86,32 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, onDeleteBill
     if (e.key === 'Escape') { e.preventDefault(); handleDone(); }
   };
 
+  const startEdit = (bill: MonthlyBill) => {
+    setEditingId(bill.bill_template_id);
+    setEditName(bill.name);
+    setEditAmount(String(bill.amount));
+    setEditDueDay(bill.due_day ? String(bill.due_day) : '');
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+  };
+
+  const saveEdit = async () => {
+    if (!editingId || !onEditBill) return;
+    const parsedAmount = parseFloat(editAmount);
+    const parsedDay = editDueDay === '' ? null : parseInt(editDueDay, 10);
+    if (!editName.trim() || isNaN(parsedAmount) || parsedAmount <= 0) return;
+    if (editDueDay !== '' && (isNaN(parsedDay!) || parsedDay! < 1 || parsedDay! > 31)) return;
+
+    await onEditBill(editingId, {
+      name: editName.trim(),
+      amount: parsedAmount,
+      due_day: parsedDay,
+    });
+    setEditingId(null);
+  };
+
   const inputBase =
     'bg-transparent border-b border-foreground/20 font-mono text-[0.778rem] py-1.5 focus:outline-none focus:border-foreground/50 placeholder:text-muted-foreground w-full';
 
@@ -126,46 +159,123 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, onDeleteBill
               )}
             </div>
           ) : (
-            sortedBills.map((bill) => (
-              <div
-                key={bill.id}
-                className={`flex items-center gap-3 py-3 ${bill.paid ? 'opacity-40' : ''}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => { if (!readOnly) onTogglePaid(bill.id, !bill.paid); }}
-                  disabled={readOnly}
-                  className="shrink-0 transition-colors hover:text-foreground disabled:opacity-40"
-                  aria-label={bill.paid ? 'Mark unpaid' : 'Mark paid'}
+            sortedBills.map((bill) =>
+              editingId === bill.bill_template_id ? (
+                <div key={bill.id} className="flex flex-col gap-2 py-3 border-b border-foreground/5">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className={inputBase}
+                      placeholder="Name"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+                        if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+                      }}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={editAmount}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === '' || /^\d*\.?\d*$/.test(v)) setEditAmount(v);
+                      }}
+                      className={inputBase}
+                      placeholder="Amount"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+                        if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+                      }}
+                    />
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={editDueDay}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === '' || /^\d{1,2}$/.test(v)) setEditDueDay(v);
+                      }}
+                      className={inputBase}
+                      placeholder="Day"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+                        if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+                      }}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={saveEdit}
+                      className="text-[0.667rem] font-mono text-foreground hover:underline flex items-center gap-1"
+                    >
+                      <Check size={12} /> Save
+                    </button>
+                    <button
+                      type="button"
+                      onClick={cancelEdit}
+                      className="text-[0.667rem] font-mono text-muted-foreground hover:underline flex items-center gap-1"
+                    >
+                      <X size={12} /> Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  key={bill.id}
+                  className={`flex items-center gap-3 py-3 ${bill.paid ? 'opacity-40' : ''}`}
                 >
-                  {bill.paid ? (
-                    <CheckCircle2 size={16} className="text-foreground" />
-                  ) : (
-                    <Circle size={16} className="text-muted-foreground" />
-                  )}
-                </button>
-                <span
-                  className={`font-mono text-[0.833rem] flex-1 min-w-0 ${
-                    bill.paid ? 'line-through' : ''
-                  }`}
-                >
-                  {bill.name}
-                </span>
-                <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
-                  {formatPHP(bill.amount)}
-                </span>
-                {!readOnly && onDeleteBill && (
                   <button
                     type="button"
-                    onClick={() => onDeleteBill(bill.bill_template_id)}
-                    className="shrink-0 text-muted-foreground/40 hover:text-destructive transition-colors ml-1"
-                    aria-label={`Delete ${bill.name}`}
+                    onClick={() => { if (!readOnly) onTogglePaid(bill.id, !bill.paid); }}
+                    disabled={readOnly}
+                    className="shrink-0 transition-colors hover:text-foreground disabled:opacity-40"
+                    aria-label={bill.paid ? 'Mark unpaid' : 'Mark paid'}
                   >
-                    <Trash2 size={14} />
+                    {bill.paid ? (
+                      <CheckCircle2 size={16} className="text-foreground" />
+                    ) : (
+                      <Circle size={16} className="text-muted-foreground" />
+                    )}
                   </button>
-                )}
-              </div>
-            ))
+                  <span
+                    className={`font-mono text-[0.833rem] flex-1 min-w-0 ${
+                      bill.paid ? 'line-through' : ''
+                    }`}
+                  >
+                    {bill.name}
+                  </span>
+                  <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
+                    {formatPHP(bill.amount)}
+                  </span>
+                  {!readOnly && onEditBill && (
+                    <button
+                      type="button"
+                      onClick={() => startEdit(bill)}
+                      className="shrink-0 text-muted-foreground/40 hover:text-foreground transition-colors ml-1"
+                      aria-label={`Edit ${bill.name}`}
+                    >
+                      <Pencil size={14} />
+                    </button>
+                  )}
+                  {!readOnly && onDeleteBill && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteBill(bill.bill_template_id)}
+                      className="shrink-0 text-muted-foreground/40 hover:text-destructive transition-colors ml-1"
+                      aria-label={`Delete ${bill.name}`}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                </div>
+              )
+            )
           )}
         </div>
 

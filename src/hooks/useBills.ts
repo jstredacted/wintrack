@@ -18,6 +18,7 @@ interface UseBillsResult {
     start_month: string;
   }) => Promise<void>;
   deleteBill: (templateId: string) => Promise<void>;
+  updateBill: (templateId: string, updates: { name?: string; amount?: number; due_day?: number | null }) => Promise<void>;
   refetch: () => void;
 }
 
@@ -167,5 +168,39 @@ export function useBills(monthId: string | null): UseBillsResult {
     [refetch]
   );
 
-  return { bills, loading, error, togglePaid, addBill, deleteBill, refetch };
+  const updateBill = useCallback(
+    async (templateId: string, updates: { name?: string; amount?: number; due_day?: number | null }) => {
+      // Update the template
+      const { error: templateError } = await supabase
+        .from('bill_templates')
+        .update(updates)
+        .eq('id', templateId);
+
+      if (templateError) {
+        setError(templateError.message);
+        return;
+      }
+
+      // Also update the monthly_bills row for this month so UI reflects changes immediately
+      if (monthId) {
+        const monthlyUpdates: Record<string, unknown> = {};
+        if (updates.name !== undefined) monthlyUpdates.name = updates.name;
+        if (updates.amount !== undefined) monthlyUpdates.amount = updates.amount;
+        if (updates.due_day !== undefined) monthlyUpdates.due_day = updates.due_day;
+
+        if (Object.keys(monthlyUpdates).length > 0) {
+          await supabase
+            .from('monthly_bills')
+            .update(monthlyUpdates)
+            .eq('bill_template_id', templateId)
+            .eq('month_id', monthId);
+        }
+      }
+
+      refetch();
+    },
+    [monthId, refetch]
+  );
+
+  return { bills, loading, error, togglePaid, addBill, deleteBill, updateBill, refetch };
 }
