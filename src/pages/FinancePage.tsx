@@ -41,6 +41,7 @@ export default function FinancePage() {
     bills,
     togglePaid,
     addBill,
+    deleteBill,
   } = useBills(monthData?.id ?? null);
   const {
     changes: balanceChanges,
@@ -292,6 +293,7 @@ export default function FinancePage() {
                     bills={bills}
                     onTogglePaid={togglePaid}
                     onAddBill={addBill}
+                    onDeleteBill={deleteBill}
                     readOnly={isPastMonth}
                     className="w-full"
                   />

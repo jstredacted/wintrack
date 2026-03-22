@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
-import { Plus, CheckCircle2, Circle } from 'lucide-react';
+import { Plus, CheckCircle2, Circle, Trash2 } from 'lucide-react';
 import { getDueUrgency } from '@/lib/utils/finance';
 import { formatPHP } from '@/lib/utils/currency';
 import { getCurrentMonth } from '@/lib/utils/month';
@@ -15,11 +15,12 @@ interface BillsCardProps {
     recurrence_type: RecurrenceType;
     start_month: string;
   }) => Promise<void>;
+  onDeleteBill?: (templateId: string) => void;
   readOnly: boolean;
   className?: string;
 }
 
-export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly, className }: BillsCardProps) {
+export default function BillsCard({ bills, onTogglePaid, onAddBill, onDeleteBill, readOnly, className }: BillsCardProps) {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState('');
@@ -153,6 +154,16 @@ export default function BillsCard({ bills, onTogglePaid, onAddBill, readOnly, cl
                 <span className="font-mono text-[0.833rem] tabular-nums shrink-0">
                   {formatPHP(bill.amount)}
                 </span>
+                {!readOnly && onDeleteBill && (
+                  <button
+                    type="button"
+                    onClick={() => onDeleteBill(bill.bill_template_id)}
+                    className="shrink-0 text-muted-foreground/40 hover:text-destructive transition-colors ml-1"
+                    aria-label={`Delete ${bill.name}`}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </div>
             ))
           )}
