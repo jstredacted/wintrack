@@ -29,6 +29,7 @@ Full details: .planning/milestones/v1.0-ROADMAP.md
 - [ ] **Phase 3: Finance Core** - Balance model, budget tracking, income streams, month navigation
 - [ ] **Phase 4: Finance Extended** - Bills management, dashboard views, external balances
 - [x] **Phase 5: Journal Rich Text & Mobile** - Tiptap editor integration, responsive layout across all pages (completed 2026-03-20)
+- [ ] **Phase 6: Cleanup & Contract Fixes** - Gap closure: FIN-05 month navigation, BILL-03 delete UI, orphaned component cleanup, documentation updates
 
 ## Phase Details
 
@@ -120,10 +121,25 @@ Plans:
 - [x] 05-04-PLAN.md — Finance mobile layout, DayStrip centering, Settings tabs, layout consistency audit
 - [x] 05-05-PLAN.md — Journal count in year overview + full phase visual verification checkpoint
 
+### Phase 6: Cleanup & Contract Fixes
+**Goal**: Close all audit gaps — broken flows, missing UI, dead code, documentation drift
+**Depends on**: Phase 5
+**Requirements**: FIN-05, BILL-03
+**Gap Closure**: Closes gaps from v2.0 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. Clicking a month in YearOverviewPage navigates to FinancePage showing that month (not current month)
+  2. Bills can be deleted from the UI via BillsCard
+  3. All 13 orphaned finance components are deleted
+  4. REQUIREMENTS.md shows 60/60 requirements Complete
+**Plans**: TBD
+
+Plans:
+- [ ] 06-01: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -133,3 +149,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 3. Finance Core | 3/4 | In Progress|  | - |
 | 4. Finance Extended | 4/5 | In Progress|  | - |
 | 5. Journal Rich Text & Mobile | 4/5 | 5/5 | Complete    | 2026-03-20 |
+| 6. Cleanup & Contract Fixes | v2.0 | 0/TBD | Not started | - |

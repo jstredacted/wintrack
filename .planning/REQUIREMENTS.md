@@ -22,11 +22,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can set a 4-digit PIN on first app load (setup flow with confirm)
-- [ ] **AUTH-02**: User must enter PIN on app load; active sessions stay unlocked until 15 minutes idle
+- [x] **AUTH-01**: User can set a 4-digit PIN on first app load (setup flow with confirm)
+- [x] **AUTH-02**: User must enter PIN on app load; active sessions stay unlocked until 15 minutes idle
 - [x] **AUTH-03**: PIN stored as SHA-256 hash in Supabase (not plaintext)
 - [x] **AUTH-04**: Session persists in sessionStorage; idle timer resets on user interaction
-- [ ] **AUTH-05**: App access gated behind PIN entry (JWT retained for Supabase RLS, but not user-facing)
+- [x] **AUTH-05**: App access gated behind PIN entry (JWT retained for Supabase RLS, but not user-facing)
 
 ### Finance: Balance
 
@@ -48,13 +48,13 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 - [x] **INC-03**: Each income source appears as a toggleable card in the Finance view per month
 - [x] **INC-04**: When toggled as received, USD sources auto-fetch live rate and deduct Wise/PayPal fees; PHP sources add directly
 - [x] **INC-05**: Received income auto-adds net PHP amount to current balance; toggle greys out the card
-- [ ] **INC-06**: User can add, edit, and remove income sources from Settings
+- [x] **INC-06**: User can add, edit, and remove income sources from Settings
 
 ### Finance: Bills
 
 - [x] **BILL-01**: User can add a bill with name, amount, due date, and recurrence type (one-time / recurring for N months / recurring until end date / ongoing)
 - [x] **BILL-02**: User can toggle a bill as paid per month (deducts from current balance)
-- [x] **BILL-03**: User can edit and delete bills
+- [ ] **BILL-03**: User can edit and delete bills
 - [x] **BILL-04**: Recurring and ongoing bills automatically appear each month until their end condition
 - [x] **BILL-05**: User sees unpaid bills highlighted by due date urgency
 - [x] **BILL-06**: One-time bills disappear after being paid
@@ -142,11 +142,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | TS-02 | Phase 1 | Complete |
 | TS-03 | Phase 1 | Complete |
 | TS-04 | Phase 1 | Complete |
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Complete |
+| AUTH-02 | Phase 2 | Complete |
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
-| AUTH-05 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Complete |
 | BAL-01 | Phase 3 | Complete |
 | BAL-02 | Phase 3 | Complete |
 | BAL-03 | Phase 3 | Complete |
@@ -159,11 +159,11 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | INC-03 | Phase 3 | Complete |
 | INC-04 | Phase 3 | Complete |
 | INC-05 | Phase 3 | Complete |
-| INC-06 | Phase 3 | Pending |
+| INC-06 | Phase 3 | Complete |
 | FIN-01 | Phase 3 | Complete |
 | BILL-01 | Phase 4 | Complete |
 | BILL-02 | Phase 4 | Complete |
-| BILL-03 | Phase 4 | Complete |
+| BILL-03 | Phase 6 | Pending |
 | BILL-04 | Phase 4 | Complete |
 | BILL-05 | Phase 4 | Complete |
 | BILL-06 | Phase 4 | Complete |
@@ -171,7 +171,7 @@ Requirements for v2.0 Finance & Platform milestone. Each maps to roadmap phases.
 | FIN-02 | Phase 4 | Complete |
 | FIN-03 | Phase 4 | Complete |
 | FIN-04 | Phase 4 | Complete |
-| FIN-05 | Phase 4 | Pending |
+| FIN-05 | Phase 6 | Pending |
 | HIST-01 | Phase 4 | Complete |
 | HIST-02 | Phase 4 | Complete |
 | HIST-03 | Phase 4 | Complete |
