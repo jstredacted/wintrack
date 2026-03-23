@@ -46,9 +46,28 @@ The daily discipline loop: set intentions in the morning, complete them through 
 - ✓ Mobile bottom tab bar with responsive layout across all pages — v2.0
 - ✓ DayStrip centering and dayStartHour bug fixes — v2.0
 
+## Current Milestone: v2.1 Finance Redesign & UI Rehaul
+
+**Goal:** Replace the month-based finance page with a continuous ledger timeline and introduce `#7CF5A5` as the app-wide accent color.
+
+**Target features:**
+- Continuous ledger timeline replacing month-by-month navigation
+- Four expense categories: fixed monthly, recurring debts, one-off, budgets
+- Fixed sidebar with balance, projections, and year overview table
+- Responsive layout (two-panel desktop, card stack mobile)
+- App-wide `#7CF5A5` accent color across all pages
+- Past months collapsed into single read-only section
+- Inline bill/budget management
+
 ### Active
 
-(No active requirements — next milestone not yet defined)
+- [ ] Continuous ledger timeline with collapsible month sections
+- [ ] Four expense categories (fixed, recurring, one-off, budgets)
+- [ ] Fixed sidebar with balance, projections, year overview
+- [ ] Recurring debts with flexible payments and remaining balance tracking
+- [ ] Budget spending caps with quick-log expense input
+- [ ] App-wide #7CF5A5 accent color (checkmarks, active states, nav, interactive elements)
+- [ ] Responsive two-panel desktop / card stack mobile layout
 
 ### Out of Scope
 
@@ -74,7 +93,7 @@ The daily discipline loop: set intentions in the morning, complete them through 
 ## Constraints
 
 - **Tech stack**: Vite + React 19, Tailwind v4, shadcn/ui, Supabase, Vercel — no deviations
-- **Design**: Black/white only, no color accents, no gradients — enforced aesthetic
+- **Design**: Monochrome base + #7CF5A5 accent, no gradients — evolved from v2.0 monochrome-only
 - **Scope**: Single user, PIN-gated — keeps architecture simple
 - **Animations**: Plain @keyframes + state machine pattern (tw-animate-css conflicts with motion v12)
 - **Font**: Geist Mono Variable throughout — no font pairing
@@ -100,5 +119,22 @@ The daily discipline loop: set intentions in the morning, complete them through 
 | 16px mobile base font | 18px desktop was too large on phone ("grandpa mode") | ✓ Native-feeling density |
 | visualViewport keyboard tracking | iOS `position: sticky` doesn't work with virtual keyboard | ✓ Toolbar follows keyboard |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-03-23 after v2.0 milestone*
+*Last updated: 2026-03-23 after v2.1 milestone start*

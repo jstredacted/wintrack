@@ -1,36 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Finance & Platform
-status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-23T02:59:33.449Z"
+milestone: v2.1
+milestone_name: Finance Redesign & UI Rehaul
+status: defining_requirements
+stopped_at: null
+last_updated: "2026-03-23T10:00:00.000Z"
 last_activity: 2026-03-23
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 21
-  completed_plans: 21
-  percent: 93
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-16)
+See: .planning/PROJECT.md (updated 2026-03-23)
 
-**Core value:** The daily discipline loop: set intentions, complete them, reflect honestly -- now expanded with personal finance management.
-**Current focus:** Phase 4: Finance Extended
+**Core value:** The daily discipline loop: set intentions, complete them, reflect honestly — now integrated with personal finance management for a complete life dashboard.
+**Current focus:** Defining requirements for v2.1
 
 ## Current Position
 
-Phase: 6 of 5 (Journal Rich Text and Mobile)
-Plan: Not started
-Status: In Progress
-Last activity: 2026-03-23
-
-Progress: [█████████░] 93%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-23 — Milestone v2.1 started
 
 ## Performance Metrics
 
