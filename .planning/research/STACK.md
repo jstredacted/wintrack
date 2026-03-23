@@ -1,214 +1,244 @@
-# Technology Stack — v2.0 Additions
+# Stack Research — v2.1 Finance Redesign & UI Rehaul
 
-**Project:** wintrack v2.0 Finance & Platform
-**Researched:** 2026-03-16
-**Scope:** NEW dependencies only. Existing stack (Vite, React 19, Tailwind v4, shadcn/ui, Supabase, Zustand, motion, Lucide) is validated and unchanged.
+**Project:** wintrack v2.1
+**Researched:** 2026-03-23
+**Confidence:** HIGH
+**Scope:** NEW dependencies and integration patterns only. Validated base stack (Vite, React 19, Tailwind v4, shadcn/ui Nova preset, Supabase JS, Tiptap v3, Lucide, vite-plugin-pwa, motion/react, Geist Mono, Zustand v5) is unchanged.
+
+---
+
+## Executive Summary
+
+v2.1 needs **zero new npm packages**. Every capability required — collapsible sections, sticky sidebar layout, scrollable panels, and a named accent color — is already available via the installed stack. The work is configuration and component scaffolding, not package installation.
+
+The four new capability areas break down as:
+
+1. **Collapsible month sections** → `bunx shadcn@latest add accordion` (scaffolds a component using already-installed `radix-ui ^1.4.3`)
+2. **Single-panel collapse triggers** → `bunx shadcn@latest add collapsible` (same Radix dependency)
+3. **Scrollable sidebar panel** → `bunx shadcn@latest add scroll-area` (same Radix dependency, optional — native `overflow-y-auto` may suffice)
+4. **`#7CF5A5` accent color** → Add `--color-brand` to the existing `@theme inline` block in `index.css`; update `--accent` / `--primary` CSS variables in `:root` / `.dark` to point to it
+
+No new runtime packages. No schema migrations required beyond adding columns for recurring debt payment tracking.
 
 ---
 
 ## Recommended Stack Additions
 
-### 1. Rich Text Editor — Tiptap
+### Core Technologies
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `@tiptap/react` | ^3.20 | React bindings for headless editor | Fully headless = complete style control. Matches Nothing aesthetic perfectly because you build the toolbar and editor chrome yourself. TypeScript-native. MIT license. 1,750+ dependents on npm. |
-| `@tiptap/pm` | ^3.20 | ProseMirror peer dependency | Required by @tiptap/react for document model |
-| `@tiptap/starter-kit` | ^3.20 | Common extensions bundle | Includes Bold, Italic, BulletList, OrderedList, Heading, Strike, Code, Blockquote, HardBreak, ListItem, Document, Paragraph, Text, Undo/Redo. Covers all v2.0 formatting requirements in one install. |
+No new frameworks or runtimes.
 
-**Why Tiptap over alternatives:**
-- **vs Slate.js** — Slate requires building every extension from scratch (bold, lists, etc.). Tiptap's StarterKit gives bold/italic/bullets out of the box. Slate's learning curve is steeper for the same output.
-- **vs Lexical (Meta)** — Lexical's "playground" approach means assembling many pieces. Its ecosystem is smaller and docs are less mature. Overkill for a journal editor.
-- **vs Quill** — Quill v2 has a rigid, opinionated UI that fights against custom monochrome styling. Less composable architecture.
+### Supporting Libraries (shadcn component scaffolding only)
 
-**Storage format decision:** Store as **Tiptap JSON** (`editor.getJSON()`) in Supabase `journal_entries.body` column. Currently stores plain text strings — migrate the column to JSONB. JSON preserves document structure, enables querying, and round-trips perfectly through Tiptap.
+These commands scaffold source files into `src/components/ui/` — they do not add new npm dependencies. The underlying Radix primitives are already installed at `radix-ui ^1.4.3`.
 
-**Backward compatibility:** Existing plain-text entries render by wrapping in a paragraph node on read:
-```javascript
-// Migration helper for existing plain-text body strings
-const content = typeof entry.body === 'string'
-  ? { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: entry.body }] }] }
-  : entry.body;
-```
+| Component | Install Command | Purpose | When to Use |
+|-----------|-----------------|---------|-------------|
+| Accordion | `bunx shadcn@latest add accordion` | Collapsible stacked sections with keyboard nav and WAI-ARIA | Month sections in the ledger timeline — each month is an AccordionItem; past months collapsed by default |
+| Collapsible | `bunx shadcn@latest add collapsible` | Single expand/collapse toggle for a content panel | "Past months" summary block, any standalone expandable card that isn't part of a stack |
+| ScrollArea | `bunx shadcn@latest add scroll-area` | Styled cross-browser scrollable container | Fixed-height sidebar that needs a scrollbar with consistent appearance across OS; defer if native `overflow-y-auto` is acceptable |
+| Separator | `bunx shadcn@latest add separator` | Semantic horizontal/vertical divider line | Dividing sidebar sections, category dividers in the ledger |
 
-**Integration point:** Replace `<textarea>` in `src/components/journal/JournalEditorOverlay.jsx` with `<EditorContent editor={editor} />`. The `useEditor` hook replaces `useState` for body. Word count via `editor.getText().trim().split(/\s+/).length`.
+**Why Accordion over a hand-rolled collapsible:**
+Radix Accordion handles keyboard navigation (Space/Enter/Arrow keys), WAI-ARIA `aria-expanded`, focus management, and animated height transitions without custom logic. Using `type="multiple"` allows all months open simultaneously; `type="single" collapsible` enforces one-open.
 
-**What you do NOT need separately:**
-- `@tiptap/extension-bullet-list`, `@tiptap/extension-bold`, etc. — all included in StarterKit
-- `@tiptap/extension-placeholder` — nice-to-have, defer unless explicitly wanted
-- Any Tiptap Pro (paid) extensions — collaboration, AI features are out of scope
+**Why not a heavy timeline library (Mobiscroll, KendoReact):**
+These are calendar/scheduler products, not finance ledgers. They bring a large bundle, opinionated styling, and licensing complexity for something that is simply a vertically ordered list of collapsible month sections. Accordion + plain divs is the correct scope for this use case.
 
-**Confidence:** HIGH — verified via [Tiptap npm](https://www.npmjs.com/package/@tiptap/react) (v3.20.1 published 9 days ago) and [official install docs](https://tiptap.dev/docs/editor/getting-started/install/react)
+### Development Tools
+
+No new dev tools.
 
 ---
 
-### 2. Finance Charts — Recharts via shadcn/ui Chart Component
+## CSS Changes: #7CF5A5 Accent Color
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `recharts` | ^3.8 | SVG chart rendering for finance dashboard | shadcn/ui's official Chart component is built on Recharts. Using the shadcn chart primitives means automatic dark mode support, Nova preset theming, and monochrome styling with zero extra config. |
+### Strategy
 
-**Critical insight:** Do NOT install Recharts directly. Use **`bunx shadcn@latest add chart`** which scaffolds `ChartContainer`, `ChartTooltip`, `ChartTooltipContent`, and `ChartLegend` components into your codebase and adds `recharts` as a dependency. This gives you themed chart wrappers that inherit the existing design system.
+The existing `index.css` already defines all color tokens as CSS custom properties in `:root` / `.dark` and maps them into the Tailwind theme via `@theme inline`. Adding `#7CF5A5` requires three edits to `index.css` — no npm changes, no Tailwind config changes.
 
-**Chart types needed for finance port:**
-| Chart Type | Finance Use Case |
-|------------|-----------------|
-| `PieChart` | Budget category breakdown (needs, wants, savings) |
-| `BarChart` | Monthly income vs. expenses comparison |
-| `LineChart` | Investment portfolio value over time |
-| `AreaChart` | Cumulative spending trends |
+### The Three Edits
 
-**Why Recharts over alternatives:**
-- **vs Nivo** — Heavier bundle, requires Canvas for some charts, doesn't integrate with shadcn theming
-- **vs Victory** — Cross-platform focus (React Native) adds weight this project doesn't need
-- **vs Chart.js** — Canvas-based (not SVG), harder to style with Tailwind, no shadcn integration
-- **vs raw D3** — Recharts wraps D3; building from scratch is unnecessary for standard chart types
+**1. Add named `--brand` token in `:root` (hex → OKLCH conversion)**
 
-**Confidence:** HIGH — [shadcn/ui Chart docs](https://ui.shadcn.com/docs/components/radix/chart) confirm Recharts as the chart engine
+`#7CF5A5` converts to approximately `oklch(0.88 0.15 152)` (verified via okcolor.app — a light, vivid green-mint in the P3 gamut). Store the raw value once in `:root` so it can be referenced anywhere:
 
----
-
-### 3. TypeScript — Incremental Migration
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| `typescript` | ^5.8 | Type checking and IDE intelligence | Already have `@types/react` (^19.2.7) and `@types/react-dom` (^19.2.3) installed. Vite handles .tsx transpilation via esbuild natively — zero plugin changes. |
-
-**No new runtime dependencies.** TypeScript is dev-only. Vite already transpiles .ts/.tsx through esbuild without configuration changes.
-
-**Configuration files to create:**
-
-`tsconfig.json` (project references root):
-```json
-{
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+```css
+:root {
+  /* ... existing tokens ... */
+  --brand: oklch(0.88 0.15 152);
+  --brand-foreground: oklch(0.145 0 0); /* near-black text on brand bg */
 }
 ```
 
-`tsconfig.app.json` (incremental migration mode):
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "allowJs": true,
-    "strict": false,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "paths": { "@/*": ["./src/*"] }
-  },
-  "include": ["src"]
+In `.dark`, re-declare `--brand` as the same value — this color reads well on dark backgrounds and does not need adjustment:
+
+```css
+.dark {
+  /* ... existing dark tokens ... */
+  --brand: oklch(0.88 0.15 152);
+  --brand-foreground: oklch(0.145 0 0);
 }
 ```
 
-`tsconfig.node.json`:
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2023"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "skipLibCheck": true,
-    "noEmit": true,
-    "isolatedModules": true
-  },
-  "include": ["vite.config.ts"]
+**2. Map to Tailwind in `@theme inline`**
+
+The `@theme inline` block already maps every CSS variable to a `--color-*` Tailwind token. Add two lines:
+
+```css
+@theme inline {
+  /* ... existing mappings ... */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
 }
 ```
 
-**Migration strategy:**
-1. Add tsconfig files with `allowJs: true`, `strict: false`
-2. Rename `main.jsx` to `main.tsx`, update `index.html` script src
-3. Rename `vite.config.js` to `vite.config.ts`
-4. Migrate leaf components first (no child imports), working inward
-5. .jsx and .tsx coexist during migration — no big-bang rename
-6. After all files migrated, flip to `strict: true`
+This generates `bg-brand`, `text-brand`, `border-brand`, `fill-brand`, `ring-brand`, and all other Tailwind color utilities automatically.
 
-**What you do NOT need:**
-- `vite-tsconfig-paths` — existing `resolve.alias` in vite.config already handles `@/`; matching `paths` in tsconfig gives IDE support
-- `ts-migrate` or codemods — at ~3,274 LOC, manual migration produces cleaner types than automated `any` injection
-- `@typescript-eslint/parser` — add when ESLint config is updated, not blocking for migration
+**3. Redirect shadcn semantic tokens to brand**
 
-**Confidence:** HIGH — [Vite TypeScript docs](https://vite.dev/guide/features) confirm native .tsx support via esbuild
+shadcn/ui components use `--primary`, `--ring`, and `--accent` for interactive states (button fills, focus rings, hover highlights). To make the accent color app-wide, update the semantic tokens:
 
----
+```css
+:root {
+  --primary: oklch(0.88 0.15 152);        /* buttons, active states */
+  --primary-foreground: oklch(0.145 0 0); /* text on primary */
+  --ring: oklch(0.88 0.15 152);           /* focus rings */
+}
+.dark {
+  --primary: oklch(0.88 0.15 152);
+  --primary-foreground: oklch(0.145 0 0);
+  --ring: oklch(0.88 0.15 152);
+}
+```
 
-### 4. PIN Authentication Gate — Zero New Dependencies
+**Why NOT use `--accent` for this:**
+In the Nova preset, `--accent` is used for hover states on non-primary interactive elements (menus, sidebars) and maps to a neutral gray. Overriding it globally would color every hover state green, which is too aggressive. Use `--primary` + `--ring` for the interactive accent; use `bg-brand` / `text-brand` for explicit green placement in custom components.
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Web Crypto API | (browser native) | SHA-256 hashing for PIN | Zero dependency. `crypto.subtle.digest('SHA-256', ...)` is available in all modern browsers. |
-| Zustand (existing) | ^5.0.11 | Session unlock state | `isUnlocked: boolean` in a store. Already in project. |
-| Supabase (existing) | ^2.98.0 | PIN hash storage | Store hashed PIN in `user_settings` table (or new `pin_hash` column). |
-
-**Implementation approach:**
-- PIN entry screen renders as a gate before `<App />` in the component tree
-- Hash PIN with `crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin))` — convert to hex string for storage
-- Compare entered PIN hash against stored hash in Supabase
-- Store unlock state in Zustand; optionally persist to `sessionStorage` (survives refresh, clears on tab close)
-- PIN setup flow: first-time user sets PIN, hash stored to Supabase
-
-**What you do NOT need:**
-- Supabase Auth — overkill for single-user PIN gate
-- `bcrypt` / `argon2` / `scrypt` WASM — these are for multi-user password storage with brute-force resistance. A personal PIN on a personal app with no network exposure does not need them.
-- JWT tokens — the existing anon key approach stays; PIN is a UI-only gate
-
-**Confidence:** HIGH — Web Crypto API has universal browser support, no dependencies
+**Confidence for CSS approach:** HIGH — Tailwind v4 docs confirm `@theme inline` with CSS variable references generates utility classes; project already uses this exact pattern (see `--color-accent: var(--accent)` at line 99 of `index.css`).
 
 ---
 
-### 5. Mobile Responsiveness — Zero New Dependencies
+## Fixed Sidebar Layout
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Tailwind v4 (existing) | ^4.2.1 | Responsive breakpoints | `sm:`, `md:`, `lg:` utilities already available. Flex and grid layouts handle reflow. |
+### Strategy
 
-**What this involves (implementation, not stack):**
-- Audit fixed desktop widths: `px-32` in JournalEditorOverlay, `max-w-[1100px]` in AppShell
-- Replace with responsive variants: `px-4 sm:px-12 lg:px-32`
-- Touch targets: minimum 44x44px for all interactive elements
-- SideNav likely becomes a bottom tab bar on mobile (responsive layout change)
-- DayStrip horizontal scroll needs touch gesture refinement
-- Test with `bun run dev --host` for real device testing
+Use CSS Grid at the page level. No new library needed. Tailwind v4 grid utilities handle everything.
 
-**What you do NOT need:**
-- `react-responsive` or media query hooks — Tailwind handles responsive at CSS level
-- Container query polyfill — native support covers target browsers
-- Mobile component library — existing shadcn components are responsive-ready
+```html
+<!-- Two-panel desktop / single-column mobile -->
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 h-screen overflow-hidden">
+  <!-- Main ledger timeline — scrolls independently -->
+  <main class="overflow-y-auto">
+    <!-- Month accordion sections -->
+  </main>
 
-**Confidence:** HIGH — no new technology needed
+  <!-- Fixed sidebar — scrolls independently, sticks to viewport -->
+  <aside class="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+    <!-- Balance, projections, year overview -->
+  </aside>
+</div>
+```
+
+**Key CSS insight:** `position: sticky` only sticks within its scroll container. For a true fixed sidebar that stays put while the main content scrolls, the parent must be `overflow: hidden` (not `overflow: auto`), and each panel gets its own `overflow-y: auto`. This is the `h-screen overflow-hidden` + independent overflow pattern — no library needed.
+
+**Mobile:** Below `lg:` breakpoint, `grid-cols-1` stacks sidebar below the ledger. On mobile, the sidebar collapses to a card at the top or is hidden behind a summary row.
+
+**Confidence:** HIGH — pattern documented in CSS-Tricks, MDN, and multiple shadcn/ui layout examples.
 
 ---
 
-## Complete Installation
+## Continuous Ledger Timeline
+
+### Structure
+
+The ledger is a vertically scrolling list of month sections. Each section is a Radix Accordion item.
+
+```
+<Accordion type="multiple" defaultValue={[currentMonth]}>
+  <AccordionItem value="2026-03">   <!-- Current month, open -->
+    <AccordionTrigger>March 2026 — Balance snapshot</AccordionTrigger>
+    <AccordionContent>
+      [Fixed bills] [Recurring debts] [One-off expenses] [Budget caps]
+    </AccordionContent>
+  </AccordionItem>
+
+  <AccordionItem value="2026-02">   <!-- Past month, closed -->
+    ...
+  </AccordionItem>
+</Accordion>
+```
+
+Past months collapse into a read-only summary line (total spent, balance at end of month). `defaultValue={[currentMonth]}` opens only the current month on load.
+
+### Recurring Debt Tracking
+
+Recurring debts require storing flexible payments + remaining balance. This needs a schema addition — not a new package.
+
+**Proposed schema changes:**
+
+```sql
+-- New table: debt_entries (replaces the bills table for recurring debts)
+CREATE TABLE debt_entries (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  total_amount numeric NOT NULL,
+  remaining_balance numeric NOT NULL,
+  min_payment numeric,
+  created_at timestamptz DEFAULT now()
+);
+
+-- New table: debt_payments (payment log per debt per month)
+CREATE TABLE debt_payments (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  debt_id uuid REFERENCES debt_entries(id) ON DELETE CASCADE,
+  amount numeric NOT NULL,
+  month text NOT NULL,  -- YYYY-MM
+  paid_at timestamptz DEFAULT now()
+);
+
+-- New table: budget_logs (spending under a budget cap)
+CREATE TABLE budget_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  budget_name text NOT NULL,
+  amount numeric NOT NULL,
+  description text,
+  month text NOT NULL,  -- YYYY-MM
+  logged_at timestamptz DEFAULT now()
+);
+```
+
+The existing `bills` table continues to hold fixed monthly and one-off expenses. Recurring debts get their own tables to support payment history and remaining balance computation.
+
+**Confidence:** MEDIUM — schema design based on standard ledger patterns; exact column set will evolve during implementation. No external library for debt math needed — JavaScript arithmetic is sufficient.
+
+---
+
+## Installation
 
 ```bash
-# Rich text editor (3 packages)
-bun add @tiptap/react @tiptap/pm @tiptap/starter-kit
-
-# Charts (scaffolds components + adds recharts dependency)
-bunx shadcn@latest add chart
-
-# TypeScript (dev only)
-bun add -D typescript
+# Scaffold shadcn/ui components (no new npm packages installed — uses radix-ui already in dependencies)
+bunx shadcn@latest add accordion
+bunx shadcn@latest add collapsible
+bunx shadcn@latest add scroll-area
+bunx shadcn@latest add separator
 ```
 
-**Total new dependency surface:**
-- **3 runtime packages** — Tiptap trio (@tiptap/react, @tiptap/pm, @tiptap/starter-kit)
-- **1 runtime package** — Recharts (added automatically by shadcn chart scaffold)
-- **1 dev package** — TypeScript
-- **0 packages** — PIN auth (Web Crypto API) and mobile responsiveness (Tailwind)
+**Total new npm package surface: 0**
+
+All scaffolded components use `radix-ui ^1.4.3` which is already in `package.json`.
+
+---
+
+## Alternatives Considered
+
+| Recommended | Alternative | Why Not |
+|-------------|-------------|---------|
+| Radix Accordion via shadcn | Custom `<details>` / `<summary>` HTML | `<details>` has no controlled state, no smooth animation, and awkward styling. Radix Accordion gives controlled open state, keyboard nav, and CSS height transitions for free. |
+| Radix Accordion via shadcn | react-collapse / react-spring | Additional packages when Radix (already installed) covers the use case. Avoid dependency bloat. |
+| CSS Grid sticky sidebar | shadcn/ui Sidebar component | shadcn Sidebar is designed for navigation drawers with open/closed state. A finance sidebar is a static data panel — CSS Grid + `position: sticky` is simpler and has no JavaScript overhead. |
+| `@theme inline --color-brand` | Tailwind `@utility` directive | `@utility` generates a standalone utility class but does not produce the full `bg-*`/`text-*`/`border-*` family automatically. `@theme inline` with `--color-brand` generates all color utilities from one declaration. |
+| `oklch()` for brand color | Raw hex `#7CF5A5` in CSS variable | Tailwind v4 processes all colors through its internal pipeline. Using oklch is consistent with the existing token set and produces correct output with Tailwind's color opacity modifier syntax (`bg-brand/50`). Hex in a CSS variable does NOT support opacity modifiers. |
 
 ---
 
@@ -216,58 +246,38 @@ bun add -D typescript
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Slate.js | Must build every extension manually; steeper learning curve for same output | Tiptap + StarterKit |
-| Quill | Opinionated UI fights monochrome styling; less composable | Tiptap (headless) |
-| Nivo / Victory / Chart.js | No shadcn integration; heavier; wrong rendering model | Recharts via shadcn chart |
-| D3 directly | Recharts wraps D3; raw D3 is unnecessary for standard charts | Recharts |
-| bcrypt / argon2 WASM | Overkill for personal single-user PIN; adds WASM dependency | Web Crypto SHA-256 |
-| Supabase Auth | No multi-user auth needed; adds auth session complexity | Simple PIN hash comparison |
-| `ts-migrate` codemods | Produces noisy `any` types at this codebase size | Manual file-by-file migration |
-| `vite-tsconfig-paths` | Existing vite resolve.alias already handles `@/` path | tsconfig `paths` for IDE only |
-| `react-responsive` | Tailwind responsive utilities handle all breakpoint needs | `sm:` / `md:` / `lg:` variants |
-| `date-fns` for finance | Existing `Intl.DateTimeFormat` pattern works; avoid adding a date library for formatting alone | `Intl.DateTimeFormat` + native Date methods |
+| Mobiscroll / KendoReact timeline | Heavyweight calendar/scheduler libraries — massive bundle, opinionated UI, wrong abstraction for a ledger | Radix Accordion + plain month sections |
+| `react-query` / TanStack Query | Supabase JS already handles async data fetching; adding a caching layer adds complexity without benefit for a single-user personal app | Existing Zustand + Supabase pattern |
+| `decimal.js` / `big.js` | Financial arithmetic with JavaScript `number` is sufficient for personal budgets (amounts < $1M, no fractional cents needed) | Native JS arithmetic with `toFixed(2)` for display |
+| `date-fns` | Not needed for YYYY-MM month string manipulation; `new Date()` + `Intl.DateTimeFormat` already handles all date display requirements in this project | Native Date + Intl.DateTimeFormat (already used) |
+| shadcn Sidebar component | Designed for collapsible nav drawers, not static data sidebars; adds open/close state management that is not needed here | CSS Grid with `position: sticky` |
+| Any new chart library | Finance sidebar projections and year overview can reuse the Recharts-backed shadcn Chart components already scaffolded in v2.0 | Existing `src/components/ui/chart.tsx` |
 
 ---
 
-## Database Schema Additions (Supabase)
+## Version Compatibility
 
-These are not npm packages but are stack-relevant for the finance port:
-
-| Table | Purpose | Key Columns |
-|-------|---------|-------------|
-| `month_settings` | Monthly salary, budget allocation | `month` (YYYY-MM), `salary`, `needs_pct`, `wants_pct`, `savings_pct` |
-| `transactions` | Income and expense records | `amount`, `category`, `description`, `date`, `type` (income/expense) |
-| `bills` | Recurring bills tracking | `name`, `amount`, `due_day`, `is_paid`, `month` |
-| `investments` | Investment portfolio entries | `name`, `type`, `amount`, `current_value`, `date_added` |
-
-The `journal_entries.body` column needs migration from `text` to `jsonb` to store Tiptap JSON.
-
----
-
-## Version Compatibility Matrix
-
-| New Package | Compatible With | Verified |
-|-------------|-----------------|----------|
-| @tiptap/react ^3.20 | React ^19.x | Yes — Tiptap v3 supports React 18+ |
-| recharts ^3.8 | React ^19.x | Yes — Recharts v3 supports React 18+ |
-| typescript ^5.8 | Vite ^7.x | Yes — Vite uses esbuild for TS, no tsc integration needed |
-| typescript ^5.8 | @types/react ^19.2 | Yes — types packages already installed |
+| Package | Version in Use | Compatibility Notes |
+|---------|----------------|---------------------|
+| `radix-ui` | ^1.4.3 | Accordion, Collapsible, ScrollArea primitives are all included in the monorepo package. `bunx shadcn@latest add` scaffolds against this version. |
+| `shadcn` | ^4.0.2 | CLI version that scaffolds into `src/components/ui/`. Confirmed to support accordion, collapsible, scroll-area commands. Style: `radix-nova`. |
+| `tailwindcss` | ^4.2.1 | `@theme inline` with `--color-*` variables is a v4-only feature — confirmed working in current project's `index.css`. |
+| `motion` | ^12.35.2 | Accordion height animation uses CSS `grid-rows` transition (shadcn default), not motion. No conflict with the known `translate`/`transform` issue. |
 
 ---
 
 ## Sources
 
-- [Tiptap React Install Docs](https://tiptap.dev/docs/editor/getting-started/install/react)
-- [Tiptap StarterKit Extensions](https://tiptap.dev/docs/editor/extensions/functionality/starterkit)
-- [Tiptap JSON/HTML Output Guide](https://tiptap.dev/docs/guides/output-json-html)
-- [Tiptap Persistence Docs](https://tiptap.dev/docs/editor/core-concepts/persistence)
-- [@tiptap/react on npm](https://www.npmjs.com/package/@tiptap/react) — v3.20.1
-- [@tiptap/starter-kit on npm](https://www.npmjs.com/package/@tiptap/starter-kit) — v3.20.0
-- [shadcn/ui Chart Component](https://ui.shadcn.com/docs/components/radix/chart)
-- [Recharts on npm](https://www.npmjs.com/package/recharts) — v3.8.0
-- [Vite TypeScript Features](https://vite.dev/guide/features)
-- [Vite TS Migration Discussion](https://github.com/vitejs/vite/discussions/6799)
+- [shadcn/ui Accordion docs](https://ui.shadcn.com/docs/components/radix/accordion) — component API, install command, type="multiple" support
+- [shadcn/ui Collapsible docs](https://ui.shadcn.com/docs/components/radix/collapsible) — single-panel expand/collapse
+- [shadcn/ui ScrollArea docs](https://ui.shadcn.com/docs/components/radix/scroll-area) — custom scrollbar container
+- [Radix Primitives — Accordion](https://www.radix-ui.com/primitives/docs/components/accordion) — underlying primitive API
+- [Tailwind CSS v4.0 — Theme Variables](https://tailwindcss.com/docs/theme) — `@theme inline` color variable mapping
+- [Tailwind CSS v4.0 — Colors](https://tailwindcss.com/docs/colors) — oklch format, custom color generation
+- [Tailkits — Tailwind v4 Custom Colors](https://tailkits.com/blog/tailwind-v4-custom-colors/) — confirms hex vs oklch behavior in CSS variables
+- [CSS Grid sticky sidebar pattern](https://www.paigeniedringhaus.com/blog/use-css-grid-to-make-a-fixed-sidebar-with-scrollable-main-body/) — `h-screen overflow-hidden` + independent overflow technique
 
 ---
-*Stack additions research for: wintrack v2.0 Finance & Platform*
-*Researched: 2026-03-16*
+
+*Stack research for: wintrack v2.1 Finance Redesign & UI Rehaul*
+*Researched: 2026-03-23*

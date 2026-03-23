@@ -1,186 +1,191 @@
 # Project Research Summary
 
-**Project:** wintrack v2.0 — Finance & Platform
-**Domain:** Personal accountability app expanding into finance management, rich text journaling, PIN auth, TypeScript migration, and mobile responsiveness
-**Researched:** 2026-03-16
+**Project:** wintrack v2.1 — Finance Redesign & UI Rehaul
+**Domain:** Personal finance ledger — continuous timeline, budget tracking, recurring debt, fixed sidebar
+**Researched:** 2026-03-23
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Wintrack v2.0 is a platform expansion of an existing React SPA (Vite, React 19, Tailwind v4, shadcn/ui, Supabase) that adds personal finance management, rich text journal editing, PIN-based access control, TypeScript adoption, and mobile responsiveness. The existing architecture is well-structured with clear patterns (hook-per-domain, overlay state machines, optimistic updates) that extend cleanly to new features. The recommended approach is to port finance data models from the source 350 app while replacing its Next.js Server Actions with Supabase client-side RPC calls under the existing anon-key + RLS pattern.
+wintrack v2.1 is a finance ledger redesign that replaces the existing month-navigation pattern (MonthBarrel) with a continuous scrollable timeline, adds per-category budget spending caps, recurring debt tracking with flexible payment logging, and a fixed right sidebar showing live balance and year projections. The research confirms this can be built entirely within the existing stack — zero new npm packages are required. The only additions are four shadcn/ui component scaffolds (Accordion, Collapsible, ScrollArea, Separator) that use Radix primitives already installed at `radix-ui ^1.4.3`, plus four new Supabase tables and a CSS brand color token.
 
-The new dependency surface is minimal: Tiptap (headless rich text editor, 3 packages), Recharts via shadcn chart scaffolding (1 package), and TypeScript (dev-only). PIN authentication and mobile responsiveness require zero new dependencies. All new packages are verified compatible with React 19 and Vite 7. The total addition is 4 runtime packages and 1 dev package -- deliberately lean.
+The recommended approach is a dependency-first build order: database schema and hooks before UI components, layout skeleton before data content, current month before past months. The most consequential architectural change is replacing the single-month `useFinance` hook with a `useLedgerMonths` batch hook that fetches the current month (with upsert) and past months (read-only, no upsert) in a single coordinated request. Past month sections render as collapsed summaries and mount their sub-hooks lazily only when expanded, avoiding the 12-RPC fan-out that would otherwise serialize at the database level.
 
-The primary risks are: (1) journal plain-text to rich-text migration silently breaking existing entries if backward compatibility is not handled with a format discriminator, (2) finance stored procedures returning empty results when RLS policies are missing or misconfigured under anon-key context, and (3) TypeScript migration stalling in a two-language purgatory if not approached leaf-to-root with `allowJs: true`. All three are well-understood and have clear prevention strategies documented in the pitfalls research.
+The two highest-risk areas are the multi-month data loading strategy (which must be a single batch RPC, not per-section calls) and the balance carry-forward chain (which corrupts silently when past months are edited without cascading `starting_balance` updates). Both must be designed at the schema and hook level before any UI work begins. The CSS accent color change (`#7CF5A5`) carries a separate risk: it must use a new `--brand` token and must never overwrite the existing `--accent` token, which shadcn/ui uses internally for hover states throughout the component library.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack (Vite, React 19, Tailwind v4, shadcn/ui, Supabase, Zustand, motion, Lucide) is validated and unchanged. Five additions cover all v2.0 requirements with minimal surface area.
+The existing stack handles every v2.1 requirement. No new runtime packages. Four shadcn CLI scaffolds pull Radix components already installed: `bunx shadcn@latest add accordion collapsible scroll-area separator`. The ledger layout uses CSS Grid with independent overflow columns — no layout library needed. The accent color uses the existing `@theme inline` pattern in `index.css`.
 
 **Core technologies:**
-- **Tiptap** (`@tiptap/react` + `@tiptap/pm` + `@tiptap/starter-kit` ^3.20): Headless rich text editor -- fully style-controllable for Nothing aesthetic, StarterKit bundles bold/italic/lists/headings out of the box
-- **Recharts** (^3.8 via `bunx shadcn@latest add chart`): SVG charting -- shadcn chart component wraps Recharts with automatic dark mode and Nova theming
-- **TypeScript** (^5.8, dev-only): Type checking -- Vite already transpiles .tsx natively via esbuild, zero config changes
-- **Web Crypto API** (browser-native): PIN hashing via `crypto.subtle.digest('SHA-256', ...)` -- zero dependencies
-- **Tailwind v4 responsive** (existing): Mobile breakpoints via `sm:`/`md:`/`lg:` -- no new packages
+- Radix Accordion (via shadcn, already installed): collapsible month sections with keyboard nav and WAI-ARIA — `type="multiple"`, `defaultValue={[currentMonth]}`
+- CSS Grid with `position: sticky` inside flex columns: two-panel finance layout, no JavaScript overhead, mobile collapse via `hidden lg:flex`
+- Supabase additive migration `016_debts_and_budgets.sql`: four new tables in one atomic migration — no changes to existing schema except an optional `category` column on `bill_templates`
+- Tailwind v4 `@theme inline`: `--color-brand: var(--brand)` generates all `bg-brand` / `text-brand` / `border-brand` utilities — must use `oklch()` not raw hex for opacity modifier support (`bg-brand/50`)
 
 ### Expected Features
 
-**Must have (table stakes):**
-- Month-based budget view with starting cash, salary, and budget limit
-- Transaction CRUD with categorization (expense/income/investment types)
-- Bill management with due dates, paid/unpaid toggle, and recurring rollover
-- Investment allocation tracking with target vs current percentages
-- Finance dashboard with cash overview and monthly summary
-- Rich text journal (bold, italic, lists, headings, keyboard shortcuts)
-- Backward-compatible rendering of existing plain-text journal entries
-- PIN entry gate on app open with session persistence
-- Touch-friendly mobile layout with responsive navigation
-- TypeScript adoption for all new code
+Based on competitor analysis of YNAB, Monarch Money, Copilot Money, Kualto, and Undebt.it:
 
-**Should have (differentiators):**
-- Unified accountability + finance in one app (the integration IS the differentiator)
-- Budget pulse visualization (signature visual element from source app)
-- Financial journal entries surfaced alongside budget data
-- Investment drift visual indicators
-- Bento grid dashboard layout
+**Must have (table stakes — v2.1 ships with these):**
+- Continuous scrollable timeline replacing MonthBarrel navigation — central UX shift
+- Collapsible past-month sections (accordion, default-closed, read-only on expand)
+- Four distinct expense categories: fixed monthly, recurring debts, one-off, budget envelopes
+- Budget spending caps with per-category quick-log expense entry
+- Recurring debt tracking: name, remaining balance, minimum payment, flexible payment logging
+- Balance carry-forward (closing balance feeds next month's opening balance)
+- Fixed sidebar on desktop: current balance, projected end-of-month balance
+- App-wide `#7CF5A5` accent color pass
 
-**Defer to v2.x:**
-- Biometric/WebAuthn authentication
-- Markdown export for journal
-- Bank account sync (Plaid/Yodlee)
-- Complex envelope budgeting system
-- Investment live price fetching
-- Full WYSIWYG editor features (tables, images, embeds)
+**Should have (ship with v2.1 if time permits):**
+- Projected end-of-month balance formula: `current_balance + remaining_income - unpaid_bills - remaining_debt_minimums`
+- Year overview compact table in sidebar (reuse existing data, new render location)
+- Debt balance progress bar within each debt card (remaining / original)
+
+**Defer to v2.2+:**
+- Debt payoff date projection — requires interest rate input, misleading when reality diverges from model
+- Budget rollover between months — state machine complexity, violates clean monthly resets
+- Financial journal entries surfaced within timeline month sections
+- Export/import of ledger data
 
 ### Architecture Approach
 
-The v2.0 architecture extends the existing hook-per-domain pattern without introducing new state management paradigms. Finance data is page-scoped (no Zustand store needed), flowing through `FinancePage` which holds month state and passes it to child hooks. PIN gate is a layout route wrapping all children in the router tree. Tiptap replaces the textarea in JournalEditorOverlay. All new code is TypeScript from day one; existing .jsx files coexist and migrate incrementally.
+FinancePage is fully rewritten as a two-column flex layout: scrollable ledger column and sticky sidebar. FinancePage manages its own scroll context using `h-full overflow-hidden` on its outer div with `overflow-y-auto` only on the ledger column — AppShell's `<main>` scroll stays intact for other pages. Each MonthSection mounts its own sub-hooks (`useBills`, `useDebts`, `useBudgetExpenses`, `useOneOffIncome`) and receives only a `monthId` prop, avoiding prop-drilling through the timeline. The module-level `monthCache` is replaced with a Zustand `financeStore` keyed by `YYYY-MM` so writes are reflected immediately across all consumers including the sidebar.
 
-**Major components:**
-1. **PinGate** (layout route) -- client-side lock screen, sessionStorage-based session, SHA-256 hash verification
-2. **FinancePage + finance hooks** -- month-scoped CRUD via 5 custom hooks (useTransactions, useBudget, useBills, useInvestments, useDashboard), Supabase RPC for atomic multi-table operations
-3. **JournalEditorOverlay + Tiptap** -- headless editor replaces textarea, JournalToolbar for minimal formatting, HTML storage in existing body column
-4. **Responsive AppShell** -- SideNav becomes bottom tab bar on mobile (<md), responsive padding throughout
-5. **Finance database layer** -- 4 new tables (budgets, bills, investments, transactions) with RLS, 4+ stored procedures for atomic operations
+**Major components (new):**
+1. `LedgerTimeline` — scrollable container of MonthSection accordion items, renders current + N past months
+2. `MonthSection` — single month with collapsed summary row (past) or expanded four-section view (current/opened)
+3. `FinanceSidebar` — fixed right panel: balance, projected EOM balance, YearOverviewTable
+4. `RecurringDebtsSection` — debt cards with remaining balance display and per-month payment log
+5. `BudgetsSection` — budget caps with inline quick-log expense entry popover
+6. `useLedgerMonths(count)` — batch multi-month loader; calls ensure/populate only for current month, fetches past months read-only
+
+**Reused unchanged:** `useBills`, `useBalanceHistory`, `useOneOffIncome`, `useExchangeRate`, `useYearOverview`, `BalanceDisplay`, `BalanceHistoryModal`, `BalanceSparkline`, `IncomeChecklistCard`, all non-finance components and hooks, all existing Supabase RPCs.
 
 ### Critical Pitfalls
 
-1. **Journal plain-text migration** -- Existing entries lose line breaks when loaded into Tiptap. Add `body_format` column to discriminate plain-text vs rich content; lazy-migrate on first edit.
-2. **Finance RLS under anon key** -- Stored procedures ported from service-role context return empty results. Every migration must include RLS policies; test through client SDK, never the dashboard.
-3. **TypeScript two-language purgatory** -- Converting one file triggers cascading type errors. Use `allowJs: true`, `strict: false`; convert leaf-to-root; convert tests alongside source files.
-4. **Tiptap + motion CSS translate collision** -- ProseMirror cursor positioning breaks under animated parent transforms. Keep editor in a static container; animate only via opacity or CSS keyframes.
-5. **Currency/locale hardcoding** -- Inline `Intl.NumberFormat` calls with hardcoded currency spread across components. Create `formatCurrency()` utility first; store amounts as integers (centavos) to avoid float rounding.
+1. **12-RPC fan-out on ledger load** — calling `useFinance` or `ensure_month_exists` per visible month fires 12 simultaneous RPCs that serialize at the DB level, causing 800ms+ load times. Avoid by writing a single `initialize_ledger` RPC that creates missing months in one transaction. Only call populate RPCs for the current month. Past months are read-only fetches.
+
+2. **Balance chain corruption on past-month edits** — `starting_balance` is written once at month creation and never updated. Editing a past month's balance leaves all subsequent months with stale opening balances silently. Avoid by either cascading the update one month forward in `apply_balance_override`, or always computing `starting_balance` from `previous_month.current_balance` at display time (recommended for a continuous ledger).
+
+3. **Module-level `monthCache` serves stale data in multi-month view** — the current per-month cache invalidation assumes one active month. With 12 months mounted, a write to March only invalidates March's cache entry while the sidebar may still read stale March data. Replace with a Zustand `financeStore` keyed by `YYYY-MM` that all consumers subscribe to reactively.
+
+4. **`--accent` token overwrite breaks shadcn hover states** — shadcn/ui Nova preset uses `--accent` for all `hover:bg-accent` states across Button, DropdownMenu, Select, and NavigationMenu. Assigning `#7CF5A5` to `--accent` turns all hover states bright green. Introduce a new `--brand` token exclusively for product-specific coloring.
+
+5. **`overflow-hidden` on two-column wrapper breaks `position: sticky`** — the existing FinancePage uses `overflow-hidden` for its horizontal slide container. This ancestor breaks sticky positioning. Remove `overflow-hidden` entirely from the new two-column wrapper; apply `overflow-y-auto` only to the ledger column.
+
+---
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+The research reveals a clear dependency graph. Data and layout must exist before content components. Past month behavior (read-only, collapsed) must be enforced in the data layer before the accordion UI is wired. The accent color sweep is non-functional and should be a final pass to avoid re-work as new components are built throughout earlier phases.
 
-### Phase 1: TypeScript Foundation
-**Rationale:** All new code must be TypeScript from day one. Setting up tsconfig, renaming entry points, and establishing type definitions must happen before any feature work begins. This is a blocker for clean feature development.
-**Delivers:** Working TypeScript configuration with `allowJs: true`, converted entry points (main.tsx, App.tsx), shared type definitions file, `tsc --noEmit` passing.
-**Addresses:** TypeScript migration (table stakes), type definitions for Supabase schema.
-**Avoids:** Two-language purgatory pitfall by establishing conventions early.
+### Phase 1: Database & Type Foundation
+**Rationale:** All new hooks and components depend on the schema. Schema must be additive and atomic. No UI work can proceed without generated types. CSS token defined early prevents any component being built with the wrong color pattern.
+**Delivers:** Migration `016_debts_and_budgets.sql` (4 new tables with RLS), regenerated `database.types.ts`, extended `types/finance.ts` with Debt / Budget / BudgetExpense interfaces, `--brand` / `--color-brand` CSS token added to `index.css`.
+**Addresses:** Recurring debt schema, budget schema, brand color token foundation.
+**Avoids:** Partial migration risk (all 4 tables in one atomic migration), `--accent` overwrite pitfall (brand token defined correctly from the start with a separate name).
 
-### Phase 2: PIN Authentication Gate
-**Rationale:** PIN must exist before finance data enters the system. Finance data (salary, budgets) is more sensitive than wins/journal. The PIN gate is independent and small-scoped.
-**Delivers:** PinGate layout route, PinInput numpad UI, SHA-256 hash storage in user_settings, session timeout with idle detection, PIN setup/change/remove in Settings.
-**Addresses:** PIN entry, setup flow, session persistence, secure storage.
-**Avoids:** False security pitfall by documenting threat model explicitly and implementing idle timeout.
+### Phase 2: Core Data Hooks
+**Rationale:** All timeline components need hooks before they can render real data. Writing and testing hooks in isolation before UI complexity is added prevents bugs from being masked by rendering concerns.
+**Delivers:** `useLedgerMonths(count)` (batch multi-month loader with Zustand store), `useDebts(monthId)`, `useBudgets()`, `useBudgetExpenses(monthId)`.
+**Addresses:** Multi-month data loading without fan-out, balance carry-forward computation, Zustand store replacing module-level cache.
+**Avoids:** 12-RPC fan-out pitfall, stale module cache pitfall. Balance chain integrity logic lives here and is tested in isolation.
 
-### Phase 3: Finance Database + Core Budget
-**Rationale:** Database schema and RPC functions must exist before any finance UI. Month settings and transactions form the foundation that bills and investments build on.
-**Delivers:** 4 Supabase tables with RLS, stored procedures for atomic operations, `formatCurrency()` utility, useTransactions and useBudget hooks, MonthSelector, basic FinancePage with budget view and transaction list.
-**Addresses:** Month-based budget, starting cash, salary tracking, transaction CRUD, budget progress visualization.
-**Avoids:** RLS silent failure pitfall by testing every query through client SDK. Currency hardcoding pitfall by establishing utility first.
+### Phase 3: Layout Skeleton
+**Rationale:** The two-column layout and AppShell scroll interaction must be confirmed working before sidebar and ledger content are built into it. Getting the container structure right first prevents rework when sticky positioning fails in an unexpected overflow context.
+**Delivers:** FinancePage two-column flex skeleton (ledger column + sidebar column), `overflow-y-auto` only on ledger column, AppShell integration confirmed on desktop and mobile.
+**Addresses:** Fixed sidebar layout (table stakes).
+**Avoids:** `overflow-hidden` ancestor breaking sticky, AppShell `<main>` scroll conflict (use `h-full overflow-hidden` on FinancePage outer div), iOS Safari fixed-inside-overflow bug (use sticky not fixed).
 
-### Phase 4: Finance Extended (Bills + Investments + Dashboard)
-**Rationale:** Bills and investments are independent of each other but both depend on the month-settings foundation from Phase 3. Dashboard aggregates all finance data and must come last.
-**Delivers:** BillsList with paid toggle and recurring rollover, InvestmentsList with target allocation, DashboardOverview with bento grid layout, Recharts integration via shadcn chart components.
-**Addresses:** Bill management, investment tracking, cash overview, monthly summary, budget pulse visualization.
-**Avoids:** Finance aggregation performance pitfall by using RPC for dashboard snapshot.
+### Phase 4: Finance Sidebar
+**Rationale:** Sidebar depends on balance data from `useLedgerMonths` (Phase 2) and the layout skeleton (Phase 3). It reads existing data — no new mutations — so it is the safest first content to build after the layout is confirmed.
+**Delivers:** `FinanceSidebar` with current balance, projected EOM balance, `YearOverviewTable` extracted from YearOverviewPage and rendered in the compact sidebar format.
+**Uses:** CSS sticky within flex column, existing `useYearOverview` hook, existing `BalanceDisplay` and `BalanceSparkline` components.
+**Implements:** Fixed sidebar architecture pattern with its own `overflow-y-auto`.
 
-### Phase 5: Rich Text Journal (Tiptap)
-**Rationale:** Independent of finance features. Isolated to JournalEditorOverlay replacement. Should come after finance so the team is not juggling two complex integrations simultaneously.
-**Delivers:** Tiptap editor replacing textarea, JournalToolbar (bold/italic/list/heading), backward-compatible rendering of plain-text entries, word count via CharacterCount extension.
-**Addresses:** Rich text formatting, keyboard shortcuts, backward compatibility.
-**Avoids:** Plain-text migration pitfall via `body_format` column. Tiptap + motion cursor collision via static container pattern. Performance pitfall via `shouldRerenderOnTransaction: false` and lazy loading.
+### Phase 5: Ledger Timeline — Current Month
+**Rationale:** Build the current month fully before tackling multi-month collapse. This confirms all hooks and section components work together with real data before the past-months layer adds collapse state machine complexity.
+**Delivers:** `LedgerTimeline` container, `MonthSection` (current, always expanded), `FixedBillsSection`, `IncomeSection`, `OneOffIncomeSection`, `RecurringDebtsSection` with payment log, `BudgetsSection` with quick-log inline entry.
+**Addresses:** Four expense categories, budget spending caps with quick-log, recurring debt tracking with flexible payments, balance carry-forward display.
+**Avoids:** Debt `remaining_balance` drift (atomic payment RPC, or computed-not-stored strategy decided in Phase 1 planning), budget expense race condition (disable log button during in-flight request, atomic RPC for balance update).
 
-### Phase 6: Mobile Responsiveness
-**Rationale:** Cross-cutting concern that must come after all new UI exists (finance pages, Tiptap editor, PIN screen). Making things responsive before they exist means doing the work twice.
-**Delivers:** SideNav as bottom tab bar on mobile, responsive padding throughout, touch-friendly targets (44x44px minimum), DayStrip touch gesture support, finance page mobile layout.
-**Addresses:** Touch targets, responsive layout, no horizontal scroll.
-**Avoids:** SideNav mobile breakage pitfall by restructuring navigation component.
+### Phase 6: Past Month Collapse
+**Rationale:** Past month behavior — collapsed summary row, lazy sub-hook hydration, read-only enforcement — is a separate concern from rendering the current month correctly. Layering it on top of a working Phase 5 reduces risk.
+**Delivers:** Multi-month accordion rendering in `LedgerTimeline`, collapsed past months showing single summary row (month name, ending balance, income total, expense total), lazy sub-hook mounting when user expands, past-month read-only enforcement at the query level.
+**Addresses:** Collapsible past months (table stakes), balance chain integrity visible across months.
+**Avoids:** DOM bloat (collapsed months render summary only, not full section trees), balance chain stale display (computed `starting_balance` from Phase 2 applies here).
 
-### Phase 7: TypeScript Completion + Polish
-**Rationale:** By this point, most files have been touched and converted during feature work. This phase converts remaining .jsx stragglers, enables `strict: true`, and addresses any accumulated tech debt.
-**Delivers:** All files in TypeScript, strict mode enabled, `tsc --noEmit` clean, dev branch workflow finalized.
-**Addresses:** Full TypeScript coverage, dev branch isolation.
+### Phase 7: Accent Color Sweep
+**Rationale:** Non-functional cosmetic pass. Doing it last avoids re-work as new components are added in Phases 3–6. All existing and new components receive the `--brand` treatment in a single coordinated pass with a full visual regression check.
+**Delivers:** `text-brand` / `bg-brand` applied to nav active states, checkmarks, progress bar fills, current month indicator, balance numbers. Dark mode verification. Accessibility check confirming brand color is only used decoratively, never as text on light backgrounds (fails WCAG AA at 1.8:1 contrast on white).
+**Avoids:** shadcn hover states turning green (`--accent` remains untouched throughout), OKLCH conversion verified (`oklch(0.88 0.14 154)` confirmed for `#7CF5A5`).
 
 ### Phase Ordering Rationale
 
-- **TypeScript first** because every subsequent phase writes new .ts/.tsx files. Establishing conventions once prevents inconsistency.
-- **PIN before finance** because finance data is sensitive. The gate should exist before the data does.
-- **Finance core before extended** because transactions and budget settings are the foundation that bills, investments, and dashboard build upon.
-- **Tiptap after finance** because both are medium-complexity integrations. Sequencing avoids context-switching overhead and lets each get proper attention.
-- **Mobile last** because it is a cross-cutting layout concern. Every new UI component needs responsive treatment, so this phase covers everything in one pass.
-- **TS completion last** because incremental migration happens naturally during feature phases. The final phase just mops up untouched files and flips strict mode.
+- Schema precedes hooks (Phase 1 → 2): hooks depend on generated TypeScript types from the migration.
+- Layout precedes content (Phase 3 → 4/5): sidebar and ledger content built into an unconfirmed scroll container creates rework when sticky positioning fails.
+- Current month before past months (Phase 5 → 6): past month collapse adds state machine complexity (expanded/collapsed, lazy loading, read-only) that is easier to layer on a proven current-month view.
+- Sidebar before ledger content (Phase 4 → 5): sidebar reads data only, no mutations, lower risk. Confirms data hooks work before complex section components depend on them.
+- Accent sweep last (Phase 7): building all new components in existing monochrome style first, then a single color pass, avoids incremental re-work and allows the full regression check to happen once.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 3 (Finance Database):** Stored procedure design and RLS policy patterns for the 4 new tables need careful specification. The 350 source app's data model may need adaptation.
-- **Phase 5 (Rich Text Journal):** Tiptap performance tuning (`shouldRerenderOnTransaction`, lazy loading) and the motion/translate collision need validation during implementation.
+- **Phase 2 (Core Hooks):** The `useLedgerMonths` batch RPC design has no direct precedent in the existing codebase. The `initialize_ledger_range` RPC logic needs careful design to handle the case where some months exist and some do not, without row-level lock contention across months for the same user.
+- **Phase 5 (Recurring Debts):** The decision between stored `remaining_balance` (fast read, drift risk) and computed `remaining_balance` (always correct, minor query cost) must be finalized before the first debt payment RPC is written. Recommendation: computed is safer for a personal app with < 100 debts.
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (TypeScript Foundation):** Well-documented Vite + TS setup. No unknowns.
-- **Phase 2 (PIN Auth):** Simple SHA-256 + sessionStorage pattern. No dependencies.
-- **Phase 4 (Finance Extended):** Standard CRUD + chart rendering. Recharts via shadcn is documented.
-- **Phase 6 (Mobile Responsiveness):** CSS-only changes with Tailwind responsive utilities. Standard practice.
-- **Phase 7 (TS Completion):** Mechanical file conversion. No research needed.
+Phases with standard patterns (can skip research-phase):
+- **Phase 1 (Schema):** Additive migration pattern is established across 15 prior migrations. RLS and `search_path` conventions are directly replicable.
+- **Phase 3 (Layout):** CSS Grid two-column sticky sidebar is a well-documented pattern with exact code confirmed in ARCHITECTURE.md.
+- **Phase 4 (Sidebar):** Reuses existing `useYearOverview` and `BalanceDisplay` — component extraction, no new data patterns.
+- **Phase 7 (Accent Color):** Token pattern fully specified in both STACK.md and ARCHITECTURE.md with exact CSS values and propagation strategy.
+
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All packages verified on npm with current versions; compatibility with React 19 + Vite 7 confirmed via official docs |
-| Features | HIGH | Finance patterns validated against YNAB, Monarch Money, Goodbudget; editor validated against Tiptap docs; clear anti-features list prevents scope creep |
-| Architecture | HIGH | Extends existing proven patterns (hook-per-domain, overlay state machines); no architectural novelty required |
-| Pitfalls | HIGH | Based on codebase analysis of actual files + verified ecosystem documentation; known gotchas (motion + translate collision) documented from v1.0 experience |
+| Stack | HIGH | Based on direct codebase inspection; zero new packages required; Radix dependency confirmed installed; CSS token pattern confirmed in existing `index.css` |
+| Features | MEDIUM | Drawn from competitor analysis (YNAB, Monarch, Copilot, Undebt.it); no direct user research; feature set reflects standard ledger patterns with appropriate scope limits |
+| Architecture | HIGH | Directly derived from codebase inspection of 12,891 LOC; all patterns grounded in what already exists; anti-patterns identified from actual code paths |
+| Pitfalls | HIGH | Each pitfall traced to a specific file and line number in the existing codebase; not speculative — these are verified failure modes |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **350 source app data model fidelity:** The finance schema is inferred from research, not directly audited from the source. During Phase 3 planning, the actual 350 app schema should be reviewed to ensure nothing is missed.
-- **Tiptap JSON vs HTML storage decision:** STACK.md recommends JSON storage (body column migrated to JSONB), while ARCHITECTURE.md recommends HTML storage (body stays text). Resolution: use HTML storage for simplicity -- existing plain text is valid HTML, no schema migration needed, and Tiptap round-trips HTML perfectly. JSON storage can be reconsidered if querying document structure becomes necessary.
-- **Integer vs numeric for currency:** PITFALLS.md recommends integer storage (centavos) to avoid float rounding. ARCHITECTURE.md schema uses `numeric` type. Resolution: use `integer` (centavos) as recommended by pitfalls research -- the rounding risk is real and the conversion is trivial.
-- **Session timeout duration:** PIN auth needs an idle timeout but the optimal duration (5 min vs 24 hours) depends on user preference. Expose as a setting with sensible default (30 min).
+- **Balance carry-forward strategy:** PITFALLS.md identifies two valid approaches — cascade `starting_balance` on override vs. always compute from `previous_month.current_balance` at display time. Must choose before Phase 2 hooks are written. Recommendation: always-computed is safer for a continuous ledger where users can edit any past month.
+- **`remaining_balance` storage for debts:** Stored column (fast, drift risk on payment edits/reverts) vs. computed join (always correct, minor query cost for < 100 debts). Must decide before Phase 5 RPC is written. Recommendation: computed, eliminates an entire class of consistency bugs.
+- **Projected EOM balance formula scope:** FEATURES.md defines it as `current_balance + remaining_expected_income - unpaid_fixed_bills - remaining_budget_caps`. Must also account for debt minimum payments. Finalize formula during Phase 4 planning.
+- **AppShell `<main>` overflow:** ARCHITECTURE.md confirms two options. Option 2 — keep `overflow-y-auto` on `<main>`, use `h-full overflow-hidden` on FinancePage outer div — is recommended and must be confirmed working on all viewport sizes in Phase 3 before committing.
+
+---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- [Tiptap React Install Docs](https://tiptap.dev/docs/editor/getting-started/install/react) -- editor setup, extensions, React integration
-- [Tiptap StarterKit](https://tiptap.dev/docs/editor/extensions/functionality/starterkit) -- included extensions
-- [Tiptap Performance Guide](https://tiptap.dev/docs/guides/performance) -- `shouldRerenderOnTransaction`, `useEditorState`
-- [shadcn/ui Chart Component](https://ui.shadcn.com/docs/components/radix/chart) -- Recharts integration
-- [Supabase RPC Documentation](https://supabase.com/docs/reference/javascript/rpc) -- stored procedure calls
-- [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) -- RLS patterns
-- [Vite TypeScript Features](https://vite.dev/guide/features) -- native .tsx support
-- [MDN Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest) -- SHA-256 PIN hashing
+- Direct codebase inspection: `src/` (12,891 LOC TypeScript) — architecture patterns, hook structure, CSS token set
+- `supabase/migrations/001–015` — schema baseline, established RLS patterns, RPC conventions
+- `src/index.css` — `@theme inline` pattern, `--accent` token usage, existing OKLCH color values
+- [Tailwind CSS v4 — Theme Variables](https://tailwindcss.com/docs/theme) — `@theme inline` color variable mapping and utility generation
+- [Radix UI Accordion](https://www.radix-ui.com/primitives/docs/components/accordion) — `type="multiple"`, keyboard navigation, height animation
+- [shadcn/ui component docs](https://ui.shadcn.com/docs/components) — Accordion, Collapsible, ScrollArea install commands and API
 
 ### Secondary (MEDIUM confidence)
-- [NerdWallet: Best Budget Apps 2026](https://www.nerdwallet.com/finance/learn/best-budget-apps) -- finance feature expectations
-- [Liveblocks: Rich Text Editor Comparison 2025](https://liveblocks.io/blog/which-rich-text-editor-framework-should-you-choose-in-2025) -- Tiptap vs Slate vs Lexical
-- [Vite JS-to-TS Migration](https://dev.to/rashidshamloo/migrating-a-vite-react-app-from-javascript-to-typescript-5dmn) -- migration strategy
-- [Rebalancer App](https://rebalancer.app/) -- investment allocation tracking UX
-- [Goodbudget](https://goodbudget.com/) -- manual-entry budget app patterns
+- YNAB, Monarch Money, Copilot Money — feature expectations and UX patterns for ledger-style finance views
+- [Kualto](https://www.kualto.com/) — cash flow projection sidebar patterns
+- [Undebt.it](https://undebt.it/) — flexible payment (debt snowflake) UX, remaining balance display
+- CSS-Tricks / MDN — sticky sidebar with independent overflow columns
 
 ### Tertiary (LOW confidence)
-- None -- all findings corroborated by multiple sources
+- Debt payoff app UX patterns (InCharge, Debt Payoff Planner) — payment logging interaction details; specific implementation choices need validation during Phase 5 planning
 
 ---
-*Research completed: 2026-03-16*
+*Research completed: 2026-03-23*
 *Ready for roadmap: yes*
