@@ -2,16 +2,17 @@
 
 ## What This Is
 
-wintrack is a personal accountability tracker with a deliberate, distraction-free interface. Declare intentions each morning, complete them through the day, reflect in your journal at night. Built with Nothing Phone's monochrome design language — dot grids, monospaced type, structured negative space, strictly black and white.
+wintrack is a personal accountability and finance tracker with a deliberate, distraction-free interface. Declare intentions each morning, complete them through the day, reflect in your journal at night, and manage your personal finances — all behind a PIN-protected gate. Built with Nothing Phone's monochrome design language — dot grids, monospaced type, structured negative space, strictly black and white.
 
 ## Core Value
 
-The daily discipline loop: set intentions in the morning, complete them through the day, reflect honestly at night.
+The daily discipline loop: set intentions in the morning, complete them through the day, reflect honestly at night — now integrated with personal finance management for a complete life dashboard.
 
 ## Requirements
 
 ### Validated
 
+**v1.0 — Daily Discipline Loop:**
 - ✓ Multi-win entry with Typeform-style full-screen flow — v1.0
 - ✓ Inline win completion toggle with strikethrough styling — v1.0
 - ✓ Win categories (work/personal/health) with badges and completion counts — v1.0
@@ -28,45 +29,55 @@ The daily discipline loop: set intentions in the morning, complete them through 
 - ✓ Dev tools panel (Ctrl+Shift+D) for test data seeding — v1.0
 - ✓ Settings page with persistence to Supabase + localStorage cache — v1.0
 
+**v2.0 — Finance & Platform:**
+- ✓ TypeScript migration (strict mode, generated Supabase types) — v2.0
+- ✓ Dev branch workflow with mobile dev server — v2.0
+- ✓ PIN authentication with setup flow, idle timeout, session management — v2.0
+- ✓ Balance tracking with manual override and history — v2.0
+- ✓ Monthly budget with progress visualization — v2.0
+- ✓ Income sources with currency conversion (Wise/PayPal fees) — v2.0
+- ✓ Bills management with recurrence (one-time, recurring, ongoing) — v2.0
+- ✓ Bill edit and delete from UI — v2.0
+- ✓ Year overview with 12-month columns, balance sparkline, journal count — v2.0
+- ✓ Month navigation with query param deep-linking — v2.0
+- ✓ One-off income tracking — v2.0
+- ✓ Balance change history with revert capability — v2.0
+- ✓ Tiptap rich text editor with slash commands and markdown shortcuts — v2.0
+- ✓ Mobile bottom tab bar with responsive layout across all pages — v2.0
+- ✓ DayStrip centering and dayStartHour bug fixes — v2.0
+
 ### Active
 
-## Current Milestone: v2.0 Finance & Platform
-
-**Goal:** Integrate full personal finance management (from ₱350), add PIN authentication, migrate to TypeScript, establish dev branch workflow, improve mobile responsiveness, and add journal rich text formatting.
-
-**Target features:**
-- Full finance port from ₱350: budget tracking, bills, investments, salary toggle, transactions, month settings
-- Simple PIN gate authentication (replaces JWT-based access)
-- TypeScript migration across the codebase
-- Dev branch workflow (dev tools only on develop branch, main for production)
-- Mobile-responsive layout (testable via vite --host)
-- Journal rich text formatting (bold, italic, bullet points, etc.)
+(No active requirements — next milestone not yet defined)
 
 ### Out of Scope
 
 - Multi-user / auth — personal tool, no accounts needed
 - AI coaching or suggestions — not this product's character
 - Social / sharing — personal accountability, not social
-- Mobile app — web-first, Vercel deployment covers mobile browser
+- Native mobile app — web-first, PWA covers mobile
 - Streak freeze / grace mechanics — roll-forward is the compassion mechanism
+- External balance integrations (bank APIs) — manual entry preferred
+- Biometric auth — PIN is sufficient for personal use
 
 ## Context
 
-- **v1.0 shipped:** 2026-03-16
-- **Scale:** 3,274 LOC (src), 2,270 LOC (tests), 264 commits, 7 phases, 18 plans
-- **Tests:** 149 passing across 25 files
-- **Timeline:** 8 days (Mar 9-16, 2026)
-- **Stack:** Vite + React 19, Tailwind v4, shadcn/ui (Nova preset), Supabase JS, Lucide icons, vite-plugin-pwa
+- **v2.0 shipped:** 2026-03-23
+- **Scale:** 12,891 LOC TypeScript, 240 tests passing, 176 commits in v2.0
+- **Timeline:** v2.0 in 7 days (Mar 16-23, 2026)
+- **Stack:** Vite + React 19, Tailwind v4, shadcn/ui (Nova preset), Supabase JS, Tiptap v3, Lucide icons, vite-plugin-pwa
 - **Deploying to:** Vercel
-- **Single user** — no auth; Supabase for persistence only (anon key + RLS)
+- **Single user** — PIN gate for privacy; Supabase for persistence (anon key + RLS)
 - **Design:** Nothing Phone Glyph Matrix — strictly black/white, monospaced type, dot grids, structured negative space
+- **Mobile:** 16px base font on mobile (18px desktop), bottom tab bar, responsive layouts, visualViewport keyboard tracking
 
 ## Constraints
 
 - **Tech stack**: Vite + React 19, Tailwind v4, shadcn/ui, Supabase, Vercel — no deviations
 - **Design**: Black/white only, no color accents, no gradients — enforced aesthetic
-- **Scope**: Single user, no auth — keeps architecture simple
+- **Scope**: Single user, PIN-gated — keeps architecture simple
 - **Animations**: Plain @keyframes + state machine pattern (tw-animate-css conflicts with motion v12)
+- **Font**: Geist Mono Variable throughout — no font pairing
 
 ## Key Decisions
 
@@ -80,12 +91,14 @@ The daily discipline loop: set intentions in the morning, complete them through 
 | Tailwind v4 dark mode via @custom-variant | v3 `darkMode: 'class'` syntax doesn't work | ✓ Correct v4 approach |
 | Plain @keyframes over tw-animate-css | CSS `translate` vs `transform: translate3d()` conflict | ✓ State machine pattern |
 | Remove check-in flow | Redundant — toggle on wins is sufficient | ✓ Simpler UX |
-| Streak from wins.completed directly | No check_ins table dependency | ✓ Clean data model |
 | Unified daily view (Today + History) | DayStrip carousel replaces separate pages | ✓ Better navigation |
 | Journal FAB (Nothing design) | Fixed circular button, monochrome | ✓ Clean, accessible |
-| SVG heatmap with inline fill | Tailwind bg-* doesn't work on SVG rect | ✓ CSS variables for fill |
-| Night-owl day offset | Configurable dayStartHour for late users | ✓ Correct attribution |
-| Web Push via Edge Function + pg_cron | Hourly check against user settings | ✓ Free tier compatible |
+| PIN gate with SHA-256 | Simple 4-digit PIN, JS fallback for non-secure contexts | ✓ Works on LAN + HTTPS |
+| HTML body_format for journal | Tiptap StarterKit HTML round-trips cleanly | ✓ Simple storage |
+| Horizontal month nav (no swipe) | Vertical swipe conflicted with page scroll on mobile | ✓ Standard < Month > pattern |
+| Module-level finance cache | Prevents "Loading..." flash when switching months | ✓ Instant revisits |
+| 16px mobile base font | 18px desktop was too large on phone ("grandpa mode") | ✓ Native-feeling density |
+| visualViewport keyboard tracking | iOS `position: sticky` doesn't work with virtual keyboard | ✓ Toolbar follows keyboard |
 
 ---
-*Last updated: 2026-03-16 after v1.0 milestone*
+*Last updated: 2026-03-23 after v2.0 milestone*
