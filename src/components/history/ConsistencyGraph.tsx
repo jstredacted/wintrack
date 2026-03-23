@@ -94,14 +94,14 @@ export default function ConsistencyGraph({ completionMap = {}, days = 84, daySta
     }
   });
 
-  // Total wins summary
+  // Total wins summary — count actual completed wins, not days
   let totalCompleted = 0;
   for (const cell of cells) {
     if (cell.entry) {
       if (typeof cell.entry === 'boolean') {
         totalCompleted += cell.entry ? 1 : 0;
       } else {
-        totalCompleted += Number(cell.entry.completed) || 0;
+        totalCompleted += cell.entry.completed || 0;
       }
     }
   }

@@ -54,7 +54,7 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }: Win
       role="dialog"
       aria-modal="true"
       aria-label="Set intentions"
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-background p-8 ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-start sm:justify-center bg-background px-6 pt-12 pb-4 sm:p-8 ${
         exiting ? 'overlay-exit' : 'overlay-enter'
       }`}
       onAnimationEnd={() => {
@@ -95,13 +95,21 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }: Win
           ))}
         </div>
 
-        <input
-          ref={inputRef}
-          name="title"
-          autoComplete="off"
-          className="w-full bg-transparent text-2xl font-mono outline-none border-b border-border pb-2 text-foreground"
-          placeholder="I will..."
-        />
+        <div className="flex items-end gap-2">
+          <input
+            ref={inputRef}
+            name="title"
+            autoComplete="off"
+            className="flex-1 bg-transparent text-2xl font-mono outline-none border-b border-border pb-2 text-foreground"
+            placeholder="I will..."
+          />
+          <button
+            type="submit"
+            className="sm:hidden shrink-0 font-mono text-xs uppercase tracking-widest border border-foreground px-3 py-2 text-foreground active:opacity-70"
+          >
+            Add
+          </button>
+        </div>
         <button type="submit" className="sr-only">
           Submit
         </button>
@@ -121,15 +129,26 @@ export default function WinInputOverlay({ open, onSubmit, onClose, onDone }: Win
           </ul>
         )}
 
-        {submittedTitles.length > 0 && (
-          <button
-            type="button"
-            onClick={handleDone}
-            className="font-mono text-sm uppercase tracking-[0.2em] border border-foreground px-4 py-2 mt-6"
-          >
-            Done
-          </button>
-        )}
+        <div className="flex gap-3 mt-6">
+          {submittedTitles.length > 0 && (
+            <button
+              type="button"
+              onClick={handleDone}
+              className="font-mono text-sm uppercase tracking-[0.2em] border border-foreground px-4 py-2"
+            >
+              Done
+            </button>
+          )}
+          {submittedTitles.length === 0 && (
+            <button
+              type="button"
+              onClick={handleDone}
+              className="sm:hidden font-mono text-xs uppercase tracking-widest text-muted-foreground"
+            >
+              Back
+            </button>
+          )}
+        </div>
       </form>
     </div>,
     document.body

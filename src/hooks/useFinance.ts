@@ -33,30 +33,34 @@ interface UseFinanceResult {
   refetch: () => void;
 }
 
+// Module-level cache so month data persists across re-renders and month switches
+const monthCache = new Map<string, { monthData: Month; incomes: MonthlyIncomeWithSource[] }>();
+
 export function useFinance(selectedMonth: string): UseFinanceResult {
   const [monthData, setMonthData] = useState<Month | null>(null);
   const [incomes, setIncomes] = useState<MonthlyIncomeWithSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refetchKey, setRefetchKey] = useState(0);
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   const refetch = useCallback(() => {
     setRefetchKey((k) => k + 1);
   }, []);
-
-  // Reset hasLoaded when month changes
-  useEffect(() => {
-    setHasLoaded(false);
-  }, [selectedMonth]);
 
   // Load month data + incomes on mount / month change
   useEffect(() => {
     let cancelled = false;
 
     async function loadMonth() {
-      // Only show loading spinner on initial load, not on refetch
-      if (!hasLoaded) setLoading(true);
+      // Show cached data immediately if available (no loading flash)
+      const cached = monthCache.get(selectedMonth);
+      if (cached) {
+        setMonthData(cached.monthData);
+        setIncomes(cached.incomes);
+        setLoading(false);
+      } else {
+        setLoading(true);
+      }
       setError(null);
 
       try {
@@ -109,7 +113,11 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
         const activeIncomes = (incomeData ?? []).filter(
           (i: MonthlyIncomeWithSource) => i.income_sources?.active !== false
         );
-        setIncomes(activeIncomes as MonthlyIncomeWithSource[]);
+        if (!cancelled) {
+          setIncomes(activeIncomes as MonthlyIncomeWithSource[]);
+          // Cache for instant display on revisit
+          monthCache.set(selectedMonth, { monthData: normalized, incomes: activeIncomes as MonthlyIncomeWithSource[] });
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Failed to load month data');
@@ -117,7 +125,6 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
       } finally {
         if (!cancelled) {
           setLoading(false);
-          setHasLoaded(true);
         }
       }
     }
@@ -126,7 +133,7 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
     return () => {
       cancelled = true;
     };
-  }, [selectedMonth, refetchKey, hasLoaded]);
+  }, [selectedMonth, refetchKey]);
 
   const updateBalance = useCallback(
     async (newBalance: number) => {
@@ -149,10 +156,11 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
         return;
       }
 
-      // Refetch month data to sync local state with DB
+      // Invalidate cache and refetch
+      monthCache.delete(selectedMonth);
       refetch();
     },
-    [monthData, refetch]
+    [monthData, refetch, selectedMonth]
   );
 
   const updateBudgetLimit = useCallback(
@@ -214,10 +222,11 @@ export function useFinance(selectedMonth: string): UseFinanceResult {
         return;
       }
 
-      // Refetch to get updated balance + income state
+      // Invalidate cache and refetch
+      monthCache.delete(selectedMonth);
       refetch();
     },
-    [incomes, refetch]
+    [incomes, refetch, selectedMonth]
   );
 
   return {

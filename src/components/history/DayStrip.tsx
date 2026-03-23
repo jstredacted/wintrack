@@ -27,7 +27,8 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
     const dateStr = new Intl.DateTimeFormat('en-CA').format(base);
     const dayAbbr = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(base);
     const dateNum = base.getDate();
-    const completed = completionMap[dateStr] === true;
+    const entry = completionMap[dateStr];
+    const completed = entry === true || (typeof entry === 'object' && entry !== null && entry.completed > 0);
     cells.push({ date: dateStr, dayAbbr, dateNum, completed });
   }
 
@@ -81,7 +82,7 @@ export default function DayStrip({ completionMap = {}, selectedDate, onSelectDat
       {/* Scroll container */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto gap-0 snap-x snap-mandatory scroll-smooth"
+        className="flex overflow-x-auto gap-0 snap-x snap-mandatory scroll-smooth px-4 sm:px-0"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         onScroll={updateScrollState}
       >

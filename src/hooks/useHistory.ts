@@ -5,7 +5,7 @@ import { useSettingsStore } from '@/stores/settingsStore'
 
 export function useHistory() {
   const dayStartHour = useSettingsStore(s => s.settings.dayStartHour)
-  const [completionMap, setCompletionMap] = useState<Record<string, boolean>>({})
+  const [completionMap, setCompletionMap] = useState<Record<string, { completed: number; total: number }>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,13 +17,11 @@ export function useHistory() {
 
       if (error || !data) { setLoading(false); return }
 
-      const map: Record<string, boolean> = {}
+      const map: Record<string, { completed: number; total: number }> = {}
       for (const win of data) {
-        if (win.completed) {
-          map[win.win_date] = true
-        } else if (!map[win.win_date]) {
-          map[win.win_date] = false
-        }
+        if (!map[win.win_date]) map[win.win_date] = { completed: 0, total: 0 }
+        map[win.win_date].total++
+        if (win.completed) map[win.win_date].completed++
       }
       setCompletionMap(map)
       setLoading(false)

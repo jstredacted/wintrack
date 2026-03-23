@@ -39,7 +39,7 @@ function renderBody(body: string, format: string) {
 export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }: JournalEntryCardProps) {
   const isCurrentlyEditing = editingId === entry.id
   return (
-    <article className="py-10 border-b border-border/30 last:border-0 group">
+    <article className="py-4 sm:py-10 border-b border-border/30 last:border-0 group">
       {/* Date — editorial metadata */}
       <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground/40 mb-4 flex items-center gap-2">
         {formatEntryDate(entry.created_at)}
@@ -51,13 +51,13 @@ export default function JournalEntryCard({ entry, onEdit, onDelete, editingId }:
       </p>
 
       {/* Title — the hero */}
-      <h2 className="text-3xl font-bold leading-tight mb-4">{entry.title}</h2>
+      <h2 className="text-xl sm:text-3xl font-bold leading-tight mb-4">{entry.title}</h2>
 
       {/* Body preview — format-aware */}
       {entry.body && renderBody(entry.body, entry.body_format || 'plaintext')}
 
-      {/* Actions — visible on hover only */}
-      <div className="flex gap-4 mt-5 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Actions — always visible on mobile, hover-reveal on desktop */}
+      <div className="flex gap-4 mt-5 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
         <button
           type="button"
           aria-label="Edit entry"

@@ -113,14 +113,14 @@ export default function BudgetProgressBar({
       </div>
 
       {/* Labels below bar — left / center / right */}
-      <div className="flex justify-between">
-        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
+      <div className="flex justify-between gap-1">
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-muted-foreground font-mono">
           Paid {formatPHP(paidTotal)}
         </span>
-        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-muted-foreground font-mono">
           Budget {formatPHP(budgetLimit)}
         </span>
-        <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-mono">
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] text-muted-foreground font-mono">
           Unpaid {formatPHP(unpaidTotal)}
         </span>
       </div>

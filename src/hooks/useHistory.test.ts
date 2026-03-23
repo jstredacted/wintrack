@@ -56,7 +56,7 @@ describe('useHistory', () => {
       expect(result.current.completionMap).toEqual({});
     });
 
-    it('completionMap["2026-03-09"] === true when win.completed is true', async () => {
+    it('completionMap tracks completed/total counts per date', async () => {
       const { supabase } = await import('@/lib/supabase');
       (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
@@ -68,10 +68,10 @@ describe('useHistory', () => {
       const { result } = renderHook(() => useHistory());
 
       await waitFor(() => expect(result.current.loading).toBe(false));
-      expect(result.current.completionMap['2026-03-09']).toBe(true);
+      expect(result.current.completionMap['2026-03-09']).toEqual({ completed: 1, total: 1 });
     });
 
-    it('completionMap["2026-03-08"] === false when win.completed is false', async () => {
+    it('completionMap counts uncompleted wins', async () => {
       const { supabase } = await import('@/lib/supabase');
       (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
@@ -83,10 +83,10 @@ describe('useHistory', () => {
       const { result } = renderHook(() => useHistory());
 
       await waitFor(() => expect(result.current.loading).toBe(false));
-      expect(result.current.completionMap['2026-03-08']).toBe(false);
+      expect(result.current.completionMap['2026-03-08']).toEqual({ completed: 0, total: 1 });
     });
 
-    it('completionMap is true for date when at least one win is completed', async () => {
+    it('completionMap aggregates multiple wins on the same date', async () => {
       const { supabase } = await import('@/lib/supabase');
       (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
@@ -101,10 +101,10 @@ describe('useHistory', () => {
       const { result } = renderHook(() => useHistory());
 
       await waitFor(() => expect(result.current.loading).toBe(false));
-      expect(result.current.completionMap['2026-03-07']).toBe(true);
+      expect(result.current.completionMap['2026-03-07']).toEqual({ completed: 1, total: 2 });
     });
 
-    it('completionMap contains both true and false entries for multiple wins on different dates', async () => {
+    it('completionMap tracks separate dates independently', async () => {
       const { supabase } = await import('@/lib/supabase');
       (supabase.from as Mock).mockReturnValue(
         buildHistoryMock({
@@ -119,8 +119,8 @@ describe('useHistory', () => {
       const { result } = renderHook(() => useHistory());
 
       await waitFor(() => expect(result.current.loading).toBe(false));
-      expect(result.current.completionMap['2026-03-09']).toBe(true);
-      expect(result.current.completionMap['2026-03-08']).toBe(false);
+      expect(result.current.completionMap['2026-03-09']).toEqual({ completed: 1, total: 1 });
+      expect(result.current.completionMap['2026-03-08']).toEqual({ completed: 0, total: 1 });
     });
 
     it('completionMap is {} when data array is empty', async () => {

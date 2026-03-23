@@ -93,7 +93,7 @@ export default function BalanceDisplay({
             onKeyDown={handleKeyDown}
             onBlur={save}
             className={[
-              'text-center font-mono tabular-nums text-[4rem] font-light border-b-2 border-foreground bg-transparent outline-none w-full',
+              'text-center font-mono tabular-nums text-[2.5rem] sm:text-[4rem] font-light border-b-2 border-foreground bg-transparent outline-none w-full',
               saving ? 'opacity-50' : '',
             ].join(' ')}
           />
@@ -105,9 +105,9 @@ export default function BalanceDisplay({
               readOnly ? '' : 'cursor-pointer',
             ].join(' ')}
           >
-            <span className="text-[2rem] font-light text-muted-foreground">{parts.symbol}</span>
-            <span className="text-[4rem] font-light">{parts.main}</span>
-            <span className="text-[2rem] font-light text-muted-foreground">{parts.decimals}</span>
+            <span className="text-[1.5rem] sm:text-[2rem] font-light text-muted-foreground">{parts.symbol}</span>
+            <span className="text-[2.5rem] sm:text-[4rem] font-light">{parts.main}</span>
+            <span className="text-[1.5rem] sm:text-[2rem] font-light text-muted-foreground">{parts.decimals}</span>
           </p>
         )}
       </div>

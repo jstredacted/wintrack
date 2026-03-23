@@ -50,7 +50,9 @@ describe('JournalEditorOverlay', () => {
     const onSave = vi.fn().mockResolvedValue(undefined);
     render(<JournalEditorOverlay open={true} onSave={onSave} onClose={vi.fn()} />);
     await user.type(screen.getByRole('textbox', { name: /title/i }), 'Test entry');
-    await user.click(screen.getByRole('button', { name: /save/i }));
+    // Two save buttons exist (mobile + desktop) — click the first one
+    const saveBtns = screen.getAllByRole('button', { name: /save/i });
+    await user.click(saveBtns[0]);
     expect(onSave).toHaveBeenCalledWith(
       expect.objectContaining({ body_format: 'html' })
     );
@@ -70,8 +72,9 @@ describe('JournalEditorOverlay', () => {
     const onSave = vi.fn((): Promise<void> => new Promise((resolve) => { resolveSave = resolve; }));
     render(<JournalEditorOverlay open={true} onSave={onSave} onClose={vi.fn()} />);
     await user.type(screen.getByRole('textbox', { name: /title/i }), 'My entry');
-    await user.click(screen.getByRole('button', { name: /save/i }));
-    expect(screen.getByRole('button', { name: /saving/i })).toBeInTheDocument();
+    const saveBtns = screen.getAllByRole('button', { name: /save/i });
+    await user.click(saveBtns[0]);
+    expect(screen.getAllByRole('button', { name: /saving/i }).length).toBeGreaterThan(0);
     resolveSave!();
   });
 });

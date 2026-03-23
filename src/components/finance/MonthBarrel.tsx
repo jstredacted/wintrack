@@ -1,5 +1,5 @@
-import { type ReactNode, useState, useRef, useCallback } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { type ReactNode, useState, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getPrevMonth, getNextMonth, getMonthYear } from '@/lib/utils/month';
 
 const MONTH_NAMES = [
@@ -15,8 +15,6 @@ interface MonthBarrelProps {
 
 export default function MonthBarrel({ selected, onSelect, children }: MonthBarrelProps) {
   const [animating, setAnimating] = useState(false);
-  const touchStartY = useRef<number | null>(null);
-  const touchStartX = useRef<number | null>(null);
 
   const prev = getPrevMonth(selected);
   const next = getNextMonth(selected);
@@ -32,9 +30,6 @@ export default function MonthBarrel({ selected, onSelect, children }: MonthBarre
     ? `${MONTH_NAMES[nextMonth - 1]} ${nextYear}`
     : MONTH_NAMES[nextMonth - 1];
   const currentMonthName = MONTH_NAMES[currMonth - 1];
-
-  const canGoPrev = true;
-  const canGoNext = true;
 
   const goPrev = useCallback(() => {
     if (animating) return;
@@ -54,71 +49,44 @@ export default function MonthBarrel({ selected, onSelect, children }: MonthBarre
     }, 150);
   }, [animating, next, onSelect]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartY.current === null || touchStartX.current === null) return;
-    const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-    const deltaX = touchStartX.current - e.changedTouches[0].clientX;
-    touchStartY.current = null;
-    touchStartX.current = null;
-    if (Math.abs(deltaY) < 40 || Math.abs(deltaX) > Math.abs(deltaY)) return;
-    if (deltaY > 0) goNext();
-    else goPrev();
-  };
-
   return (
-    <div
-      className="flex flex-col h-full select-none"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* PREVIOUS month at the very TOP */}
-      <button
-        type="button"
-        onClick={goPrev}
-        disabled={!canGoPrev}
-        className="py-3 flex flex-col items-center opacity-30 hover:opacity-50 transition-opacity"
-        aria-label="Previous month"
-      >
-        <ChevronUp size={16} className="text-muted-foreground mb-1" />
-        <span className="text-lg font-mono text-muted-foreground">{prevLabel}</span>
-      </button>
+    <div className="flex flex-col h-full select-none">
+      {/* Month navigation header — horizontal prev/current/next */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border/20">
+        <button
+          type="button"
+          onClick={goPrev}
+          className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors min-h-[44px] min-w-[44px] justify-center"
+          aria-label="Previous month"
+        >
+          <ChevronLeft size={18} />
+          <span className="text-xs font-mono hidden sm:inline">{prevLabel}</span>
+        </button>
 
-      {/* Gradient fade from top */}
-      <div className="h-6 bg-gradient-to-b from-background to-transparent" />
-
-      {/* CURRENT MONTH — centered in the middle, takes flex-1 */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
         <div className="text-center">
-          <div className="text-4xl font-bold font-mono tracking-tight">{currentMonthName}</div>
-          {/* Only show year when adjacent months span different years */}
+          <div className="text-xl sm:text-2xl font-bold font-mono tracking-tight">{currentMonthName}</div>
           {(prevYear !== currYear || nextYear !== currYear) && (
-            <div className="text-sm text-muted-foreground font-mono mt-1">{currYear}</div>
+            <div className="text-xs text-muted-foreground font-mono">{currYear}</div>
           )}
         </div>
 
-        {/* Children content goes here */}
-        {children}
+        <button
+          type="button"
+          onClick={goNext}
+          className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors min-h-[44px] min-w-[44px] justify-center"
+          aria-label="Next month"
+        >
+          <span className="text-xs font-mono hidden sm:inline">{nextLabel}</span>
+          <ChevronRight size={18} />
+        </button>
       </div>
 
-      {/* Gradient fade from bottom */}
-      <div className="h-6 bg-gradient-to-t from-background to-transparent" />
-
-      {/* NEXT month at the very BOTTOM */}
-      <button
-        type="button"
-        onClick={goNext}
-        disabled={!canGoNext}
-        className="py-3 flex flex-col items-center opacity-30 hover:opacity-50 transition-opacity"
-        aria-label="Next month"
-      >
-        <span className="text-lg font-mono text-muted-foreground">{nextLabel}</span>
-        <ChevronDown size={16} className="text-muted-foreground mt-1" />
-      </button>
+      {/* Content — scrollable */}
+      <div className="flex-1 min-h-0 w-full overflow-y-auto">
+        <div className="w-full px-4 py-4 max-w-[1000px] mx-auto">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

@@ -99,21 +99,23 @@ export default function SettingsPage() {
   if (loading) return null;
 
   return (
-    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-12">
-      <h1 className="text-3xl font-bold tracking-tight mb-8">Settings</h1>
-
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-0 sm:py-12">
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="font-mono text-xs uppercase tracking-widest w-full justify-start border-b border-border rounded-none bg-transparent h-auto gap-0 px-0 mb-0">
-          {['General', 'Notifications', 'Income', 'Security'].map((tab) => (
-            <TabsTrigger
-              key={tab}
-              value={tab.toLowerCase()}
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2 pt-1 text-muted-foreground data-[state=active]:text-foreground"
-            >
-              {tab}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        {/* Sticky header + tabs on mobile */}
+        <div className="sticky top-0 z-10 bg-background pt-8 sm:pt-0 pb-0">
+          <h1 className="text-3xl font-bold tracking-tight mb-6">Settings</h1>
+          <TabsList className="font-mono text-xs uppercase tracking-widest w-full justify-start border-b border-border rounded-none bg-transparent h-auto gap-0 px-0 mb-0 overflow-x-auto flex-nowrap">
+            {['General', 'Notifications', 'Income', 'Security'].map((tab) => (
+              <TabsTrigger
+                key={tab}
+                value={tab.toLowerCase()}
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2 pt-1 text-muted-foreground data-[state=active]:text-foreground shrink-0"
+              >
+                {tab}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
         {/* General Tab */}
         <TabsContent value="general" className="mt-6 space-y-8">
@@ -215,9 +217,7 @@ export default function SettingsPage() {
           <p className="text-sm text-muted-foreground">
             Receive push reminders at your configured morning and evening hours.
           </p>
-          <div className="border-0 bg-transparent sm:border sm:bg-card sm:shadow-sm sm:rounded-lg sm:p-5">
-            <NotificationPermission />
-          </div>
+          <NotificationPermission />
         </TabsContent>
 
         {/* Income Tab */}

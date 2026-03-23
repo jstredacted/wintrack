@@ -43,7 +43,7 @@ export default function CategoryRadar({ categoryCounts = {} }: CategoryRadarProp
   const polygonPoints = points.map(p => `${p.x},${p.y}`).join(' ');
 
   return (
-    <div className="flex items-center justify-center">
+    <div>
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
         {/* Grid circles */}
         {[0.25, 0.5, 0.75, 1].map((r) => (

@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -53,6 +53,27 @@ export default function JournalEditorOverlay({
   const liveWordCountRef = useRef(0);
   const savingRef = useRef(false);
   const bodyRef = useRef<string>('');
+  const toolbarRef = useRef<HTMLDivElement>(null);
+
+  // Track iOS virtual keyboard via visualViewport API
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  useEffect(() => {
+    if (!open) return;
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => {
+      // When keyboard is open, visualViewport.height < window.innerHeight
+      const offset = window.innerHeight - vv.height - vv.offsetTop;
+      setKeyboardOffset(Math.max(0, offset));
+    };
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    update();
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
+  }, [open]);
 
   const editor = useEditor({
     extensions: [
@@ -151,15 +172,15 @@ export default function JournalEditorOverlay({
             </div>
 
             {/* Editor form — full-screen writing mode */}
-            <form onSubmit={handleSave} className="flex-1 flex flex-col px-12 py-10 sm:px-20 lg:px-32 w-full">
+            <form onSubmit={handleSave} className="flex-1 flex flex-col min-h-0 px-4 py-6 sm:px-20 sm:py-10 lg:px-32 w-full">
               {/* Category selector */}
-              <div className="flex gap-3 mb-4">
+              <div className="flex gap-2 sm:gap-3 mb-4">
                 {CATEGORIES.map(c => (
                   <button
                     key={c.value}
                     type="button"
                     onClick={() => setCategory(c.value)}
-                    className={`font-mono text-xs uppercase tracking-[0.2em] px-2 py-1 border
+                    className={`font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] px-1.5 sm:px-2 py-0.5 sm:py-1 border
                       ${category === c.value ? 'border-foreground text-foreground' : 'border-border text-muted-foreground'}`}
                   >
                     {c.label}
@@ -176,10 +197,59 @@ export default function JournalEditorOverlay({
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full bg-transparent text-3xl font-bold outline-none placeholder:text-muted-foreground/40 mb-6 border-b border-border/40 pb-3"
               />
-              <div className="flex-1 w-full tiptap-editor">
+              <div className="flex-1 w-full tiptap-editor overflow-y-auto">
                 <EditorContent editor={editor} className="h-full" />
               </div>
-              <div className="flex gap-6 mt-8 pb-4">
+              {/* Mobile formatting toolbar + save — fixed above keyboard using visualViewport */}
+              {editor && (
+                <div
+                  ref={toolbarRef}
+                  className="fixed left-0 right-0 sm:relative sm:bottom-auto flex sm:hidden flex-col bg-background border-t border-border z-[60]"
+                  style={{ bottom: keyboardOffset > 0 ? keyboardOffset : 0 }}
+                >
+                  <div className="flex items-center gap-0 py-1 overflow-x-auto">
+                    {[
+                      { label: 'B', action: () => editor.chain().focus().toggleBold().run(), active: editor.isActive('bold'), style: 'font-bold text-base' },
+                      { label: 'I', action: () => editor.chain().focus().toggleItalic().run(), active: editor.isActive('italic'), style: 'italic text-base' },
+                      { label: 'H2', action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), active: editor.isActive('heading', { level: 2 }), style: 'text-xs' },
+                      { label: 'H3', action: () => editor.chain().focus().toggleHeading({ level: 3 }).run(), active: editor.isActive('heading', { level: 3 }), style: 'text-xs' },
+                      { label: '—', action: () => editor.chain().focus().toggleBulletList().run(), active: editor.isActive('bulletList'), style: 'text-base' },
+                      { label: '1.', action: () => editor.chain().focus().toggleOrderedList().run(), active: editor.isActive('orderedList'), style: 'text-xs' },
+                    ].map(({ label, action, active, style }) => (
+                      <button
+                        key={label}
+                        type="button"
+                        onPointerDown={(e) => { e.preventDefault(); action(); }}
+                        className={`min-w-[48px] min-h-[48px] flex items-center justify-center rounded-md font-mono shrink-0 transition-colors
+                          ${active ? 'bg-foreground text-background' : 'text-foreground border border-transparent active:bg-accent'} ${style}`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex gap-6 py-3 border-t border-border/50">
+                    <button
+                      type="submit"
+                      disabled={!title.trim() || saving}
+                      className="font-mono text-xs uppercase tracking-widest text-foreground
+                                 disabled:opacity-30 border-b border-foreground pb-px
+                                 disabled:border-muted-foreground
+                                 active:scale-[0.96] transition-transform duration-75"
+                    >
+                      {saving ? 'Saving\u2026' : 'Save'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="font-mono text-xs uppercase tracking-widest text-muted-foreground"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+              {/* Desktop save buttons */}
+              <div className="hidden sm:flex gap-6 mt-8 pb-4">
                 <button
                   type="submit"
                   disabled={!title.trim() || saving}

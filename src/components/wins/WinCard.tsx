@@ -79,14 +79,14 @@ export default function WinCard({
           <button
             aria-label="edit"
             onClick={handleEditStart}
-            className="text-muted-foreground/30 hover:text-muted-foreground transition-colors opacity-0 group-hover:opacity-100 active:opacity-70 transition-opacity duration-75"
+            className="text-muted-foreground/30 hover:text-muted-foreground transition-colors sm:opacity-0 sm:group-hover:opacity-100 active:opacity-70 transition-opacity duration-75"
           >
             <Pencil size={16} />
           </button>
           <button
             aria-label="delete"
             onClick={() => onDelete?.()}
-            className="text-muted-foreground/30 hover:text-muted-foreground transition-colors opacity-0 group-hover:opacity-100 active:opacity-70 transition-opacity duration-75"
+            className="text-muted-foreground/30 hover:text-muted-foreground transition-colors sm:opacity-0 sm:group-hover:opacity-100 active:opacity-70 transition-opacity duration-75"
           >
             <Trash2 size={16} />
           </button>

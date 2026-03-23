@@ -127,6 +127,9 @@
   body {
     @apply bg-background text-foreground;
     }
+  @media (max-width: 639px) {
+    html { font-size: 16px; }
+  }
   html {
     @apply font-sans;
     font-size: 18px;
@@ -274,14 +277,16 @@
 .tiptap-editor h2 { font-size: 1.4rem; font-weight: 600; margin: 1rem 0 0.5rem; line-height: 1.2; }
 .tiptap-editor h3 { font-size: 1.15rem; font-weight: 600; margin: 0.75rem 0 0.25rem; line-height: 1.3; }
 .tiptap-editor p { line-height: 1.7; margin-bottom: 0.5rem; }
-.tiptap-editor ul, .tiptap-editor ol { padding-left: 1.5rem; }
+.tiptap-editor ul { padding-left: 2rem; list-style-type: disc; }
+.tiptap-editor ol { padding-left: 2rem; list-style-type: decimal; list-style-position: outside; }
 .tiptap-editor li { margin: 0.2rem 0; line-height: 1.6; }
 
 /* Tiptap content — scoped styles for rendering saved HTML in JournalEntryCard */
 .tiptap-content h2 { font-size: 1.4rem; font-weight: 600; margin: 1rem 0 0.5rem; line-height: 1.2; }
 .tiptap-content h3 { font-size: 1.15rem; font-weight: 600; margin: 0.75rem 0 0.25rem; line-height: 1.3; }
 .tiptap-content p { line-height: 1.7; margin-bottom: 0.5rem; }
-.tiptap-content ul, .tiptap-content ol { padding-left: 1.5rem; }
+.tiptap-content ul { padding-left: 2rem; list-style-type: disc; }
+.tiptap-content ol { padding-left: 2rem; list-style-type: decimal; list-style-position: outside; }
 .tiptap-content li { margin: 0.2rem 0; line-height: 1.6; }
 
 /* Dot grid texture — applied to AppShell root so it layers with bg-background on the same element */
